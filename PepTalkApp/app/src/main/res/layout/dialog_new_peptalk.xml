@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal">
+
+    <TextView
+        android:layout_margin="30dp"
+        android:id="@+id/textview_new_peptalk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add a New Pep Talk"
+        android:gravity="center_horizontal|top"
+        android:textSize="24sp"/>
+    <EditText
+        android:id="@+id/edittext_new_peptalk_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="9"
+        android:layout_marginBottom="50dp"
+        android:hint="Enter title for this pep talk.."/>
+
+    <EditText
+        android:id="@+id/edittext_new_peptalk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:ems="16"
+        android:hint="Hey buddy, you're great because..."
+        android:imeOptions="actionDone"/>
+
+    <Button
+        android:id="@+id/button_new_peptalk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:text="dismiss"/>
+
+
+</LinearLayout>

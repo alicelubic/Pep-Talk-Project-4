@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_peptalks"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Pep Talks" />
+        <item
+            android:id="@+id/nav_checklist"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Checklist" />
+        <item
+            android:id="@+id/nav_resources"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="More Resources" />
+        <item
+            android:id="@+id/nav_instructions"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Instructions" />
+
+        <item
+            android:id="@+id/nav_about"
+            android:title="About"/>
+        <item
+            android:id="@+id/nav_logout"
+            android:title="logout"/>
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="jkfsnbjfsngjsngjsfngjnsfgnsjglkmvjsnodsvnrjsfmogd0vujnisdogbihursndmfpv whvbrhsjofbinwensugmdov" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="phone a friend" />
+        </menu>
+    </item>
+
+</menu>
