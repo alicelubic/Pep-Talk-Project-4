@@ -18,8 +18,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.PepTalkListActivity" />
-        <activity android:name=".views.ChecklistActivity"></activity>
+        <activity android:name=".views.PepTalkListActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".views.ChecklistActivity"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>
