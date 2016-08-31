@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
+import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
 
 /**
@@ -30,12 +31,10 @@ public class CustomDialog extends AlertDialog {
     }
     //if all this goes well, I'll write some sort of switch statement for layouts so that there's only one method to do all dis launchin
 
-
-    //write to da db
     //push appends data to a list, so it generates a unique key every time a new child is added,
     //which can be called upon with getKey
 
-
+    //will static launch methods cause a problem?
 
 
     public static void launchNewPeptalkDialog(Context context) {
@@ -50,30 +49,24 @@ public class CustomDialog extends AlertDialog {
         final EditText title = (EditText) dialog.findViewById(R.id.edittext_new_peptalk_title);
         final EditText body = (EditText) dialog.findViewById(R.id.edittext_new_peptalk);
         Button submit = (Button) dialog.findViewById(R.id.button_new_peptalk);
-//        final String titleInput = title.getText().toString().trim();
-//        final String bodyInput = body.getText().toString().trim();
 
         //TODO set it so soft keyboard comes up automatically, and dialog accomodates it... coordinator maybe/
-        //TODO set max char length for the title edittext
+        //TODO set max char length for the title edittext and account for invalid input with error
 
+        //this works
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String titleInput = title.getText().toString().trim();
                 String bodyInput = body.getText().toString().trim();
-                writeNewPeptalk(titleInput, bodyInput, false);//setting all as false to start with
+                writeNewPeptalk(titleInput, bodyInput);//, false);//setting all as false to start with
                 Log.i(TAG, "on submit click: title is "+ titleInput);
                 dialog.dismiss();
             }
         });
 
-        //object reference
-//        DatabaseReference pepParentObjRef = dbRef.child("peptalks");//the children of this object are the individual peptalks
-//        pepParentObjRef.push().setValue(title.getText().toString());
-
     }
 
-    //will static cause a problem?
     public static void launchEditPeptalkDialog(Context context, int position) {
 
         //TODO gotta find out how to populate an edittext with existing content to edit it...
@@ -85,7 +78,6 @@ public class CustomDialog extends AlertDialog {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-
     }
 
     public static void launchNewChecklistDialog(Context context) {
@@ -93,8 +85,21 @@ public class CustomDialog extends AlertDialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.dialog_new_checklist, null);
         builder.setView(layout);
-        AlertDialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();
         dialog.show();
+
+        final EditText editText = (EditText) dialog.findViewById(R.id.edittext_new_checklist);
+        Button submit = (Button) dialog.findViewById(R.id.button_new_checklist);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String input = editText.getText().toString().trim();
+                writeNewChecklist(input, false);
+                dialog.dismiss();
+            }
+        });
+        
+
     }
 
     public static void launchEditChecklistDialog(Context context, int position) {
@@ -120,9 +125,21 @@ public class CustomDialog extends AlertDialog {
 
 
     //not sure where these methods should live
-    public static void writeNewPeptalk(String title, String body, boolean isWidgetDefault) {
+
+    public static void writeNewChecklist(String text, boolean isChecked){
+        final ChecklistItemObject item = new ChecklistItemObject(text);
+        dbRef.child("Checklist").child(text).setValue(item, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                Log.i(TAG, "writeNewChecklist onComplete: "+ item.getText());
+            }
+        });
+    }
+
+
+    public static void writeNewPeptalk(String title, String body){//, boolean isWidgetDefault) {
         //
-        final PepTalkObject peptalk = new PepTalkObject(title, body, isWidgetDefault);
+        final PepTalkObject peptalk = new PepTalkObject(title, body);
         dbRef.child("PepTalks").child(title).setValue(peptalk, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -152,4 +169,6 @@ public class CustomDialog extends AlertDialog {
         });
 
     }
+
+
 }

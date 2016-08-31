@@ -24,11 +24,11 @@ public class ChecklistActivity extends AppCompatActivity {
 
         //dummy data
         ArrayList<ChecklistItemObject> checklistList = new ArrayList<>();
-        checklistList.add(new ChecklistItemObject("Drink some water", false));
-        checklistList.add(new ChecklistItemObject("Eat some food", false));
-        checklistList.add(new ChecklistItemObject("Give yourself a hug", false));
-        checklistList.add(new ChecklistItemObject("Take a nap", false));
-        checklistList.add(new ChecklistItemObject("Take a moment, deep breath", false));
+//        checklistList.add(new ChecklistItemObject("Drink some water", false));
+//        checklistList.add(new ChecklistItemObject("Eat some food", false));
+//        checklistList.add(new ChecklistItemObject("Give yourself a hug", false));
+        checklistList.add(new ChecklistItemObject("Take a nap"));
+//        checklistList.add(new ChecklistItemObject("Take a moment, deep breath", false));
 
 
 

@@ -4,27 +4,30 @@ package owlslubic.peptalkapp.models;
  * Created by owlslubic on 8/30/16.
  */
 public class ChecklistItemObject {
-    String mText;
-    boolean mChecked;
+    String text;
+//    boolean isChecked;
 
-    public ChecklistItemObject(String mText, boolean mIsChecked) {
-        this.mText = mText;
-        this. mChecked = mIsChecked;
+    public ChecklistItemObject() {}
+
+    public ChecklistItemObject(String text){//}, boolean isChecked) {
+        this.text = text;
+//        this.isChecked = isChecked;
     }
 
-    public String getmText() {
-        return mText;
+    public String getText() {
+        return text;
     }
 
-    public void setmText(String mText) {
-        this.mText = mText;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public boolean ismChecked() {
-        return  mChecked;
-    }
-
-    public void setmChecked(boolean mIsChecked) {
-        this. mChecked = mIsChecked;
-    }
+//    public boolean isChecked() {
+//        return isChecked;
+//    }
+//
+//    public void setIsChecked(boolean isChecked) {
+//        this.isChecked = isChecked;
+//    }
 }
+

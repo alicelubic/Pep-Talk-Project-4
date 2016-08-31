@@ -38,7 +38,7 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
     @Override
     public void onBindViewHolder(final ChecklistViewHolder holder, final int position) {
         //so i'll tell it to bind the checklist item to the cardview,
-        holder.mItem.setText(mChecklistItems.get(position).getmText());
+        holder.mItem.setText(mChecklistItems.get(position).getText());
         //and set the onclick listener for the checkbox
         holder.mCheckBox.setChecked(false);
         holder.mCheckBox.setOnClickListener(new View.OnClickListener() {
@@ -46,9 +46,10 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
             public void onClick(View view) {
                 Toast.makeText(view.getContext(), "click!", Toast.LENGTH_SHORT).show();
                 //not sure if this works lol
-                if (mChecklistItems.get(position).ismChecked() == true) {
-                    holder.mCheckBox.setChecked(true);
-                }
+//                if (mChecklistItems.get(position).isChecked() == true) {
+//                    holder.mCheckBox.setChecked(true);
+//                    holder.mCheckBox.check
+//                }
             }
 
         });

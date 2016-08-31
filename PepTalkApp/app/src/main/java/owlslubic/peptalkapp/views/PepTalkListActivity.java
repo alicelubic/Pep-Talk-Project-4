@@ -40,10 +40,10 @@ public class PepTalkListActivity extends AppCompatActivity {
 
         //dummy data - when using recyclerview from firebase i won't need a list, ha!
         ArrayList<PepTalkObject> peptalks = new ArrayList<>();
-        peptalks.add(new PepTalkObject("For when you're feelin' like a failure","You're not!",false));
-        peptalks.add(new PepTalkObject("Go have a quick cry in the bathroom","You're not!",false));
-        peptalks.add(new PepTalkObject("It's not the end of the world!","You're not!",false));
-        peptalks.add(new PepTalkObject("you're okAY!","You're not!",false));
+//        peptalks.add(new PepTalkObject("For when you're feelin' like a failure","You're not!",false));
+//        peptalks.add(new PepTalkObject("Go have a quick cry in the bathroom","You're not!",false));
+//        peptalks.add(new PepTalkObject("It's not the end of the world!","You're not!",false));
+        peptalks.add(new PepTalkObject("you're okAY!","You're not!"));
 
 
 

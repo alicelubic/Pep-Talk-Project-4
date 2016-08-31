@@ -7,15 +7,15 @@ public class PepTalkObject {
 //    String id;
     String title;
     String body;
-    boolean isWidgetDefault;
+//    boolean isWidgetDefault;
 
     public PepTalkObject() {}
 
-    public PepTalkObject(String title, String body, boolean isWidgetDefault) {
+    public PepTalkObject(String title, String body){//, boolean isWidgetDefault) {
 //        mId = id;
         this.title = title;
         this.body = body;
-        this.isWidgetDefault = isWidgetDefault;
+//        this.isWidgetDefault = isWidgetDefault;
     }
 
     public String getTitle() {
@@ -34,13 +34,13 @@ public class PepTalkObject {
         this.body = body;
     }
 
-    public boolean isWidgetDefault() {
-        return this.isWidgetDefault;
-    }
+//    public boolean isWidgetDefault() {
+//        return this.isWidgetDefault;
+//    }
 
-    public void setIsWidgetDefault(boolean isWidgetDefault) {
-        this.isWidgetDefault = isWidgetDefault;
-    }
+//    public void setIsWidgetDefault(boolean isWidgetDefault) {
+//        this.isWidgetDefault = isWidgetDefault;
+//    }
 //
 //    public String getId() {
 //        return id;
