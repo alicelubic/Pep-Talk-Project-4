@@ -27,12 +27,25 @@ public class PepTalkListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pep_talk_list);
 
+        //fab launches dialog
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_peptalk_list);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomDialog.launchNewPeptalkDialog(PepTalkListActivity.this);
+                Toast.makeText(PepTalkListActivity.this, "new pep talk comin' your way!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         //dummy data - when using recyclerview from firebase i won't need a list, ha!
         ArrayList<PepTalkObject> peptalks = new ArrayList<>();
         peptalks.add(new PepTalkObject("For when you're feelin' like a failure","You're not!",false));
         peptalks.add(new PepTalkObject("Go have a quick cry in the bathroom","You're not!",false));
         peptalks.add(new PepTalkObject("It's not the end of the world!","You're not!",false));
         peptalks.add(new PepTalkObject("you're okAY!","You're not!",false));
+
+
 
         //recyclerview for the cardviews that each display a pep talk title
         //if there is no title, then it should display the first x characters of the body + "..."
@@ -42,19 +55,11 @@ public class PepTalkListActivity extends AppCompatActivity {
         PepTalkAdapter adapter = new PepTalkAdapter(this, peptalks);
         recyclerView.setAdapter(adapter);
 
-        //fab launches dialog
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_checklist);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CustomDialog.launchNewPeptalkDialog(PepTalkListActivity.this);
-                Toast.makeText(PepTalkListActivity.this, "new pep talk comin' your way!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        //inflate menu that has back home button, and maybe some sort of info overflow menu.. do i need it?
 
 
+        //TODO inflate menu that has back home button, and maybe some sort of info overflow menu.. do i need it?
+
+/*
         //firebase setup - where will this live? here? dialog? its own data model class?
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         //object reference
@@ -75,12 +80,11 @@ public class PepTalkListActivity extends AppCompatActivity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 //dont have to specify child, it listens for every child of the object
-                /*set data to cardview:
-                String pepTitle = dataSnapshot.getValue(String.class)
-                //or should I be getting whole PepTalkObject and .getTitle from that?
-                cardview.setText(pepTitle)
-
-                */
+//                set data to cardview:
+//                String pepTitle = dataSnapshot.getValue(String.class)//not string, do the PepTalkObject itself
+//                //or should I be getting whole PepTalkObject and .getTitle from that?
+//                cardview.setText(pepTitle)
+//
             }
 
             @Override
@@ -98,5 +102,6 @@ public class PepTalkListActivity extends AppCompatActivity {
 
             }
         });
+        */
     }
 }

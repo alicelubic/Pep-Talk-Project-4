@@ -37,7 +37,7 @@ public class PepTalkAdapter extends RecyclerView.Adapter<PepTalkViewHolder> {
     public void onBindViewHolder(PepTalkViewHolder holder, int position) {
         //here you'll set an onLONGclicklistener for the cardview that will launch the edit dialog for it
         //onclick should let you view the pep talk, so if my fragment business is bad news, just make a lil alert dialog that'll display it...... that's fine
-        holder.mTitle.setText(mPepTalkTitles.get(position).getmTitle());
+        holder.mTitle.setText(mPepTalkTitles.get(position).getTitle());
         holder.mCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

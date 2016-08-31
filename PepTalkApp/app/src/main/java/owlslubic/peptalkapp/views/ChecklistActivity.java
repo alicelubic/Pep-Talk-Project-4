@@ -46,10 +46,12 @@ public class ChecklistActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //launch new checklist item dialog
+                CustomDialog.launchNewChecklistDialog(ChecklistActivity.this);
                 Toast.makeText(ChecklistActivity.this, "get ready to check another one off the list!", Toast.LENGTH_SHORT).show();
             }
         });
+
+
 
 
 

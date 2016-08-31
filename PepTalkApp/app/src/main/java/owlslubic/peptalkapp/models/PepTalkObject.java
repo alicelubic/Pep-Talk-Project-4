@@ -4,37 +4,49 @@ package owlslubic.peptalkapp.models;
  * Created by owlslubic on 8/30/16.
  */
 public class PepTalkObject {
-    String mTitle;
-    String mBody;
-    boolean mIsWidgetDefault;
+//    String id;
+    String title;
+    String body;
+    boolean isWidgetDefault;
 
-    public PepTalkObject(String mTitle, String mBody, boolean mIsWidgetDefault) {
-        this.mTitle = mTitle;
-        this.mBody = mBody;
-        this.mIsWidgetDefault = mIsWidgetDefault;
+    public PepTalkObject() {}
+
+    public PepTalkObject(String title, String body, boolean isWidgetDefault) {
+//        mId = id;
+        this.title = title;
+        this.body = body;
+        this.isWidgetDefault = isWidgetDefault;
     }
 
-    public String getmTitle() {
-        return mTitle;
+    public String getTitle() {
+        return this.title;
     }
 
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getmBody() {
-        return mBody;
+    public String getBody() {
+        return this.body;
     }
 
-    public void setmBody(String mBody) {
-        this.mBody = mBody;
+    public void setBody(String body) {
+        this.body = body;
     }
 
-    public boolean ismIsWidgetDefault() {
-        return mIsWidgetDefault;
+    public boolean isWidgetDefault() {
+        return this.isWidgetDefault;
     }
 
-    public void setmIsWidgetDefault(boolean mIsWidgetDefault) {
-        this.mIsWidgetDefault = mIsWidgetDefault;
+    public void setIsWidgetDefault(boolean isWidgetDefault) {
+        this.isWidgetDefault = isWidgetDefault;
     }
+//
+//    public String getId() {
+//        return id;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
 }
