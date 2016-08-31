@@ -18,5 +18,5 @@ public class ChecklistViewHolder extends RecyclerView.ViewHolder{
         mCheckBox = (CheckBox) itemView.findViewById(R.id.checkbox_checklist);
 
     }
-    
+
 }
