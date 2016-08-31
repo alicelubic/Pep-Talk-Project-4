@@ -5,38 +5,49 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
+import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.ChecklistAdapter;
+import owlslubic.peptalkapp.presenters.ChecklistViewHolder;
+import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 
 public class ChecklistActivity extends AppCompatActivity {
+
+    private static final String TAG = "ChecklistActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checklist);
 
-        //dummy data
-        ArrayList<ChecklistItemObject> checklistList = new ArrayList<>();
-//        checklistList.add(new ChecklistItemObject("Drink some water", false));
-//        checklistList.add(new ChecklistItemObject("Eat some food", false));
-//        checklistList.add(new ChecklistItemObject("Give yourself a hug", false));
-        checklistList.add(new ChecklistItemObject("Take a nap"));
-//        checklistList.add(new ChecklistItemObject("Take a moment, deep breath", false));
 
-
-
-        //recyclerview for cardviews with checkboxes
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_checklist);
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(manager);
-        ChecklistAdapter adapter = new ChecklistAdapter(this, checklistList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        FirebaseRecyclerAdapter<ChecklistItemObject, ChecklistViewHolder> adapter =
+                new FirebaseRecyclerAdapter<ChecklistItemObject, ChecklistViewHolder>
+                        (ChecklistItemObject.class, R.layout.card_checklist, ChecklistViewHolder.class, dbRef.child("Checklist")) {
+                    @Override
+                    protected void populateViewHolder(ChecklistViewHolder holder, ChecklistItemObject model, int position) {
+                        Log.i(TAG, "populateViewHolder: "+ model.getText());
+                        holder.mItem.setText(model.getText());
+                    }
+                };
+
         recyclerView.setAdapter(adapter);
 
 

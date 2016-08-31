@@ -9,7 +9,7 @@ import owlslubic.peptalkapp.R;
 
 public class ChecklistViewHolder extends RecyclerView.ViewHolder{
     CheckBox mCheckBox;
-    TextView mItem;
+    public TextView mItem;
 
     public ChecklistViewHolder(View itemView) {
         super(itemView);
