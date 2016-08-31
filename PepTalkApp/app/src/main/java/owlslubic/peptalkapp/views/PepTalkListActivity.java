@@ -27,7 +27,7 @@ public class PepTalkListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pep_talk_list);
 
-        //dummy data
+        //dummy data - when using recyclerview from firebase i won't need a list, ha!
         ArrayList<PepTalkObject> peptalks = new ArrayList<>();
         peptalks.add(new PepTalkObject("For when you're feelin' like a failure","You're not!",false));
         peptalks.add(new PepTalkObject("Go have a quick cry in the bathroom","You're not!",false));
@@ -35,21 +35,22 @@ public class PepTalkListActivity extends AppCompatActivity {
         peptalks.add(new PepTalkObject("you're okAY!","You're not!",false));
 
         //recyclerview for the cardviews that each display a pep talk title
+        //if there is no title, then it should display the first x characters of the body + "..."
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         PepTalkAdapter adapter = new PepTalkAdapter(this, peptalks);
         recyclerView.setAdapter(adapter);
 
-        //fab, onClick launches dialog
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_checklist);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //launch new pep talk dialog
-//                Toast.makeText(PepTalkListActivity.this, "new pep talk comin' your way!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        //fab launches dialog
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_checklist);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomDialog.launchNewPeptalkDialog(PepTalkListActivity.this);
+                Toast.makeText(PepTalkListActivity.this, "new pep talk comin' your way!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //inflate menu that has back home button, and maybe some sort of info overflow menu.. do i need it?
 
