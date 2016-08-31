@@ -36,7 +36,6 @@ public class CustomDialog extends AlertDialog {
 
     //will static launch methods cause a problem?
 
-
     public static void launchNewPeptalkDialog(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -98,7 +97,7 @@ public class CustomDialog extends AlertDialog {
                 dialog.dismiss();
             }
         });
-        
+
 
     }
 
