@@ -23,4 +23,13 @@ public class CustomDialog extends AlertDialog {
     protected CustomDialog(Context context, int themeResId) {
         super(context, themeResId);
     }
+
+
+
+    //not sure WHERE this will need to be, whether dialog or activity
+    //to write to firebase:
+
+
+
+
 }

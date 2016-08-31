@@ -8,6 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 import owlslubic.peptalkapp.R;
@@ -48,5 +54,48 @@ public class PepTalkListActivity extends AppCompatActivity {
         //inflate menu that has back home button, and maybe some sort of info overflow menu.. do i need it?
 
 
+        //firebase setup - where will this live? here? dialog? its own data model class?
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        //object reference
+        DatabaseReference pepParentObjRef = dbRef.child("peptalks");//the children of this object are the individual peptalks
+        DatabaseReference pepChild1 = pepParentObjRef.child("peptalk1");
+
+        //write to da db
+        //push puts values inside an object
+        //pepChild1.push().setValue(editText.getText().toString())
+
+
+        pepParentObjRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //dont have to specify child, it listens for every child of the object
+                /*set data to cardview:
+                String pepTitle = dataSnapshot.getValue(String.class)
+                //or should I be getting whole PepTalkObject and .getTitle from that?
+                cardview.setText(pepTitle)
+
+                */
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
