@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
-import owlslubic.peptalkapp.presenters.ChecklistAdapter;
 import owlslubic.peptalkapp.presenters.ChecklistViewHolder;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 
@@ -43,13 +42,12 @@ public class ChecklistActivity extends AppCompatActivity {
                         (ChecklistItemObject.class, R.layout.card_checklist, ChecklistViewHolder.class, dbRef.child("Checklist")) {
                     @Override
                     protected void populateViewHolder(ChecklistViewHolder holder, ChecklistItemObject model, int position) {
-                        Log.i(TAG, "populateViewHolder: "+ model.getText());
+                        Log.i(TAG, "populateViewHolder: " + model.getText());
                         holder.mItem.setText(model.getText());
                     }
                 };
 
         recyclerView.setAdapter(adapter);
-
 
 
         //fab for add new checklist item
@@ -61,10 +59,6 @@ public class ChecklistActivity extends AppCompatActivity {
                 Toast.makeText(ChecklistActivity.this, "get ready to check another one off the list!", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-
 
 
     }

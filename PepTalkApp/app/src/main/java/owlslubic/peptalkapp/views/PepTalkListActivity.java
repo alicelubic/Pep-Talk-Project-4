@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
-import owlslubic.peptalkapp.presenters.PepTalkAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 
 public class PepTalkListActivity extends AppCompatActivity {
@@ -52,32 +51,29 @@ public class PepTalkListActivity extends AppCompatActivity {
                 new FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder>
                         (PepTalkObject.class, R.layout.card_peptalk, PepTalkViewHolder.class, dbRef.child("PepTalks")) {
                     @Override
-                    protected void populateViewHolder(PepTalkViewHolder holder, PepTalkObject model, int position) {
+                    protected void populateViewHolder(PepTalkViewHolder holder, final PepTalkObject model, int position) {
                         Log.i(TAG, "populateViewHolder: "+ model.getTitle());
                         holder.mTitle.setText(model.getTitle());
+                        holder.mCard.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //launches a display of the peptalk body, dialog or otherwise
+                            }
+                        });
+                        holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View view) {
+                                //launches edit pep talk dialog
+                                CustomDialog.launchEditPeptalkDialog(PepTalkListActivity.this, model);
+                                return true;
+                            }
+                        });
                     }
                 };
 
         recyclerView.setAdapter(adapter);
 
 
-
-        //dummy data - when using recyclerview from firebase i won't need a list, ha!
-//        ArrayList<PepTalkObject> peptalks = new ArrayList<>();
-//        peptalks.add(new PepTalkObject("For when you're feelin' like a failure","You're not!",false));
-//        peptalks.add(new PepTalkObject("Go have a quick cry in the bathroom","You're not!",false));
-//        peptalks.add(new PepTalkObject("It's not the end of the world!","You're not!",false));
-//        peptalks.add(new PepTalkObject("you're okAY!","You're not!"));
-
-
-
-        //recyclerview for the cardviews that each display a pep talk title
-        //if there is no title, then it should display the first x characters of the body + "..."
-//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
-//        LinearLayoutManager manager = new LinearLayoutManager(this);
-//        recyclerView.setLayoutManager(manager);
-//        PepTalkAdapter adapter = new PepTalkAdapter(this, peptalks);
-//        recyclerView.setAdapter(adapter);
 
 
 

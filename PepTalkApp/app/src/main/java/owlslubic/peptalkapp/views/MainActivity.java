@@ -1,36 +1,109 @@
-package owlslubic.peptalkapp;
+package owlslubic.peptalkapp.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import owlslubic.peptalkapp.views.ChecklistActivity;
-import owlslubic.peptalkapp.views.DialogFragNewPepTalk;
-import owlslubic.peptalkapp.views.PepTalkListActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity{//}
-       // implements NavigationView.OnNavigationItemSelectedListener {
+import owlslubic.peptalkapp.R;
+
+public class MainActivity extends AppCompatActivity {
+    //}
+    // implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "MainActivity";
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //TODO fuck with the toolbar here
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+
+        //firebase auth setup - may this go in the nav drawer? should i do a different activity
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    //user is signed in
+                    Log.d(TAG, "onAuthStateChanged: signed_in: " + user.getUid());
+                } else {
+                    //user is signed out
+                    Log.d(TAG, "onAuthStateChanged: signed_out");
+                }
+            }
+        };
+
+
+/*
+        //CREATE NEW ACCOUNT by passing the new user's email and pass:
+        //TODO get together some edittexts or whatever to do the actual sign in.... in whichever activity this ends up livin in
+        //TODO maybe have it so the sign in views then become invisible and the LAUNCH PEPTALKS button becomes visible? maybe some animation transition....?
+        String email = "";
+        String password = "";//aka edittext.getText().toString().trim();
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        //"if sign in succeeds, the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener."
+
+                        //^not sure what logic they talkin bout but we'll see
+
+                        //if sign in fails:
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+        //SIGN IN TO EXISTING ACCOUNT:
+        //When a user signs in, pass in the user's email address and password:
+        mAuth.signInWithEmailAndPassword(email,password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        //If sign-in succeeded, the AuthStateListener runs the onAuthStateChanged callback.
+                        // In the callback, you can use the getCurrentUser method to get the user's account data.
+
+
+                        Log.d(TAG, "signInWithEmail:onComplete: "+task.isSuccessful());
+
+                        //if sign in fails:
+                        Log.d(TAG, "signInWithEmail: failed "+task.getException());
+                        Toast.makeText(MainActivity.this, "Sign in failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        //SIGN OUT: TODO associate this with a button.... obviously
+        FirebaseAuth.getInstance().signOut();
+
+
+*/
+
 
         Button button = (Button) findViewById(R.id.button_temp1);
         Button button2 = (Button) findViewById(R.id.button_temp2);
@@ -60,6 +133,10 @@ public class MainActivity extends AppCompatActivity{//}
 
             }
         });
+
+
+
+
 
 /*
 
@@ -151,5 +228,20 @@ public class MainActivity extends AppCompatActivity{//}
 
 
 */
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 }
