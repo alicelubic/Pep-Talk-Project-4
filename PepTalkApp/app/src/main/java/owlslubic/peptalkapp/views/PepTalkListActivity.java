@@ -10,13 +10,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
@@ -37,10 +32,8 @@ public class PepTalkListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 CustomDialog.launchNewPeptalkDialog(PepTalkListActivity.this);
-                Toast.makeText(PepTalkListActivity.this, "new pep talk comin' your way!", Toast.LENGTH_SHORT).show();
             }
         });
-
 
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
@@ -57,14 +50,15 @@ public class PepTalkListActivity extends AppCompatActivity {
                         holder.mCard.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                //launches a display of the peptalk body, dialog or otherwise
+                                //launches edit pep talk dialog
+                                CustomDialog.launchEditPeptalkDialog(PepTalkListActivity.this, model);
                             }
                         });
                         holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View view) {
-                                //launches edit pep talk dialog
-                                CustomDialog.launchEditPeptalkDialog(PepTalkListActivity.this, model);
+                                //launches delete peptalk with are you sure? dialog
+                                CustomDialog.launchDeletePepTalkDialog(model, PepTalkListActivity.this);
                                 return true;
                             }
                         });
@@ -72,8 +66,6 @@ public class PepTalkListActivity extends AppCompatActivity {
                 };
 
         recyclerView.setAdapter(adapter);
-
-
 
 
 

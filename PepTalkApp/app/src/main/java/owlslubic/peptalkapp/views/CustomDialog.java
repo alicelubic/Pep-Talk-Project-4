@@ -126,7 +126,6 @@ public class CustomDialog extends AlertDialog {
             }
         });
 
-
     }
 
     public static void launchEditChecklistDialog(Context context, final ChecklistItemObject check) {
@@ -158,16 +157,84 @@ public class CustomDialog extends AlertDialog {
     }
 
 
-    //this will be what is launched if all the checklist items are checked
-    public void launchChecklistCompleteDialog() {
+
+    public static void launchDeletePepTalkDialog(final PepTalkObject peptalk, Context context) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setNegativeButton("nevermind", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //dismiss
+            }
+        });
+        builder.setPositiveButton("yurp", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dbRef.child("PepTalks").child(peptalk.getId()).setValue(null, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        Log.i(TAG, "DELETE CHECKLIST error: "+ databaseError.toString() );
+                    }
+                });
+
+            }
+        });
+        builder.setTitle("Are you sure you want to delete?");
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.setButton(BUTTON_POSITIVE, "yurp", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dbRef.child("PepTalks").child(peptalk.getId()).setValue(null, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
+
+
+
+
     }
+    public static void launchDeleteChecklistDialog(final ChecklistItemObject check, Context context){
 
-    //in case i cant get the fragment display to work, or if I need to launch it from the peptalk list activity i just want a backup
-    public void launchPeptalkDisplayDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setNegativeButton("nevermind", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //dismiss
+            }
+        });
+        builder.setPositiveButton("yurp", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dbRef.child("Checklist").child(check.getId()).setValue(null, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        Log.i(TAG, "DELETE CHECKLIST error: "+ databaseError.toString() );
+                    }
+                });
+
+            }
+        });
+        builder.setTitle("Are you sure you want to delete?");
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.setButton(BUTTON_POSITIVE, "yurp", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dbRef.child("Checklist").child(check.getId()).setValue(null, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
+
     }
-
-
-    //not sure where these methods should live
 
     public static void writeNewChecklist(String text) {
         Random random = new Random();
@@ -207,15 +274,16 @@ public class CustomDialog extends AlertDialog {
         dbRef.child("Checklist").child(check.getId()).child("text").setValue(text);
     }
 
-    public static void deletePepTalk(PepTalkObject peptalk) {
-        dbRef.child("PepTalks").child(peptalk.getTitle()).setValue(null, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                Log.i(TAG, "deletePepTalk onComplete: " + "success");
-                Log.i(TAG, "deletePepTalk onComplete error: " + databaseError.toString());
-            }
-        });
 
+
+
+
+    //this will be what is launched if all the checklist items are checked
+    public void launchChecklistCompleteDialog() {
+    }
+
+    //in case i cant get the fragment display to work, or if I need to launch it from the peptalk list activity i just want a backup
+    public void launchPeptalkDisplayDialog() {
     }
 
 

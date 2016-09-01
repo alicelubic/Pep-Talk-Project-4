@@ -7,20 +7,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
-
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
-import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.ChecklistViewHolder;
-import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 
 public class ChecklistActivity extends AppCompatActivity {
 
@@ -44,10 +39,18 @@ public class ChecklistActivity extends AppCompatActivity {
                     protected void populateViewHolder(ChecklistViewHolder holder, final ChecklistItemObject model, int position) {
                         Log.i(TAG, "populateViewHolder: " + model.getText());
                         holder.mItem.setText(model.getText());
+
+                        holder.mCard.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                CustomDialog.launchEditChecklistDialog(ChecklistActivity.this, model);
+                            }
+                        });
+
                         holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View view) {
-                                CustomDialog.launchEditChecklistDialog(ChecklistActivity.this, model);
+                               CustomDialog.launchDeleteChecklistDialog(model,ChecklistActivity.this);
                                 return true;
                             }
                         });
