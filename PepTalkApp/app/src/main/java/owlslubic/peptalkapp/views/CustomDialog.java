@@ -39,7 +39,6 @@ public class CustomDialog extends AlertDialog {
 
 
     //will static launch methods cause a problem?
-
     public static void launchNewPeptalkDialog(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -130,13 +129,30 @@ public class CustomDialog extends AlertDialog {
 
     }
 
-    public static void launchEditChecklistDialog(Context context, int position) {
+    public static void launchEditChecklistDialog(Context context, final ChecklistItemObject check) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.dialog_edit_checklist, null);
         builder.setView(layout);
-        AlertDialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();
         dialog.show();
+
+        final EditText editText = (EditText) dialog.findViewById(R.id.edittext_edit_checklist);
+        editText.setText(check.getText());
+        editText.setCursorVisible(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+
+        Button submit = (Button) dialog.findViewById(R.id.button_edit_checklist);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String update = editText.getText().toString().trim();
+                updateChecklist(check,update);
+                dialog.dismiss();
+            }
+        });
+
 
 
     }
@@ -154,16 +170,18 @@ public class CustomDialog extends AlertDialog {
     //not sure where these methods should live
 
     public static void writeNewChecklist(String text) {
+        Random random = new Random();
+        int randomId = random.nextInt(5000)+1;//this only works if they dont ave a tonnnn of posts, but we'll burn that bridge LATER
+        String id = String.valueOf(randomId);
 
-        final ChecklistItemObject item = new ChecklistItemObject(text);
-        dbRef.child("Checklist").child(text).setValue(item, new DatabaseReference.CompletionListener() {
+        final ChecklistItemObject item = new ChecklistItemObject(id, text);
+        dbRef.child("Checklist").child(id).setValue(item, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 Log.i(TAG, "writeNewChecklist onComplete: " + item.getText());
             }
         });
     }
-
 
     public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {
         Random random = new Random();
@@ -183,6 +201,10 @@ public class CustomDialog extends AlertDialog {
     public static void updatePepTalk(PepTalkObject peptalk, String title, String body) {
         dbRef.child("PepTalks").child(peptalk.getId()).child("title").setValue(title);
         dbRef.child("PepTalks").child(peptalk.getId()).child("body").setValue(body);
+    }
+
+    public static void updateChecklist(ChecklistItemObject check, String text){
+        dbRef.child("Checklist").child(check.getId()).child("text").setValue(text);
     }
 
     public static void deletePepTalk(PepTalkObject peptalk) {

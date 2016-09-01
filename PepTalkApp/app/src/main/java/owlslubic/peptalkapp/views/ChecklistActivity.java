@@ -41,9 +41,16 @@ public class ChecklistActivity extends AppCompatActivity {
                 new FirebaseRecyclerAdapter<ChecklistItemObject, ChecklistViewHolder>
                         (ChecklistItemObject.class, R.layout.card_checklist, ChecklistViewHolder.class, dbRef.child("Checklist")) {
                     @Override
-                    protected void populateViewHolder(ChecklistViewHolder holder, ChecklistItemObject model, int position) {
+                    protected void populateViewHolder(ChecklistViewHolder holder, final ChecklistItemObject model, int position) {
                         Log.i(TAG, "populateViewHolder: " + model.getText());
                         holder.mItem.setText(model.getText());
+                        holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View view) {
+                                CustomDialog.launchEditChecklistDialog(ChecklistActivity.this, model);
+                                return true;
+                            }
+                        });
                     }
                 };
 

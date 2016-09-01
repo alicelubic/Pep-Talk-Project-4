@@ -3,4 +3,16 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <EditText
+        android:id="@+id/edittext_edit_checklist"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:inputType="textMultiLine"/>
+
+    <Button
+        android:id="@+id/button_edit_checklist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="update"/>
+
 </LinearLayout>
