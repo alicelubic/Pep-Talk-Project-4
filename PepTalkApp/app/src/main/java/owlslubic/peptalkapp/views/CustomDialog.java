@@ -14,6 +14,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Random;
+
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
@@ -164,28 +166,23 @@ public class CustomDialog extends AlertDialog {
 
 
     public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {
-        //TODO current issue is that using title as key creates new object with new title upon edit, so...
-        final PepTalkObject peptalk = new PepTalkObject(title, body);
-        dbRef.child("PepTalks").child(title).setValue(peptalk, new DatabaseReference.CompletionListener() {
+        Random random = new Random();
+        int randomId = random.nextInt(5000)+1;//this only works if they dont ave a tonnnn of posts, but we'll burn that bridge LATER
+        String id = String.valueOf(randomId);
+        Log.d(TAG, "writeNewPeptalk: RANDOM ID IS: "+ id);
+        final PepTalkObject peptalk = new PepTalkObject(id, title, body);
+        dbRef.child("PepTalks").child(id).setValue(peptalk, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 Log.i(TAG, "writeNewPeptalk onComplete: " + peptalk.getTitle() + " has been written to firebase");
             }
         });
-        //i'm hoping the above line will create a new object in peptalks with the title as its key, but anything could happen
-
 
     }
 
     public static void updatePepTalk(PepTalkObject peptalk, String title, String body) {
-        dbRef.child("PepTalks").child(peptalk.getTitle()).child("title").setValue(title);
-        dbRef.child("PepTalks").child(peptalk.getTitle()).child("body").setValue(body);
-
-        //note, there may be an issue with passing in the whole value, on the website
-        //they say to set the value as the string of what you're updating, but we'll see
-
-        //TODO this method will be called on the onLongClick for the cardview in the recyclerview,
-        // so address that once you've implemented firebase's recyclerview
+        dbRef.child("PepTalks").child(peptalk.getId()).child("title").setValue(title);
+        dbRef.child("PepTalks").child(peptalk.getId()).child("body").setValue(body);
     }
 
     public static void deletePepTalk(PepTalkObject peptalk) {

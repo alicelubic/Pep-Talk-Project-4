@@ -4,15 +4,15 @@ package owlslubic.peptalkapp.models;
  * Created by owlslubic on 8/30/16.
  */
 public class PepTalkObject {
-//    String id;
+    String id;
     String title;
     String body;
 //    boolean isWidgetDefault;
 
     public PepTalkObject() {}
 
-    public PepTalkObject(String title, String body){//, boolean isWidgetDefault) {
-//        mId = id;
+    public PepTalkObject(String id, String title, String body){//, boolean isWidgetDefault) {
+        this.id = id;
         this.title = title;
         this.body = body;
 //        this.isWidgetDefault = isWidgetDefault;
@@ -34,6 +34,15 @@ public class PepTalkObject {
         this.body = body;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
 //    public boolean isWidgetDefault() {
 //        return this.isWidgetDefault;
 //    }
@@ -49,4 +58,7 @@ public class PepTalkObject {
 //    public void setId(String id) {
 //        this.id = id;
 //    }
+
+
+
 }
