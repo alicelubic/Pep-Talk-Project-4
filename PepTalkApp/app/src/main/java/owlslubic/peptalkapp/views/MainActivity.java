@@ -9,6 +9,7 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,8 +39,21 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
+        //temp sign up stuff
+
+        EditText et_email = (EditText) findViewById(R.id.edittext_email);
+        EditText et_pass = (EditText) findViewById(R.id.edittext_passs);
+        Button b = (Button) findViewById(R.id.button_sign_in);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
 
         //firebase auth setup - may this go in the nav drawer? should i do a different activity
+
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
 
@@ -57,12 +71,12 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-/*
         //CREATE NEW ACCOUNT by passing the new user's email and pass:
         //TODO get together some edittexts or whatever to do the actual sign in.... in whichever activity this ends up livin in
         //TODO maybe have it so the sign in views then become invisible and the LAUNCH PEPTALKS button becomes visible? maybe some animation transition....?
-        String email = "";
-        String password = "";//aka edittext.getText().toString().trim();
+        String email = et_email.getText().toString().trim();
+        String password = et_pass.getText().toString().trim();//aka edittext.getText().toString().trim();
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -81,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         //SIGN IN TO EXISTING ACCOUNT:
         //When a user signs in, pass in the user's email address and password:
-        mAuth.signInWithEmailAndPassword(email,password)
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -90,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
                         // In the callback, you can use the getCurrentUser method to get the user's account data.
 
 
-                        Log.d(TAG, "signInWithEmail:onComplete: "+task.isSuccessful());
+                        Log.d(TAG, "signInWithEmail:onComplete: " + task.isSuccessful());
 
                         //if sign in fails:
-                        Log.d(TAG, "signInWithEmail: failed "+task.getException());
+                        Log.d(TAG, "signInWithEmail: failed " + task.getException());
                         Toast.makeText(MainActivity.this, "Sign in failed", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -102,8 +116,9 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
 
 
-*/
 
+
+        //temp stuff
 
         Button button = (Button) findViewById(R.id.button_temp1);
         Button button2 = (Button) findViewById(R.id.button_temp2);
@@ -231,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -243,5 +259,10 @@ public class MainActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+
+
+
+
     }
+
 }

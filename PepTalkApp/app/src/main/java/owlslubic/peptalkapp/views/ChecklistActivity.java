@@ -15,11 +15,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
+import owlslubic.peptalkapp.presenters.ChecklistFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.ChecklistViewHolder;
 
 public class ChecklistActivity extends AppCompatActivity {
 
     private static final String TAG = "ChecklistActivity";
+    ChecklistFirebaseAdapter mFirebaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,36 +30,39 @@ public class ChecklistActivity extends AppCompatActivity {
 
 
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_checklist);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        FirebaseRecyclerAdapter<ChecklistItemObject, ChecklistViewHolder> adapter =
-                new FirebaseRecyclerAdapter<ChecklistItemObject, ChecklistViewHolder>
-                        (ChecklistItemObject.class, R.layout.card_checklist, ChecklistViewHolder.class, dbRef.child("Checklist")) {
-                    @Override
-                    protected void populateViewHolder(ChecklistViewHolder holder, final ChecklistItemObject model, int position) {
-                        Log.i(TAG, "populateViewHolder: " + model.getText());
-                        holder.mItem.setText(model.getText());
+//
+//        FirebaseRecyclerAdapter<ChecklistItemObject, ChecklistViewHolder> adapter =
+//                new FirebaseRecyclerAdapter<ChecklistItemObject, ChecklistViewHolder>
+//                        (ChecklistItemObject.class, R.layout.card_checklist, ChecklistViewHolder.class, dbRef.child("Checklist")) {
+//                    @Override
+//                    protected void populateViewHolder(ChecklistViewHolder holder, final ChecklistItemObject model, int position) {
+//                        Log.i(TAG, "populateViewHolder: " + model.getText());
+//                        holder.mItem.setText(model.getText());
+//
+//                        holder.mCard.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                CustomDialog.launchEditChecklistDialog(ChecklistActivity.this, model);
+//                            }
+//                        });
+//
+//                        holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
+//                            @Override
+//                            public boolean onLongClick(View view) {
+//                               CustomDialog.launchDeleteChecklistDialog(model,ChecklistActivity.this);
+//                                return true;
+//                            }
+//                        });
+//                    }
+//                };
 
-                        holder.mCard.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                CustomDialog.launchEditChecklistDialog(ChecklistActivity.this, model);
-                            }
-                        });
-
-                        holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
-                            @Override
-                            public boolean onLongClick(View view) {
-                               CustomDialog.launchDeleteChecklistDialog(model,ChecklistActivity.this);
-                                return true;
-                            }
-                        });
-                    }
-                };
-
-        recyclerView.setAdapter(adapter);
+        mFirebaseAdapter = new ChecklistFirebaseAdapter(ChecklistItemObject.class, R.layout.card_checklist, ChecklistViewHolder.class, dbRef.child("Checklist"),this);
+        recyclerView.setAdapter(mFirebaseAdapter);
 
 
         //fab for add new checklist item

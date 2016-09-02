@@ -196,7 +196,6 @@ public class CustomDialog extends AlertDialog {
 
 
 
-
     }
     public static void launchDeleteChecklistDialog(final ChecklistItemObject check, Context context){
 
