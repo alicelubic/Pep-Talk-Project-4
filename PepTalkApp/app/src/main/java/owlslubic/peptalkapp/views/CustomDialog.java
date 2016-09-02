@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -46,8 +47,8 @@ public class CustomDialog extends AlertDialog {
         builder.setView(layout);
         final AlertDialog dialog = builder.create();
         dialog.show();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);//next try adjust pan
 
-        TextView header = (TextView) dialog.findViewById(R.id.textview_new_peptalk);
         final EditText title = (EditText) dialog.findViewById(R.id.edittext_new_peptalk_title);
         final EditText body = (EditText) dialog.findViewById(R.id.edittext_new_peptalk);
         Button submit = (Button) dialog.findViewById(R.id.button_new_peptalk);
@@ -179,7 +180,7 @@ public class CustomDialog extends AlertDialog {
 
             }
         });
-        builder.setTitle("Are you sure you want to delete?");
+        builder.setTitle("Are you sure you want to delete your " + peptalk.getTitle() + " peptalk?");
         final AlertDialog dialog = builder.create();
         dialog.show();
         dialog.setButton(BUTTON_POSITIVE, "yurp", new OnClickListener() {

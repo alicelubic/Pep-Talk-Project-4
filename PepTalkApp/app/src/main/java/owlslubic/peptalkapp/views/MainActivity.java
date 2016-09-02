@@ -4,7 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,9 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import owlslubic.peptalkapp.R;
 
-public class MainActivity extends AppCompatActivity {
-    //}
-    // implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -37,19 +41,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         //TODO fuck with the toolbar here
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-
-        //temp sign up stuff
-
-        EditText et_email = (EditText) findViewById(R.id.edittext_email);
-        EditText et_pass = (EditText) findViewById(R.id.edittext_passs);
-        Button b = (Button) findViewById(R.id.button_sign_in);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
 
 
         //firebase auth setup - may this go in the nav drawer? should i do a different activity
@@ -74,26 +65,25 @@ public class MainActivity extends AppCompatActivity {
         //CREATE NEW ACCOUNT by passing the new user's email and pass:
         //TODO get together some edittexts or whatever to do the actual sign in.... in whichever activity this ends up livin in
         //TODO maybe have it so the sign in views then become invisible and the LAUNCH PEPTALKS button becomes visible? maybe some animation transition....?
-        String email = et_email.getText().toString().trim();
-        String password = et_pass.getText().toString().trim();//aka edittext.getText().toString().trim();
+        //temp sign up stuff
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //"if sign in succeeds, the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener."
+        final EditText et_email = (EditText) findViewById(R.id.edittext_email);
+        final EditText et_pass = (EditText) findViewById(R.id.edittext_passs);
+        Button b = (Button) findViewById(R.id.button_sign_in);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-                        //^not sure what logic they talkin bout but we'll see
+                String email = et_email.getText().toString().trim();
+                String password = et_pass.getText().toString().trim();
+                createNewUser(email, password);
 
-                        //if sign in fails:
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(MainActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
-                        }
+            }
+        });
 
-                    }
-                });
-        //SIGN IN TO EXISTING ACCOUNT:
+
+
+  /*      //SIGN IN TO EXISTING ACCOUNT:
         //When a user signs in, pass in the user's email address and password:
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -116,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
 
 
-
+*/
 
         //temp stuff
 
@@ -125,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "check out da checklist!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "check out da checklist!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, ChecklistActivity.class);
                 startActivity(intent);
             }
@@ -133,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Pep Talks on the wAy!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Pep Talks on the wAy!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, PepTalkListActivity.class);
                 startActivity(intent);
             }
@@ -150,14 +140,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-
-/*
-
         //nav drawer setup
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -165,8 +151,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
 
 
     //nav drawer menu options
@@ -201,13 +185,13 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-*/
 
-//    @SuppressWarnings("StatementWithEmptyBody")
-//    @Override
-//    public boolean onNavigationItemSelected(MenuItem item) {
-//        /**these bad boys ain't workin**/
-/*
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        /**these bad boys ain't workin**/
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -242,10 +226,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-*/
-    }
 
 
+
+/*
 
     @Override
     protected void onStart() {
@@ -259,10 +243,55 @@ public class MainActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-
-
-
-
     }
+
+
+
+*/
+
+
+    public void createNewUser(String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        //"if sign in succeeds, the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener."
+
+                        //^not sure what logic they talkin bout but we'll see
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "onComplete: " + "CREATE USER WAS SUCCESSFUL");
+                        }
+
+
+                        //if sign in fails:
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+    }
+
+
+//
+//    mAuth.createUserWithEmailAndPassword(email, password)
+//            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//        @Override
+//        public void onComplete(@NonNull Task<AuthResult> task) {
+//            //"if sign in succeeds, the auth state listener will be notified and logic to handle the
+//            // signed in user can be handled in the listener."
+//
+//            //^not sure what logic they talkin bout but we'll see
+//            Log.d(TAG, "onComplete: " + "CREATE USER WAS SUCCESSFUL");
+//
+//
+//            //if sign in fails:
+//            if (!task.isSuccessful()) {
+//                Toast.makeText(MainActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }
+//    });
 
 }

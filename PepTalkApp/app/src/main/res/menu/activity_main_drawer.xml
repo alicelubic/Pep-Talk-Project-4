@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
+
         <item
             android:id="@+id/nav_peptalks"
             android:icon="@drawable/ic_menu_camera"
@@ -32,7 +33,7 @@
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="jkfsnbjfsngjsngjsfngjnsfgnsjglkmvjsnodsvnrjsfmogd0vujnisdogbihursndmfpv whvbrhsjofbinwensugmdov" />
+                android:title="jkfsnbjvuov" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"

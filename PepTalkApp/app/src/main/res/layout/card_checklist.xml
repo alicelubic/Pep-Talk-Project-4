@@ -14,20 +14,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         card_view:cardElevation="3dp"
-        card_view:cardUseCompatPadding="true">
+        card_view:cardUseCompatPadding="true"
+        card_view:cardCornerRadius="6dp"
+        card_view:cardBackgroundColor="@color/card_background_light">
 
         <TextView
             android:id="@+id/textview_checklist_item"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:gravity="center"
             android:textSize="20sp"
+            android:padding="6dp"
+            android:layout_margin="6dp"
+            android:textColor="@android:color/white"
             android:text="Checklist Item"/>
 
         <CheckBox
             android:id="@+id/checkbox_checklist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:layout_margin="6dp"
             android:layout_gravity="end|center_vertical"/>
 
     </android.support.v7.widget.CardView>

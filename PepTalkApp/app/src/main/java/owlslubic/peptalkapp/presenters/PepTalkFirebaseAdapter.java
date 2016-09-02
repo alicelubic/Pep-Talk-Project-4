@@ -48,16 +48,16 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             }
         });
 
-        holder.mCard.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(MotionEventCompat.getActionMasked(motionEvent)== MotionEvent.ACTION_DOWN){
-                    mOnStartDragListener.onStartDrag(holder);
-                }
-
-                return false;
-            }
-        });
+//        holder.mCard.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                if(MotionEventCompat.getActionMasked(motionEvent)== MotionEvent.ACTION_DOWN){
+//                    mOnStartDragListener.onStartDrag(holder);
+//                }
+//
+//                return false;
+//            }
+//        });
 
     }
 
