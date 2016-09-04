@@ -1,34 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="420dp"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/card_background_light"
     android:padding="16dp">
-
-    <TextView
-        android:id="@+id/textview_edit_peptalk"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
 
     <EditText
         android:id="@+id/edittext_edit_peptalk_title"
+        style="@style/CodeFont"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:inputType="textMultiLine"/>
+        android:layout_gravity="center"
+        android:layout_margin="6dp"
+        android:imeOptions="actionNext"
+        android:maxLength="140"/>
+
     <!--maybe eventually set the height of this to be fixed and then include a lil scrolly or something inside-->
 
     <EditText
         android:id="@+id/edittext_edit_peptalk_body"
+        style="@style/CodeFont"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:inputType="textMultiLine"/>
+        android:layout_below="@id/edittext_edit_peptalk_title"
+        android:imeOptions="actionDone"/>
+
+    <!--android:inputType="textMultiLine"-->
 
     <Button
-        android:layout_gravity="center"
-        android:id="@+id/button_submit_edit_peptalk"
+        android:id="@+id/button_nvm_edit_peptalk"
+        style="@style/CodeFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="good to go"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="6dp"
+        android:background="@color/card_background_dark"
+        android:requiresFadingEdge="horizontal"
+        android:text="cool"
+        android:paddingLeft="16dp"
+        />
+
+    <Button
+        android:id="@+id/button_submit_edit_peptalk"
+        style="@style/CodeFont"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="end"
+        android:background="@color/card_background_dark"
+        android:paddingRight="16dp"
+        android:requiresFadingEdge="horizontal"
+        android:text="good" />
 
 
-</LinearLayout>
+</RelativeLayout>

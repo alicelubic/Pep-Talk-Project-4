@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:ems="9"
         android:layout_marginBottom="16dp"
-        android:hint="Enter title for this pep talk.."/>
+        android:hint="Enter title for this pep talk.."
+        style="@style/CodeFont"/>
 
     <EditText
         android:id="@+id/edittext_new_peptalk"
@@ -21,14 +22,17 @@
         android:ems="16"
         android:inputType="textMultiLine"
         android:hint="Hey buddy, you're great because..."
+        style="@style/CodeFont"
         />
     <!--android:imeOptions="actionDone"-->
 
     <Button
+        android:layout_gravity="end"
         android:id="@+id/button_new_peptalk"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
+        style="@style/CodeFont"
         android:text="done"/>
 
 

@@ -1,9 +1,12 @@
 <resources>
-    <string name="app_name">PepTalkApp</string>
+    <string name="app_name">PepTalkNow!</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
     <string name="add_a_new_pep_talk">Add a New Pep Talk</string>
+    <string name="more_resources">More Resources</string>
+
+
 </resources>

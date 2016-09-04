@@ -46,8 +46,10 @@ public class CustomDialog extends AlertDialog {
         View layout = inflater.inflate(R.layout.dialog_new_peptalk, null);
         builder.setView(layout);
         final AlertDialog dialog = builder.create();
-        dialog.show();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);//next try adjust pan
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.show();
+
 
         final EditText title = (EditText) dialog.findViewById(R.id.edittext_new_peptalk_title);
         final EditText body = (EditText) dialog.findViewById(R.id.edittext_new_peptalk);
@@ -262,6 +264,9 @@ public class CustomDialog extends AlertDialog {
                 Log.i(TAG, "writeNewPeptalk onComplete: " + peptalk.getTitle() + " has been written to firebase");
             }
         });
+//        dbRef.child("PepTalks").push().setValue(peptalk, new DatabaseReference.CompletionListener() {
+//            @Override
+//            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
     }
 
