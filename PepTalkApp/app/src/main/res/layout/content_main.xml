@@ -13,25 +13,12 @@
     android:orientation="vertical"
     android:padding="26dp">
 
-    <Button
-        android:id="@+id/button_temp1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="checklist activity" />
-
-    <Button
-        android:id="@+id/button_temp2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="pep talk activity" />
-
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="user sign up"
-        android:textSize="50sp" />
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/edittext_email"

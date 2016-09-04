@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Button mShowBottomSheetButton;
     private FloatingActionButton mFab;
     private Toolbar mToolbar;
+    private ActionBarDrawerToggle mToggle;
+    private NavigationView mNavigationView;
     private DrawerLayout mDrawer;
 
 
@@ -45,10 +47,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         initViews();
 
+//        setUpFirebaseAuth();
 
+
+  /*
         //firebase auth setup - may this go in the nav drawer? should i do a different activity
 
         mAuth = FirebaseAuth.getInstance();
@@ -69,8 +73,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         //CREATE NEW ACCOUNT by passing the new user's email and pass:
-        //TODO get together some edittexts or whatever to do the actual sign in.... in whichever activity this ends up livin in
-        //TODO maybe have it so the sign in views then become invisible and the LAUNCH PEPTALKS button becomes visible? maybe some animation transition....?
+//        maybe have it so the sign in views then become invisible and the LAUNCH PEPTALKS button becomes visible? maybe some animation transition....?
+
         //temp sign up stuff
 
         final EditText et_email = (EditText) findViewById(R.id.edittext_email);
@@ -88,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
 
-  /*      //SIGN IN TO EXISTING ACCOUNT:
+     //SIGN IN TO EXISTING ACCOUNT:
         //When a user signs in, pass in the user's email address and password:
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -117,7 +121,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    //nav drawer menu options
+    //making a method to do this so the oncreate stays clean and pretty aww
+    private void initViews() {
+
+
+        //TODO fuck with the toolbar here
+        //toolbar
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
+        //nav drawer setup
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mToggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(mToggle);
+        mToggle.syncState();
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
+
+
+        //bottom sheet
+        mBottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottomSheetLayout));
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        mBottomSheetHeading = (TextView) findViewById(R.id.textview_bottomSheetHeading);
+        mBottomSheetBottomText = (TextView) findViewById(R.id.textview_bottomsheet_bottom);
+        mBottomSheetTopText = (TextView) findViewById(R.id.textview_bottomsheet_top);
+        mShowBottomSheetButton = (Button) findViewById(R.id.button_temp_bottom_sheet);
+        mShowBottomSheetButton.setOnClickListener(this);
+
+
+        //fab
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(this);//is this ok to put in here?
+    }
+
+
+
+    //NAV DRAWER MENU options
     @Override
     public void onBackPressed() {
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
@@ -142,7 +184,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings) {//this is in the overflow menu
+
             return true;
         }
 
@@ -153,20 +196,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        /**these bad boys ain't workin**/
-
-        //if it's the About/Intstruct/Resources button clicked, it should set the textviews
-        // in it to whichever text is necessary
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_peptalks) {
-            Toast.makeText(MainActivity.this, "Pep Talks on the wAy!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, PepTalkListActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_checklist) {
-            Toast.makeText(MainActivity.this, "check out da checklist!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, ChecklistActivity.class);
             startActivity(intent);
 
@@ -206,30 +243,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
-
-
-/*
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
-
-
-*/
 
 
     public void createNewUser(String email, String password) {
@@ -277,59 +290,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //    });
 
 
-    //making a method to do this so the oncreate stays clean and pretty aww
-    private void initViews() {
-        //temp activity buttons stuff
-        Button button = (Button) findViewById(R.id.button_temp1);
-        Button button2 = (Button) findViewById(R.id.button_temp2);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Toast.makeText(MainActivity.this, "check out da checklist!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, ChecklistActivity.class);
-                startActivity(intent);
-            }
-        });
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Toast.makeText(MainActivity.this, "Pep Talks on the wAy!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, PepTalkListActivity.class);
-                startActivity(intent);
-            }
-        });
 
-        //nav drawer setup
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.setDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
-        //TODO fuck with the toolbar here
-        //toolbar
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-
-        //bottom sheet
-        mBottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottomSheetLayout));
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        mBottomSheetHeading = (TextView) findViewById(R.id.textview_bottomSheetHeading);
-        mBottomSheetBottomText = (TextView) findViewById(R.id.textview_bottomsheet_bottom);
-        mBottomSheetTopText = (TextView) findViewById(R.id.textview_bottomsheet_top);
-        mShowBottomSheetButton = (Button) findViewById(R.id.button_temp_bottom_sheet);
-        mShowBottomSheetButton.setOnClickListener(this);
-
-
-        //fab
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(this);//is this ok to put in here?
-
-    }
 
 
     @Override
@@ -355,6 +316,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
+
+/*
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+
+
+*/
+
+
     private void launchBottomSheetFromNav() {
         //close nav drawer
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
@@ -366,14 +350,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
     }
 
 
-
-    private void createNewUserAccount() {
+    private void setUpFirebaseAuth() {
 
     }
+
 
 }
