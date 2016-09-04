@@ -16,7 +16,7 @@
     style="@style/CodeFont"
     android:background="@drawable/circular_text_view"/>
 
-
-
     <include layout="@layout/content_bottom_sheet" />
+
+
 </android.support.design.widget.CoordinatorLayout>

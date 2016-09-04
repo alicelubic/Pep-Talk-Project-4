@@ -12,14 +12,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavigationView;
     private DrawerLayout mDrawer;
+    private FrameLayout mFrameLayout;
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -55,6 +59,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //making a method to do this so the oncreate stays clean and pretty aww
     private void initViews() {
+
+        //fab and fablet business
+        mFrameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        mFrameLayout.getBackground().setAlpha(0);
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                mFrameLayout.getBackground().setAlpha(140);
+                mFrameLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        fabMenu.collapse();
+                        return true;
+                    }
+                });
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                mFrameLayout.getBackground().setAlpha(0);
+                mFrameLayout.setOnTouchListener(null);
+            }
+        });
+
+
+        com.getbase.floatingactionbutton.FloatingActionButton fabNewChecklist = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.fablet_checklist);
+        com.getbase.floatingactionbutton.FloatingActionButton fabNewPeptalk = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.fablet_peptalk);
+        fabNewChecklist.setOnClickListener(this);
+        fabNewPeptalk.setOnClickListener(this);
+
 
         mPepTalkTextView = (TextView) findViewById(R.id.textview_main_circular);
 
@@ -89,9 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-        //fab
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(this);//is this ok to put in here?
+
     }
 
 
@@ -195,26 +228,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.fab:
-
+            case R.id.fablet_checklist:
+                CustomDialog.launchNewChecklistDialog(this);
+                mFrameLayout.getBackground().setAlpha(0);
+                mFrameLayout.setOnTouchListener(null);
+                break;
+            case R.id.fablet_peptalk:
+                CustomDialog.launchNewPeptalkDialog(this);
+                mFrameLayout.getBackground().setAlpha(0);
+                mFrameLayout.setOnTouchListener(null);
                 break;
             case R.id.textview_main_circular:
                 //launch pep talk view
                 //but temporarily it'll be a signup thing
                 Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
                 startActivity(intent);
-
-
-//            case R.id.button_temp_bottom_sheet://temp
-//                Toast.makeText(MainActivity.this, "bottom sheets", Toast.LENGTH_SHORT).show();
-//                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-//                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-//                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                } else {
-//                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//                }
-//                break;
+                break;
 
 
         }

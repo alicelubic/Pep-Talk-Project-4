@@ -8,6 +8,12 @@
     <color name="card_very_light">#b46f9d</color>
     <color name="card_very_dark">#301</color>
 
+    <color name="accent_dark">#b46f9d</color>
+    <color name="accent">#540339</color>
+    <color name="secondary_text">#727272</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white_overlay">#F3F3F3</color>
+
 
 
 
