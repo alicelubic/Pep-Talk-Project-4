@@ -28,7 +28,9 @@ public class ChecklistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checklist);
 
-        getSupportActionBar().setTitle("Your Feel-Better Cheklist");
+//        getSupportActionBar().setTitle("Your Feel-Better Cheklist");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
 
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();

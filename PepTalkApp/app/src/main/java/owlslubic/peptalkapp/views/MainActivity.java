@@ -30,16 +30,15 @@ import owlslubic.peptalkapp.R;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private static final String TAG = "MainActivity";
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+
     private BottomSheetBehavior mBottomSheetBehavior;
-    private TextView mBottomSheetHeading, mBottomSheetTopText, mBottomSheetBottomText;
-    private Button mShowBottomSheetButton;
+    private TextView mBottomSheetHeading, mBottomSheetTopText, mBottomSheetBottomText, mPepTalkTextView;
     private FloatingActionButton mFab;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavigationView;
     private DrawerLayout mDrawer;
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -52,82 +51,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        setUpFirebaseAuth();
 
 
-  /*
-        //firebase auth setup - may this go in the nav drawer? should i do a different activity
-
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    //user is signed in
-                    Log.d(TAG, "onAuthStateChanged: signed_in: " + user.getUid());
-                } else {
-                    //user is signed out
-                    Log.d(TAG, "onAuthStateChanged: signed_out");
-                }
-            }
-        };
-
-
-        //CREATE NEW ACCOUNT by passing the new user's email and pass:
-//        maybe have it so the sign in views then become invisible and the LAUNCH PEPTALKS button becomes visible? maybe some animation transition....?
-
-        //temp sign up stuff
-
-        final EditText et_email = (EditText) findViewById(R.id.edittext_email);
-        final EditText et_pass = (EditText) findViewById(R.id.edittext_passs);
-        Button b = (Button) findViewById(R.id.button_sign_in);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String email = et_email.getText().toString().trim();
-                String password = et_pass.getText().toString().trim();
-                createNewUser(email, password);
-
-            }
-        });
-
-
-     //SIGN IN TO EXISTING ACCOUNT:
-        //When a user signs in, pass in the user's email address and password:
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        //If sign-in succeeded, the AuthStateListener runs the onAuthStateChanged callback.
-                        // In the callback, you can use the getCurrentUser method to get the user's account data.
-
-
-                        Log.d(TAG, "signInWithEmail:onComplete: " + task.isSuccessful());
-
-                        //if sign in fails:
-                        Log.d(TAG, "signInWithEmail: failed " + task.getException());
-                        Toast.makeText(MainActivity.this, "Sign in failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        //SIGN OUT: TODO associate this with a button.... obviously
-        FirebaseAuth.getInstance().signOut();
-
-
-*/
-
-
     }
 
 
     //making a method to do this so the oncreate stays clean and pretty aww
     private void initViews() {
 
+        mPepTalkTextView = (TextView) findViewById(R.id.textview_main_circular);
+
+        mPepTalkTextView.setText("Sign Up");//temp
+
+        mPepTalkTextView.setOnClickListener(this);
+
 
         //TODO fuck with the toolbar here
         //toolbar
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -148,8 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mBottomSheetHeading = (TextView) findViewById(R.id.textview_bottomSheetHeading);
         mBottomSheetBottomText = (TextView) findViewById(R.id.textview_bottomsheet_bottom);
         mBottomSheetTopText = (TextView) findViewById(R.id.textview_bottomsheet_top);
-        mShowBottomSheetButton = (Button) findViewById(R.id.button_temp_bottom_sheet);
-        mShowBottomSheetButton.setOnClickListener(this);
+
 
 
         //fab
@@ -236,7 +174,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mBottomSheetBottomText.setText("");
 
         } else if (id == R.id.nav_logout) {
-            Toast.makeText(MainActivity.this, "logout, bye", Toast.LENGTH_SHORT).show();
+
+//            if (!isUserLoggedIn()){
+//                Log.i(TAG, "USER IS NOT LOGGED IN");
+//                mDrawer.closeDrawer(GravityCompat.START);
+//            }
+//            logUserOut();
 
         }
 
@@ -245,49 +188,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void createNewUser(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //"if sign in succeeds, the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener."
-
-                        //^not sure what logic they talkin bout but we'll see
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: " + "CREATE USER WAS SUCCESSFUL");
-                        }
 
 
-                        //if sign in fails:
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(MainActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-    }
 
 
+    //temporarily moving this to custo dialog class
+
+//    public static void createUserWithEmailAndPassword(String email, String password) {
+//        mAuth.createUserWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        //"if sign in succeeds, the auth state listener will be notified and logic to handle the
+//                        // signed in user can be handled in the listener."
 //
-//    mAuth.createUserWithEmailAndPassword(email, password)
-//            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//        @Override
-//        public void onComplete(@NonNull Task<AuthResult> task) {
-//            //"if sign in succeeds, the auth state listener will be notified and logic to handle the
-//            // signed in user can be handled in the listener."
-//
-//            //^not sure what logic they talkin bout but we'll see
-//            Log.d(TAG, "onComplete: " + "CREATE USER WAS SUCCESSFUL");
+//                        //^not sure what logic they talkin bout but we'll see
+//                        if (task.isSuccessful()) {
+//                            Log.d(TAG, "onComplete: " + "CREATE USER WAS SUCCESSFUL");
+//                        }
 //
 //
-//            //if sign in fails:
-//            if (!task.isSuccessful()) {
-//                Toast.makeText(MainActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
-//            }
+//                        //if sign in fails:
+//                        if (!task.isSuccessful()) {
+//                            Log.d(TAG, "onComplete: SIGN UP USER FAILED");
+//                        }
 //
-//        }
-//    });
+//                    }
+//                });
+//    }
 
 
 
@@ -300,16 +228,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.fab:
 
                 break;
-            case R.id.button_temp_bottom_sheet://temp
-                Toast.makeText(MainActivity.this, "bottom sheets", Toast.LENGTH_SHORT).show();
-                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else {
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-                break;
+            case R.id.textview_main_circular:
+                //launch pep talk view
+                //but temporarily it'll be a signup thing
+                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+                startActivity(intent);
+
+
+//            case R.id.button_temp_bottom_sheet://temp
+//                Toast.makeText(MainActivity.this, "bottom sheets", Toast.LENGTH_SHORT).show();
+//                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+//                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//                } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+//                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//                } else {
+//                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//                }
+//                break;
 
 
         }
@@ -317,26 +252,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
-/*
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
-
-
-*/
 
 
     private void launchBottomSheetFromNav() {
@@ -355,9 +270,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void setUpFirebaseAuth() {
 
-    }
+
 
 
 }

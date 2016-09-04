@@ -30,7 +30,9 @@ public class PepTalkListActivity extends AppCompatActivity implements OnStartDra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pep_talk_list);
 
-        getSupportActionBar().setTitle("Your Pep Talks");
+//        getSupportActionBar().setTitle("Your Pep Talks");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
 
         //fab launches dialog

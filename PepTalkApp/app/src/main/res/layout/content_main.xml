@@ -4,53 +4,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-
-<LinearLayout android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="26dp">
+    android:background="@color/card_background_light">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="user sign up"
-        android:textSize="20sp" />
-
-    <EditText
-        android:id="@+id/edittext_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="9"
-        android:hint="enter email..." />
-
-    <EditText
-        android:id="@+id/edittext_passs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="9"
-        android:hint="enter password..." />
-    <!--android:inputType="textPassword"-->
-
-    <Button
-        android:id="@+id/button_sign_in"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="yeah, ok" />
-
-    <Button
-        android:id="@+id/button_temp_bottom_sheet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="show bottom sheet"
-        android:layout_marginTop="16dp"/>
+<TextView
+    android:id="@+id/textview_main_circular"
+    android:layout_width="120dp"
+    android:layout_height="120dp"
+    android:layout_gravity="center"
+    android:text=""
+    style="@style/CodeFont"
+    android:background="@drawable/circular_text_view"/>
 
 
 
-</LinearLayout>
-
-<include layout="@layout/content_bottom_sheet"/>
+    <include layout="@layout/content_bottom_sheet" />
 </android.support.design.widget.CoordinatorLayout>

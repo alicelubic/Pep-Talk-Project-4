@@ -22,6 +22,9 @@
             android:parentActivityName=".views.MainActivity"/>
         <activity android:name=".views.ChecklistActivity"
             android:parentActivityName=".views.MainActivity"/>
+
+        <activity android:name=".views.SignUpActivity"
+            android:parentActivityName=".views.MainActivity"/>
     </application>
 
 </manifest>

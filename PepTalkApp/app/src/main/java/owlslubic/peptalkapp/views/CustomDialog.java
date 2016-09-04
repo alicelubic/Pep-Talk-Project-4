@@ -3,6 +3,7 @@ package owlslubic.peptalkapp.views;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,12 +25,15 @@ import java.util.Random;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
+import owlslubic.peptalkapp.models.MyFirebaseAuth;
 import owlslubic.peptalkapp.models.PepTalkObject;
 
 /**
  * Created by owlslubic on 8/30/16.
  */
 public class CustomDialog extends AlertDialog {
+    //consider having cool lookin buttons for these dialogs yo
+
 
     private static final String TAG = "CustomDialog";
     private static DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
@@ -103,7 +112,7 @@ public class CustomDialog extends AlertDialog {
             public void onClick(View view) {
                 String title = editTitle.getText().toString().trim();
                 String body = editBody.getText().toString().trim();
-                updatePepTalk(peptalk,title,body);
+                updatePepTalk(peptalk, title, body);
                 dialog.dismiss();
             }
         });
@@ -150,15 +159,13 @@ public class CustomDialog extends AlertDialog {
             @Override
             public void onClick(View view) {
                 String update = editText.getText().toString().trim();
-                updateChecklist(check,update);
+                updateChecklist(check, update);
                 dialog.dismiss();
             }
         });
 
 
-
     }
-
 
 
     public static void launchDeletePepTalkDialog(final PepTalkObject peptalk, Context context) {
@@ -176,7 +183,7 @@ public class CustomDialog extends AlertDialog {
                 dbRef.child("PepTalks").child(peptalk.getId()).setValue(null, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        Log.i(TAG, "DELETE CHECKLIST error: "+ databaseError.toString() );
+                        Log.i(TAG, "DELETE CHECKLIST error: " + databaseError.toString());
                     }
                 });
 
@@ -198,9 +205,9 @@ public class CustomDialog extends AlertDialog {
         });
 
 
-
     }
-    public static void launchDeleteChecklistDialog(final ChecklistItemObject check, Context context){
+
+    public static void launchDeleteChecklistDialog(final ChecklistItemObject check, Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setNegativeButton("nevermind", new OnClickListener() {
@@ -215,7 +222,7 @@ public class CustomDialog extends AlertDialog {
                 dbRef.child("Checklist").child(check.getId()).setValue(null, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        Log.i(TAG, "DELETE CHECKLIST error: "+ databaseError.toString() );
+                        Log.i(TAG, "DELETE CHECKLIST error: " + databaseError.toString());
                     }
                 });
 
@@ -240,7 +247,7 @@ public class CustomDialog extends AlertDialog {
 
     public static void writeNewChecklist(String text) {
         Random random = new Random();
-        int randomId = random.nextInt(5000)+1;//this only works if they dont ave a tonnnn of posts, but we'll burn that bridge LATER
+        int randomId = random.nextInt(5000) + 1;//this only works if they dont ave a tonnnn of posts, but we'll burn that bridge LATER
         String id = String.valueOf(randomId);
 
         final ChecklistItemObject item = new ChecklistItemObject(id, text);
@@ -254,9 +261,9 @@ public class CustomDialog extends AlertDialog {
 
     public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {
         Random random = new Random();
-        int randomId = random.nextInt(5000)+1;//this only works if they dont ave a tonnnn of posts, but we'll burn that bridge LATER
+        int randomId = random.nextInt(5000) + 1;//this only works if they dont ave a tonnnn of posts, but we'll burn that bridge LATER
         String id = String.valueOf(randomId);
-        Log.d(TAG, "writeNewPeptalk: RANDOM ID IS: "+ id);
+        Log.d(TAG, "writeNewPeptalk: RANDOM ID IS: " + id);
         final PepTalkObject peptalk = new PepTalkObject(id, title, body);
         dbRef.child("PepTalks").child(id).setValue(peptalk, new DatabaseReference.CompletionListener() {
             @Override
@@ -275,12 +282,9 @@ public class CustomDialog extends AlertDialog {
         dbRef.child("PepTalks").child(peptalk.getId()).child("body").setValue(body);
     }
 
-    public static void updateChecklist(ChecklistItemObject check, String text){
+    public static void updateChecklist(ChecklistItemObject check, String text) {
         dbRef.child("Checklist").child(check.getId()).child("text").setValue(text);
     }
-
-
-
 
 
     //this will be what is launched if all the checklist items are checked
@@ -292,4 +296,55 @@ public class CustomDialog extends AlertDialog {
     }
 
 
+
+/*    moving this to its own activity
+    public static void launchSignUpDialog(final Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View layout = inflater.inflate(R.layout.dialog_signup, null);
+        builder.setView(layout);
+        final AlertDialog dialog = builder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);//next try adjust pan
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.show();
+
+        final EditText et_email = (EditText) dialog.findViewById(R.id.edittext_email);
+        final EditText et_pass = (EditText) dialog.findViewById(R.id.edittext_passs);
+        Button b = (Button) dialog.findViewById(R.id.button_sign_in);
+
+
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (et_email.getText() != null && et_pass != null) {
+                    String email = et_email.getText().toString().trim();
+                    String password = et_pass.getText().toString().trim();
+                    Log.i(TAG, "signUpDialog: email: " + email + " and pass: " + password);
+//                    MyFirebaseAuth.createUserWithEmailAndPassword(email, password);//it forced me to make the method static. address that, would ya?
+
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(context, "creating your account", Toast.LENGTH_SHORT).show();
+                            }
+                            if(!task.isSuccessful()){
+                                Toast.makeText(context, "account creation failed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                }
+
+                dialog.dismiss();
+            }
+        });
+    }
+    */
+
 }
+
+
+
