@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout_peptalklist_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -18,7 +19,7 @@
         <!--android:theme="@style/AppTheme.AppBarOverlay">-->
 
         <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar_peptalk"-->
+            <!--android:key="@+key/toolbar_peptalk"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="?attr/actionBarSize"-->
             <!--android:background="@color/card_background_dark"-->
@@ -39,4 +40,4 @@
         android:layout_gravity="bottom|end"
         android:src="@android:drawable/ic_input_add"/>
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

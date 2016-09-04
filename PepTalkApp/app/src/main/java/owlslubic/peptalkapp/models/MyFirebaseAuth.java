@@ -50,9 +50,9 @@ public class MyFirebaseAuth {
 
         //temp sign up stuff - MOVING THIS TO A DIALOG
 //
-//        final EditText et_email = (EditText) findViewById(R.id.edittext_email);
-//        final EditText et_pass = (EditText) findViewById(R.id.edittext_passs);
-//        Button b = (Button) findViewById(R.id.button_sign_in);
+//        final EditText et_email = (EditText) findViewById(R.key.edittext_email);
+//        final EditText et_pass = (EditText) findViewById(R.key.edittext_passs);
+//        Button b = (Button) findViewById(R.key.button_sign_in);
 //        b.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {

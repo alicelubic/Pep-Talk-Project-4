@@ -5,6 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:id="@+id/coordinator_layout_main_activity"
     android:background="@color/card_background_light">
 
 <TextView

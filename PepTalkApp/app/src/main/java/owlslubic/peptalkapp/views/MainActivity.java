@@ -36,12 +36,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private BottomSheetBehavior mBottomSheetBehavior;
     private TextView mBottomSheetHeading, mBottomSheetTopText, mBottomSheetBottomText, mPepTalkTextView;
-    private FloatingActionButton mFab;
+    private FloatingActionsMenu mFabMenu;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavigationView;
     private DrawerLayout mDrawer;
     private FrameLayout mFrameLayout;
+
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -63,15 +64,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //fab and fablet business
         mFrameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         mFrameLayout.getBackground().setAlpha(0);
-        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
-        fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+        mFabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        mFabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
                 mFrameLayout.getBackground().setAlpha(140);
                 mFrameLayout.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        fabMenu.collapse();
+                        mFabMenu.collapse();
                         return true;
                     }
                 });
@@ -232,11 +233,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 CustomDialog.launchNewChecklistDialog(this);
                 mFrameLayout.getBackground().setAlpha(0);
                 mFrameLayout.setOnTouchListener(null);
+                mFabMenu.collapse();
                 break;
             case R.id.fablet_peptalk:
                 CustomDialog.launchNewPeptalkDialog(this);
                 mFrameLayout.getBackground().setAlpha(0);
                 mFrameLayout.setOnTouchListener(null);
+                mFabMenu.collapse();
                 break;
             case R.id.textview_main_circular:
                 //launch pep talk view
