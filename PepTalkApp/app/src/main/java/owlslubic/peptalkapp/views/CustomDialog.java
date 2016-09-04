@@ -72,14 +72,15 @@ public class CustomDialog extends AlertDialog {
                 String titleInput = title.getText().toString().trim();
                 String bodyInput = body.getText().toString().trim();
 
-                if(titleInput.equals(null)|| titleInput.length()==0 || titleInput.startsWith(" ")){
+                if(titleInput.equalsIgnoreCase("")|| titleInput.equalsIgnoreCase(" ")){
                     title.setError("oops! please enter a valid title");
-                }else if(bodyInput.equals(null)|| bodyInput.length()==0 || bodyInput.startsWith(" ")){
+                }else if(bodyInput.equalsIgnoreCase("")|| bodyInput.equalsIgnoreCase(" ")){
                     body.setError("oops! please enter valid text");
                 }else {
                     writeNewPeptalk(titleInput, bodyInput);//, false);//setting all as false to start with
                     Log.i(TAG, "on submit click: title is " + titleInput);
                     Toast.makeText(context, "pep talk added", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
                 }
 
                 //snackbar - DOES NOT WORK but i'd like it to
@@ -93,7 +94,7 @@ public class CustomDialog extends AlertDialog {
 //                    snackbar.show();
 //                }
 
-                dialog.dismiss();
+
             }
         });
 
@@ -131,18 +132,19 @@ public class CustomDialog extends AlertDialog {
                 String title = editTitle.getText().toString().trim();
                 String body = editBody.getText().toString().trim();
 
-                if(title.equals(null)|| title.length()==0 || title.startsWith(" ")){
+                if(title.equalsIgnoreCase("")|| title.equalsIgnoreCase(" ")){
                     editTitle.setError("oops! please enter a valid title");
-                }else if(body.equals(null)|| body.length()==0 || body.startsWith(" ")){
+                }else if(body.equalsIgnoreCase("")|| body.equalsIgnoreCase(" ")){
                     editBody.setError("oops! please enter valid text");
                 }else {
                     updatePepTalk(peptalk, title, body);
                     Log.i(TAG, "on submit click: title is " + title);
                     Toast.makeText(context, "pep talk updated", Toast.LENGTH_SHORT).show();
+                    //replace with snackbar
+                    dialog.dismiss();
                 }
 
-                //replace with snackbar
-                dialog.dismiss();
+
             }
         });
 
@@ -164,15 +166,16 @@ public class CustomDialog extends AlertDialog {
             public void onClick(View view) {
                 String input = editText.getText().toString().trim();
 
-                if(input.equals(null)|| input.length()==0 || input.startsWith(" ")){
+                if(input.equalsIgnoreCase("")|| input.equalsIgnoreCase(" ")){
                     editText.setError("oops! please enter a valid title");
                 }else {
                     writeNewChecklist(input);
                     Toast.makeText(context, "added to checklist", Toast.LENGTH_SHORT).show();
+                    //replace with snackbar
+                    dialog.dismiss();
                 }
 
-                //replace with snackbar
-                dialog.dismiss();
+
             }
         });
 
@@ -199,14 +202,15 @@ public class CustomDialog extends AlertDialog {
             public void onClick(View view) {
                 String update = editText.getText().toString().trim();
 
-                if(update.equals(null)|| update.length()==0 || update.startsWith(" ")){
+                if(update.equalsIgnoreCase("")|| update.equalsIgnoreCase(" ")){
                     editText.setError("oops! please enter a valid title");
                 }else {
                     updateChecklist(check, update);
                     Toast.makeText(context, "checklist updated", Toast.LENGTH_SHORT).show();
+                    //replace with snackbar
+                    dialog.dismiss();
                 }
-                //replace with snackbar
-                dialog.dismiss();
+
             }
         });
 
@@ -310,16 +314,6 @@ public class CustomDialog extends AlertDialog {
         String key = pepKey.getKey();
         final PepTalkObject peptalk = new PepTalkObject(key, title, body);
        pepKey.setValue(peptalk);
-
-//        peptalkRef.child(key).setValue(peptalk, new DatabaseReference.CompletionListener() {
-//            @Override
-//            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                Log.i(TAG, "writeNewPeptalk onComplete: " + peptalk.getTitle() + " has been written to firebase");
-//            }
-//        });
-//        dbRef.child("PepTalks").push().setValue(peptalk, new DatabaseReference.CompletionListener() {
-//            @Override
-//            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
     }
 
