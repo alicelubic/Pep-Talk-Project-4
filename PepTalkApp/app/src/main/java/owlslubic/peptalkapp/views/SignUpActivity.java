@@ -37,6 +37,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+   /*
+        //this auth state stuff might need ot be in main actvity since thats where we need to tell if the user is logged in or out
+        //but i'm gonna have to deal with this tomorrow
+
+
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -58,7 +63,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 //update UI?
             }
         };
-
+*/
         final EditText et_email = (EditText) findViewById(R.id.edittext_email);
         final EditText et_pass = (EditText) findViewById(R.id.edittext_passs);
         Button submit = (Button) findViewById(R.id.button_sign_in);
@@ -77,8 +82,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-
+    //this method seems to work
     public void createUserWithEmailAndPassword(String email, String password) {
+        //maybe include String firstName
+        //maybe use the nav drawer header as a sign up/sign in feature, once logged in it just welcomes you by name?
+//        maybe have it so the sign in views then become invisible and the LAUNCH PEPTALKS button becomes visible? maybe some animation transition....?
+
         mAuth = FirebaseAuth.getInstance();
 
         if (email.length() == 0 || password.length() == 0) {
@@ -114,54 +123,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-
-
-
 /*
-    private void setUpFirebaseAuth() {
-        //firebase auth setup - may this go in the nav drawer? should i do a different activity
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    //user is signed in
-                    Log.d(TAG, "onAuthStateChanged: signed_in: " + user.getUid());
-                } else {
-                    //user is signed out
-                    Log.d(TAG, "onAuthStateChanged: signed_out");
-                }
-            }
-        };
-
-
-    }
-
-    private void createNewAccount(String email, String password) {//maybe include String firstName
-        //maybe use the nav drawer header as a sign up/sign in feature, once logged in it just welcomes you by name?
-//        maybe have it so the sign in views then become invisible and the LAUNCH PEPTALKS button becomes visible? maybe some animation transition....?
-
-        //temp sign up stuff - MOVING THIS TO A DIALOG
-
-        final EditText et_email = (EditText) findViewById(R.id.edittext_email);
-        final EditText et_pass = (EditText) findViewById(R.id.edittext_passs);
-        Button b = (Button) findViewById(R.id.button_sign_in);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (et_email.getText() != null && et_pass != null) {
-                    String email = et_email.getText().toString().trim();
-                    String password = et_pass.getText().toString().trim();
-                    createUserWithEmailAndPassword(email, password);
-                }
-
-            }
-        });
-
-    }
-
 
         private void signInExistingAccount(String email, String password){
             //When a user signs in, pass in the user's email address and password:
@@ -204,7 +166,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         FirebaseAuth.getInstance().signOut();
         Log.i(TAG, "USER SIGNED OUT");
     }
-    
+
 
 
     //in which activity do these belong?
@@ -232,4 +194,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         }
     }
+
+
+
+
+
 }

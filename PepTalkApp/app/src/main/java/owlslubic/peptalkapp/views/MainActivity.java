@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavigationView;
     private DrawerLayout mDrawer;
-    private FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
 
 
     @Override
@@ -47,8 +48,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         initViews();
-
-//        setUpFirebaseAuth();
 
 
     }
@@ -94,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(this);//is this ok to put in here?
     }
+
 
 
 
@@ -175,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_logout) {
 
+
 //            if (!isUserLoggedIn()){
 //                Log.i(TAG, "USER IS NOT LOGGED IN");
 //                mDrawer.closeDrawer(GravityCompat.START);
@@ -186,37 +187,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
-
-
-
-    //temporarily moving this to custo dialog class
-
-//    public static void createUserWithEmailAndPassword(String email, String password) {
-//        mAuth.createUserWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        //"if sign in succeeds, the auth state listener will be notified and logic to handle the
-//                        // signed in user can be handled in the listener."
-//
-//                        //^not sure what logic they talkin bout but we'll see
-//                        if (task.isSuccessful()) {
-//                            Log.d(TAG, "onComplete: " + "CREATE USER WAS SUCCESSFUL");
-//                        }
-//
-//
-//                        //if sign in fails:
-//                        if (!task.isSuccessful()) {
-//                            Log.d(TAG, "onComplete: SIGN UP USER FAILED");
-//                        }
-//
-//                    }
-//                });
-//    }
-
 
 
 
@@ -253,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-
+    //works
     private void launchBottomSheetFromNav() {
         //close nav drawer
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
@@ -268,6 +238,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
     }
+
+
+
+
+
+
+
+    //temporarily moving this to custo dialog class
+
+//    public static void createUserWithEmailAndPassword(String email, String password) {
+//        mAuth.createUserWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        //"if sign in succeeds, the auth state listener will be notified and logic to handle the
+//                        // signed in user can be handled in the listener."
+//
+//                        //^not sure what logic they talkin bout but we'll see
+//                        if (task.isSuccessful()) {
+//                            Log.d(TAG, "onComplete: " + "CREATE USER WAS SUCCESSFUL");
+//                        }
+//
+//
+//                        //if sign in fails:
+//                        if (!task.isSuccessful()) {
+//                            Log.d(TAG, "onComplete: SIGN UP USER FAILED");
+//                        }
+//
+//                    }
+//                });
+//    }
 
 
 
