@@ -6,7 +6,22 @@
 
     <string name="action_settings">Settings</string>
     <string name="add_a_new_pep_talk">Add a New Pep Talk</string>
-    <string name="more_resources">More Resources</string>
+    <string name="more_resources_heading">More Resources</string>
+    <string name="instuctions_heading">Instructions</string>
+    <string name="about_heading">About the app</string>
 
+    <string name="about">This app is for anyone who could use a pep talk when you\'re feeling down. \n\n
+        Stress and negative emotions can make it hard to think straight leaving them you stuck in that rut. \n\n
+        This app reminds you to take a moment to ground yourself, and helps you take an active approach to feeling better.</string>
+
+    <string name="instructions">
+        Swipe through pep talks, and add and edit as many as you need. \n\n
+         Create a checklist of actions or suggestions that make you feel better.\n\n
+        Visit the resources page if these pep talks aren\'t doing it for you. There are some great techniques to help you get through this.
+    </string>
+
+    <string name="more_resources">Of all the stress management philosophies I\'ve subscribed to, and all the tips and tricks I\'ve used to get through mood lows or bad days, I have found that the concepts of Mindfulness benefit me most. \n\n
+        Read about how guided meditations and mindfulness exercises can help you take an active approach to feeling better right now.
+</string>
 
 </resources>

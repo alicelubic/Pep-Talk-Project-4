@@ -13,31 +13,21 @@
     tools:context="owlslubic.peptalkapp.views.PepTalkListActivity"
     android:background="@color/card_background_light">
 
-    <!--<android.support.design.widget.AppBarLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:theme="@style/AppTheme.AppBarOverlay">-->
-
-        <!--<android.support.v7.widget.Toolbar-->
-            <!--android:key="@+key/toolbar_peptalk"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="?attr/actionBarSize"-->
-            <!--android:background="@color/card_background_dark"-->
-            <!--app:popupTheme="@style/AppTheme.PopupOverlay" />-->
-
-    <!--</android.support.design.widget.AppBarLayout>-->
-
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_peptalk_list"
         android:layout_width="match_parent"
-        android:layout_height="400dp"/>
+        android:layout_height="match_parent"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_peptalk_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:src="@android:drawable/ic_input_add"/>
-
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add_white_24dp"/>
+</FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

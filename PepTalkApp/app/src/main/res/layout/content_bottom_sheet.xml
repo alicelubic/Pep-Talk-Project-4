@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="420dp"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
     android:id="@+id/bottomSheetLayout"
-    android:padding="16dp"
     app:layout_behavior="@string/bottom_sheet_behavior"
     app:behavior_hideable="true"
-    android:background="@color/card_background_light">
+    android:background="@color/card_background_dark">
 
     <TextView
         android:id="@+id/textview_bottomSheetHeading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/more_resources"
+        android:padding="6dp"
+        android:text=""
         style="@style/CodeFont"/>
 
     <TextView
         android:id="@+id/textview_bottomsheet_top"
-        android:layout_below="@id/textview_bottomSheetHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        style="@style/CodeFont"
-        android:text="TESTING TESTING"/>
+        android:layout_marginTop="6dp"
+        android:padding="6dp"
+        android:gravity="center_horizontal"
+        style="@style/CodeFont"/>
     <TextView
         android:id="@+id/textview_bottomsheet_bottom"
-        android:layout_below="@id/textview_bottomsheet_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        style="@style/CodeFont"
-        android:text="TESTING TESTING TESTING" />
+        android:layout_marginTop="6dp"
+        android:padding="6dp"
+        android:gravity="center_horizontal"
+        style="@style/CodeFont"/>
 
 
-</RelativeLayout>
+</LinearLayout>

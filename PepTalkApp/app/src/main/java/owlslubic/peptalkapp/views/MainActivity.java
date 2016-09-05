@@ -184,8 +184,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             launchBottomSheetFromNav();
 
-            mBottomSheetHeading.setText("More Resources");
-            mBottomSheetTopText.setText("");
+            mBottomSheetHeading.setText(R.string.more_resources_heading);
+            mBottomSheetTopText.setText(R.string.more_resources);
             mBottomSheetBottomText.setText("");
 
         } else if (id == R.id.nav_instructions) {
@@ -193,8 +193,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             launchBottomSheetFromNav();
 
-            mBottomSheetHeading.setText("Instructions");
-            mBottomSheetTopText.setText("");
+            mBottomSheetHeading.setText(R.string.instuctions_heading);
+            mBottomSheetTopText.setText(R.string.instructions);
             mBottomSheetBottomText.setText("");
 
 
@@ -203,8 +203,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             launchBottomSheetFromNav();
 
-            mBottomSheetHeading.setText("About");
-            mBottomSheetTopText.setText("");
+            mBottomSheetHeading.setText(R.string.about_heading);
+            mBottomSheetTopText.setText(R.string.about);
             mBottomSheetBottomText.setText("");
 
         } else if (id == R.id.nav_logout) {

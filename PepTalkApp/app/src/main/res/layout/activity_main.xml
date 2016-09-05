@@ -40,13 +40,16 @@
 
     <!--this is the FAB from the third party library:-->
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        <!--android:layout_marginBottom="@dimen/activity_vertical_margin"-->
+        <!--android:layout_marginEnd="@dimen/activity_horizontal_margin"-->
+        <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
+
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fab_menu"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"        android:layout_gravity="end|bottom"
+
+        android:layout_gravity="end|bottom"
         fab:fab_addButtonColorNormal="@color/accent"
         fab:fab_addButtonColorPressed="@color/accent_dark"
         fab:fab_addButtonPlusIconColor="@color/white"
@@ -54,16 +57,6 @@
         fab:fab_labelStyle="@style/menu_labels_style"
         fab:fab_labelsPosition="left">
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fablet_checklist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/accent"
-            fab:fab_colorPressed="@color/accent_dark"
-            fab:fab_plusIconColor="@color/white"
-            fab:fab_icon="@drawable/ic_check_white_24dp"
-            fab:fab_size="mini"
-            fab:fab_title="New Checklist" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fablet_peptalk"
@@ -76,6 +69,16 @@
             fab:fab_size="mini"
             fab:fab_title="New Pep Talk" />
 
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fablet_checklist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/accent"
+                fab:fab_colorPressed="@color/accent_dark"
+                fab:fab_plusIconColor="@color/white"
+                fab:fab_icon="@drawable/ic_check_white_24dp"
+                fab:fab_size="mini"
+                fab:fab_title="New Checklist" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </FrameLayout>

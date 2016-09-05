@@ -30,6 +30,10 @@
         <item name="android:textColor">#FF0000</item>
     </style>
 
+    <style name="checkbox" parent="@android:style/Widget.Material.Light.CompoundButton.CheckBox">
+        <item name="android:color">#fafafa</item>
+
+    </style>
 
     <!--from the 3rd party fab library-->
 
