@@ -6,7 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
@@ -28,8 +32,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 import owlslubic.peptalkapp.R;
+import owlslubic.peptalkapp.models.PepTalkObject;
+import owlslubic.peptalkapp.presenters.CustomPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -42,9 +55,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView mNavigationView;
     private DrawerLayout mDrawer;
     private FrameLayout mFrameLayout;
+    private DatabaseReference mDbRef;
 
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
+
+
+    private ViewPager mViewPager;
+    private PagerAdapter mPagerAdapter;
+    private CustomPagerAdapter mCustomPagerAdapter;
+    private List<PepTalkObject> mPepTalkList;
 
 
     @Override
@@ -123,7 +143,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mBottomSheetBottomText = (TextView) findViewById(R.id.textview_bottomsheet_bottom);
         mBottomSheetTopText = (TextView) findViewById(R.id.textview_bottomsheet_top);
 
-
+        //viewpager stuff
+        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+//        mCustomPagerAdapter = new CustomPagerAdapter(MainActivity.this,getPepTalks());//this mght null pointer, if it doesn't have the list already?
 
 
     }
@@ -244,8 +266,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.textview_main_circular:
                 //launch pep talk view
                 //but temporarily it'll be a signup thing
-                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+//                startActivity(intent);
+
+               //not sure if this makes the viewpager appear or?
+
+//                mViewPager.setAdapter(mCustomPagerAdapter);
+
                 break;
 
 
@@ -272,7 +299,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    public List<PepTalkObject> getPepTalks(){
 
+        mDbRef.child("PepTalks").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    mPepTalkList.add(snapshot.getValue(PepTalkObject.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return mPepTalkList;
+    }
 
 
 
@@ -305,6 +349,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+/*
 
+public void setupFrag(){
+    FragmentManager manager = getSupportFragmentManager();
+    FragmentTransaction transaction = manager.beginTransaction();
+
+    mDbRef = FirebaseDatabase.getInstance().getReference();
+    //get the pep talks from the db and set it to this frag,
+    // then when I replace it on swipe, i get the next firebase bit
+
+//
+//    MyFragment fragment = MyFragment.newInstance();
+//    transaction.add(R.id.framelayout_main_frag_container, fragment);
+//    transaction.commit();
+
+
+
+//    upon swipe:
+    getSupportFragmentManager().beginTransaction()
+            .replace(R.id.framelayout_main_frag_container, new MyFragment())//we are replacing, not adding to the backstack. so if we hit back, it will just go away
+            .commit();
+*/
 
 }
+
+
+
+
+
+

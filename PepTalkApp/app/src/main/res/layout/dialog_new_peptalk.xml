@@ -3,7 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/card_very_light">
 
 
     <EditText
@@ -18,8 +19,9 @@
     <EditText
         android:id="@+id/edittext_new_peptalk"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="100dp"
         android:ems="16"
+        android:gravity="center"
         android:inputType="textMultiLine"
         android:hint="Hey buddy, you're great because..."
         style="@style/CodeFont"
