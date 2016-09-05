@@ -19,9 +19,9 @@
     <EditText
         android:id="@+id/edittext_new_peptalk"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
         android:ems="16"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:inputType="textMultiLine"
         android:hint="Hey buddy, you're great because..."
         style="@style/CodeFont"

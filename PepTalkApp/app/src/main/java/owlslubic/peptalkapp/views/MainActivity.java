@@ -32,12 +32,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import owlslubic.peptalkapp.R;
@@ -75,7 +77,68 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initViews();
 
 
+
+
     }
+
+
+
+    //list to feed to viewpager adapter
+    public List<PepTalkObject> getPepTalks(){
+        mPepTalkList.add(new PepTalkObject("","test title","test body"));
+
+        //the below will add updates but uh how to get existing ones?
+/*
+        mDbRef.child("PepTalks").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                mPepTalkList.add(dataSnapshot.getValue(PepTalkObject.class));
+                Log.d(TAG, "GET PEPTALKS onChildAdded: pep talk list size: "+ mPepTalkList.size());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                mPepTalkList.remove(dataSnapshot.getValue(PepTalkObject.class));
+                Log.d(TAG, "GET PEPTALKS onChildRemoved: removed peptalklist size: "+ mPepTalkList.size());
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+      trying the above method instead
+        mDbRef.child("PepTalks").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    mPepTalkList.add(snapshot.getValue(PepTalkObject.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+*/
+        return mPepTalkList;
+    }
+
+
+
+
 
 
     //making a method to do this so the oncreate stays clean and pretty aww
@@ -143,11 +206,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mBottomSheetBottomText = (TextView) findViewById(R.id.textview_bottomsheet_bottom);
         mBottomSheetTopText = (TextView) findViewById(R.id.textview_bottomsheet_top);
 
-        //viewpager stuff
+  /*      //viewpager stuff i was trying but i knew it was too simple to be true
+        //        if(mPepTalkList.isEmpty()){
+        mPepTalkList= new ArrayList<>();
+//        }
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
-//        mCustomPagerAdapter = new CustomPagerAdapter(MainActivity.this,getPepTalks());//this mght null pointer, if it doesn't have the list already?
+        mCustomPagerAdapter = new CustomPagerAdapter(MainActivity.this,getPepTalks());//this mght null pointer, if it doesn't have the list already?
 
-
+*/
     }
 
 
@@ -276,6 +342,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
 
+
         }
 
     }
@@ -299,24 +366,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public List<PepTalkObject> getPepTalks(){
 
-        mDbRef.child("PepTalks").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    mPepTalkList.add(snapshot.getValue(PepTalkObject.class));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        return mPepTalkList;
-    }
 
 
 

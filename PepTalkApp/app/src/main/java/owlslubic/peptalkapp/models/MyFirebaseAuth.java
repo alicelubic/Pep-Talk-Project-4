@@ -44,28 +44,6 @@ public class MyFirebaseAuth {
 
     }
 
-    private void createNewAccount(String email, String password) {//maybe include String firstName
-        //maybe use the nav drawer header as a sign up/sign in feature, once logged in it just welcomes you by name?
-//        maybe have it so the sign in views then become invisible and the LAUNCH PEPTALKS button becomes visible? maybe some animation transition....?
-
-        //temp sign up stuff - MOVING THIS TO A DIALOG
-//
-//        final EditText et_email = (EditText) findViewById(R.key.edittext_email);
-//        final EditText et_pass = (EditText) findViewById(R.key.edittext_passs);
-//        Button b = (Button) findViewById(R.key.button_sign_in);
-//        b.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                String email = et_email.getText().toString().trim();
-//                String password = et_pass.getText().toString().trim();
-//                createUserWithEmailAndPassword(email, password);
-//
-//            }
-//        });
-
-    }
-
     /*
         private void signInExistingAccount(String email, String password){
             //When a user signs in, pass in the user's email address and password:
@@ -93,6 +71,29 @@ public class MyFirebaseAuth {
         FirebaseAuth.getInstance().signOut();
     }
 
+
+    //creating new account has a working method in the SignUpActivity
+    private void createNewAccount(String email, String password) {//maybe include String firstName
+        //maybe use the nav drawer header as a sign up/sign in feature, once logged in it just welcomes you by name?
+//        maybe have it so the sign in views then become invisible and the LAUNCH PEPTALKS button becomes visible? maybe some animation transition....?
+
+        //temp sign up stuff - MOVING THIS TO A DIALOG
+//
+//        final EditText et_email = (EditText) findViewById(R.key.edittext_email);
+//        final EditText et_pass = (EditText) findViewById(R.key.edittext_passs);
+//        Button b = (Button) findViewById(R.key.button_sign_in);
+//        b.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                String email = et_email.getText().toString().trim();
+//                String password = et_pass.getText().toString().trim();
+//                createUserWithEmailAndPassword(email, password);
+//
+//            }
+//        });
+
+    }
 
     public void createNewUser(String email, String password) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();

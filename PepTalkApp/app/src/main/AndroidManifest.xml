@@ -25,6 +25,23 @@
 
         <activity android:name=".views.SignUpActivity"
             android:parentActivityName=".views.MainActivity"/>
+
+        <!--widget business-->
+        <receiver android:name=".presenters.MyWidgetProvider"
+            android:label="Pep Talk Widget"
+            android:icon="@drawable/ic_menu_hamburger_24dp">
+            <intent-filter>
+                <action
+                    android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+
+            </intent-filter>
+
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info"/>
+
+        </receiver>
+
+
     </application>
 
 </manifest>

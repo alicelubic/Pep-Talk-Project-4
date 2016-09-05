@@ -15,6 +15,9 @@ import owlslubic.peptalkapp.models.PepTalkObject;
 /**
  * Created by owlslubic on 9/5/16.
  */
+
+
+//don't think i'll be continuing with this
 public class CustomPagerAdapter extends PagerAdapter {
     private Context mContext;
     private List<PepTalkObject> mPepTalkObjectList;
