@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -21,7 +22,10 @@ import owlslubic.peptalkapp.presenters.ChecklistViewHolder;
 public class ChecklistActivity extends AppCompatActivity {
 
     private static final String TAG = "ChecklistActivity";
+    private static final String USERS = "users";
+    private static final String CHECKLIST = "checklist";
     ChecklistFirebaseAdapter mFirebaseAdapter;
+    private DatabaseReference mChecklistRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +36,16 @@ public class ChecklistActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
-
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-
+        //recyclerview setup
+        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(CHECKLIST);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_checklist);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mFirebaseAdapter = new ChecklistFirebaseAdapter(ChecklistItemObject.class, R.layout.card_checklist,
+                ChecklistViewHolder.class, mChecklistRef,this);
+        recyclerView.setAdapter(mFirebaseAdapter);
 
 //
 //        FirebaseRecyclerAdapter<ChecklistItemObject, ChecklistViewHolder> adapter =
@@ -65,8 +73,7 @@ public class ChecklistActivity extends AppCompatActivity {
 //                    }
 //                };
 
-        mFirebaseAdapter = new ChecklistFirebaseAdapter(ChecklistItemObject.class, R.layout.card_checklist, ChecklistViewHolder.class, dbRef.child("Checklist"),this);
-        recyclerView.setAdapter(mFirebaseAdapter);
+
 
 
         //fab for add new checklist item
@@ -75,7 +82,6 @@ public class ChecklistActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 CustomDialog.launchNewChecklistDialog(ChecklistActivity.this);
-                Toast.makeText(ChecklistActivity.this, "get ready to check another one off the list!", Toast.LENGTH_SHORT).show();
             }
         });
 

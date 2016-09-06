@@ -118,15 +118,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void addNewUserToDb(){
-
-       if( mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())!= null){
-            mDbRef.child("users").push().setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-       }
-    }
-
-
     //handling the sign-in result
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

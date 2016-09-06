@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -26,9 +27,12 @@ import owlslubic.peptalkapp.presenters.SimpleItemTouchHelperCallback;
 public class PepTalkListActivity extends AppCompatActivity {// implements OnStartDragListener {
 
     private static final String TAG = "PepTalkListActivity";
+    private static final String USERS = "users";
+    private static final String PEPTALKS = "peptalks";
     private DatabaseReference mDbRef;
     private PepTalkFirebaseAdapter mFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
+    private DatabaseReference mPeptalkRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +54,27 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
             }
         });
 
-        mDbRef = FirebaseDatabase.getInstance().getReference();
+
+        //recyclerview
+
+        mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+
+        mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class,
+                R.layout.card_peptalk, PepTalkViewHolder.class, mPeptalkRef,
+                this);//, this); took out the onstartdrag listener
+        recyclerView.setAdapter(mFirebaseAdapter);
+
+
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);//, this, mFirebaseAdapter.get);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
 
         //TODO can i use the same adapter for both?
 //        FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder> adapter =
@@ -80,18 +101,6 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
 //                        });
 //                    }
 //                };
-
-        mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class,
-                R.layout.card_peptalk, PepTalkViewHolder.class, mDbRef.child("PepTalks"),
-                this);//, this); took out the onstartdrag listener
-        recyclerView.setAdapter(mFirebaseAdapter);
-
-
-
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);//, this, mFirebaseAdapter.get);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
-
 
 
 

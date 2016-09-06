@@ -7,7 +7,10 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import owlslubic.peptalkapp.models.PepTalkObject;
@@ -22,9 +25,10 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
 
+
+
     public PepTalkFirebaseAdapter(Class<PepTalkObject> modelClass, int modelLayout, Class<PepTalkViewHolder> viewHolderClass, Query ref, Context context){//OnStartDragListener onStartDragListener, Context context){
         super(modelClass, modelLayout,viewHolderClass,ref);
-       //not sure where this super shit is comin from. might cause an issue
         mRef = ref.getRef();
 //        mOnStartDragListener = onStartDragListener;
         mContext = context;
