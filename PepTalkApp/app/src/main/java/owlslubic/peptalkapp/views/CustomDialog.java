@@ -72,11 +72,11 @@ public class CustomDialog extends AlertDialog {
                 String titleInput = title.getText().toString().trim();
                 String bodyInput = body.getText().toString().trim();
 
-                if(titleInput.equalsIgnoreCase("")|| titleInput.equalsIgnoreCase(" ")){
+                if (titleInput.equalsIgnoreCase("") || titleInput.equalsIgnoreCase(" ")) {
                     title.setError("oops! please enter a valid title");
-                }else if(bodyInput.equalsIgnoreCase("")|| bodyInput.equalsIgnoreCase(" ")){
+                } else if (bodyInput.equalsIgnoreCase("") || bodyInput.equalsIgnoreCase(" ")) {
                     body.setError("oops! please enter valid text");
-                }else {
+                } else {
                     writeNewPeptalk(titleInput, bodyInput);//, false);//setting all as false to start with
                     Log.i(TAG, "on submit click: title is " + titleInput);
                     Toast.makeText(context, "pep talk added", Toast.LENGTH_SHORT).show();
@@ -132,11 +132,11 @@ public class CustomDialog extends AlertDialog {
                 String title = editTitle.getText().toString().trim();
                 String body = editBody.getText().toString().trim();
 
-                if(title.equalsIgnoreCase("")|| title.equalsIgnoreCase(" ")){
+                if (title.equalsIgnoreCase("") || title.equalsIgnoreCase(" ")) {
                     editTitle.setError("oops! please enter a valid title");
-                }else if(body.equalsIgnoreCase("")|| body.equalsIgnoreCase(" ")){
+                } else if (body.equalsIgnoreCase("") || body.equalsIgnoreCase(" ")) {
                     editBody.setError("oops! please enter valid text");
-                }else {
+                } else {
                     updatePepTalk(peptalk, title, body);
                     Log.i(TAG, "on submit click: title is " + title);
                     Toast.makeText(context, "pep talk updated", Toast.LENGTH_SHORT).show();
@@ -166,9 +166,9 @@ public class CustomDialog extends AlertDialog {
             public void onClick(View view) {
                 String input = editText.getText().toString().trim();
 
-                if(input.equalsIgnoreCase("")|| input.equalsIgnoreCase(" ")){
+                if (input.equalsIgnoreCase("") || input.equalsIgnoreCase(" ")) {
                     editText.setError("oops! please enter a valid title");
-                }else {
+                } else {
                     writeNewChecklist(input);
                     Toast.makeText(context, "added to checklist", Toast.LENGTH_SHORT).show();
                     //replace with snackbar
@@ -202,9 +202,9 @@ public class CustomDialog extends AlertDialog {
             public void onClick(View view) {
                 String update = editText.getText().toString().trim();
 
-                if(update.equalsIgnoreCase("")|| update.equalsIgnoreCase(" ")){
+                if (update.equalsIgnoreCase("") || update.equalsIgnoreCase(" ")) {
                     editText.setError("oops! please enter a valid title");
-                }else {
+                } else {
                     updateChecklist(check, update);
                     Toast.makeText(context, "checklist updated", Toast.LENGTH_SHORT).show();
                     //replace with snackbar
@@ -230,6 +230,7 @@ public class CustomDialog extends AlertDialog {
         builder.setPositiveButton("yurp", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                //this is what does the actual deleting
                 peptalkRef.child(peptalk.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -252,7 +253,7 @@ public class CustomDialog extends AlertDialog {
                 });
                 //replace with snackbar
 
-                Toast.makeText(context, "\""+peptalk.getTitle()+"\" deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "\"" + peptalk.getTitle() + "\" deleted", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
@@ -292,7 +293,7 @@ public class CustomDialog extends AlertDialog {
                     }
                 });
                 //replace with snackbar
-                Toast.makeText(context, "\""+check.getText()+"\" deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "\"" + check.getText() + "\" deleted", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
@@ -305,21 +306,25 @@ public class CustomDialog extends AlertDialog {
         final ChecklistItemObject item = new ChecklistItemObject(key, text);
         itemKey.setValue(item);
 
-        Log.d(TAG, "writeNewChecklist: new key is: "+ key);
+        Log.d(TAG, "writeNewChecklist: new key is: " + key);
 
     }
 
     public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {
         DatabaseReference pepKey = peptalkRef.push();
         String key = pepKey.getKey();
-        final PepTalkObject peptalk = new PepTalkObject(key, title, body);
-       pepKey.setValue(peptalk);
+        final PepTalkObject peptalk = new PepTalkObject(key, title, body, false);
+        pepKey.setValue(peptalk);
 
     }
 
     public static void updatePepTalk(PepTalkObject peptalk, String title, String body) {
         peptalkRef.child(peptalk.getKey()).child("title").setValue(title);
         peptalkRef.child(peptalk.getKey()).child("body").setValue(body);
+        //when boolean is set in the dialog, it'll be pulling this value from the object
+        //with a method like if whatever checkbox is selected, :
+//        setWidgetDefaultFromDialog(peptalk,true);then update the database
+
     }
 
     public static void updateChecklist(ChecklistItemObject check, String text) {
@@ -383,6 +388,13 @@ public class CustomDialog extends AlertDialog {
         });
     }
     */
+
+    public static boolean setWidgetDefaultFromDialog(PepTalkObject pepTalkObject, boolean b) {
+        pepTalkObject.setIsWidgetDefault(b);
+        peptalkRef.child(pepTalkObject.getKey()).child("isWidgetDefault").setValue(b);
+
+        return b;
+    }
 
 }
 

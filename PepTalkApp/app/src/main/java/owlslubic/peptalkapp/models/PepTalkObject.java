@@ -7,15 +7,15 @@ public class PepTalkObject {
     String key;
     String title;
     String body;
-//    boolean isWidgetDefault;
+    boolean isWidgetDefault;
 
     public PepTalkObject() {}
 
-    public PepTalkObject(String key, String title, String body){//, boolean isWidgetDefault) {
+    public PepTalkObject(String key, String title, String body, boolean isWidgetDefault) {
         this.key = key;
         this.title = title;
         this.body = body;
-//        this.isWidgetDefault = isWidgetDefault;
+        this.isWidgetDefault = isWidgetDefault;
     }
 
     public String getTitle() {
@@ -43,22 +43,14 @@ public class PepTalkObject {
     }
 
 
-//    public boolean isWidgetDefault() {
-//        return this.isWidgetDefault;
-//    }
+    public boolean isWidgetDefault() {
+        return this.isWidgetDefault;
+    }
 
-//    public void setIsWidgetDefault(boolean isWidgetDefault) {
-//        this.isWidgetDefault = isWidgetDefault;
-//    }
-//
-//    public String getKey() {
-//        return key;
-//    }
-//
-//    public void setKey(String key) {
-//        this.key = key;
-//    }
+    public void setIsWidgetDefault(boolean isWidgetDefault) {
+        this.isWidgetDefault = isWidgetDefault;
+    }
 
-
+    //TODO but for whatever reason, the widget parameter is not showing up in the database. figure out why
 
 }

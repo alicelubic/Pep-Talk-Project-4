@@ -2,6 +2,7 @@ package owlslubic.peptalkapp.presenters;
 
 import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -21,11 +22,11 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
 
-    public PepTalkFirebaseAdapter(Class<PepTalkObject> modelClass, int modelLayout, Class<PepTalkViewHolder> viewHolderClass, Query ref, OnStartDragListener onStartDragListener, Context context){
+    public PepTalkFirebaseAdapter(Class<PepTalkObject> modelClass, int modelLayout, Class<PepTalkViewHolder> viewHolderClass, Query ref, Context context){//OnStartDragListener onStartDragListener, Context context){
         super(modelClass, modelLayout,viewHolderClass,ref);
        //not sure where this super shit is comin from. might cause an issue
         mRef = ref.getRef();
-        mOnStartDragListener = onStartDragListener;
+//        mOnStartDragListener = onStartDragListener;
         mContext = context;
     }
 
@@ -48,6 +49,8 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             }
         });
 
+
+
 //        holder.mCard.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -67,8 +70,14 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
     }
 
     @Override
-    public void onItemDismiss(int position) {
+    public void onItemDismiss(int position, PepTalkObject peptalk) {
+        //        CustomDialog.launchDeletePepTalkDialog(); or equivalent
+        //problem is determining which pep talk is getting dismissed
+//        CustomDialog.launchDeletePepTalkDialog(peptalk, mContext);
+
 
     }
+
+
 }
 

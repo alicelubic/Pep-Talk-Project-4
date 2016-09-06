@@ -26,6 +26,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.BuildConfig;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,6 +50,7 @@ import owlslubic.peptalkapp.presenters.CustomPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private static final String TAG = "MainActivity";
+    private static final int RC_SIGN_IN = 9 ;
 
     private BottomSheetBehavior mBottomSheetBehavior;
     private TextView mBottomSheetHeading, mBottomSheetTopText, mBottomSheetBottomText, mPepTalkTextView;
@@ -76,19 +79,67 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         initViews();
 
+        //temp button
+        Button button = (Button) findViewById(R.id.button_sign_out);//TODO this button should live in my nav drawer yo
+        button.setOnClickListener(this);
 
+        //first check if the user is already signed in
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            // already signed in, so send them on their way
+            Toast.makeText(MainActivity.this, "Already signed in!", Toast.LENGTH_SHORT).show();
+//            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+            Log.d(TAG, "check if signed in: USER IS ALREADY SIGNED IN");
+        } else {
+            // not signed in
+            Log.d(TAG, "check if signed in: USER IS NOT SIGNED IN, COMMENCING GOOGLE SIGN IN");
+
+        }
+    }
+
+    public void myLoginMethod(){
+        //first check if the user is already signed in
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            // already signed in, so send them on their way
+            Toast.makeText(MainActivity.this, "Already signed in!", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "check if signed in: USER IS ALREADY SIGNED IN");
+//            finish();
+        } else {
+            // not signed in
+            Log.d(TAG, "check if signed in: USER IS NOT SIGNED IN, COMMENCING GOOGLE SIGN IN");
+
+            //for sign in
+            startActivityForResult(AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setProviders(
+                            AuthUI.EMAIL_PROVIDER,
+                            AuthUI.GOOGLE_PROVIDER)
+                    .build(), RC_SIGN_IN);
+
+            //password smartlock disable/enable
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setIsSmartLockEnabled(false)//disabled while im in development mode, but it says that to enable it in prduction you can use a flag to control smartlock: .setIsSmartLockEnabled(!BuildConfig.DEBUG)
+                            .build(),
+                    RC_SIGN_IN);
+        }
 
 
     }
 
 
 
+
+/*
+
     //list to feed to viewpager adapter
     public List<PepTalkObject> getPepTalks(){
-        mPepTalkList.add(new PepTalkObject("","test title","test body"));
+        mPepTalkList.add(new PepTalkObject("","test title","test body", false));
 
         //the below will add updates but uh how to get existing ones?
-/*
+
         mDbRef.child("PepTalks").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -132,11 +183,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
+
 */
-        return mPepTalkList;
-    }
-
-
+//
+//       return mPepTalkList;
+//   }
 
 
 
@@ -335,10 +386,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
 //                startActivity(intent);
 
+                myLoginMethod();
+
                //not sure if this makes the viewpager appear or?
 
 //                mViewPager.setAdapter(mCustomPagerAdapter);
 
+                break;
+            case R.id.button_sign_out:
+                AuthUI.getInstance()
+                        .signOut(this)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // user is now signed out
+                                Log.d(TAG, "SIGN OUT SUCCESSFUL");
+                                Toast.makeText(MainActivity.this, "you are now signed out", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                 break;
 
 
@@ -346,6 +410,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+
+
+    //handling the sign-in result
+    //this is an alternative to using firebase auth's authentication state listeners
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // user is signed in!
+                Log.d(TAG, "onActivityResult: user is signed in");
+//                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            } else {
+                // user is not signed in. Maybe just wait for the user to press
+                // "sign in" again, or show a message
+                Log.d(TAG, "onActivityResult: user is not signed in");
+                Toast.makeText(MainActivity.this, "sign in failed. try again yo", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
 
 

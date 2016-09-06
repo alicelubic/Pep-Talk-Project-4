@@ -17,6 +17,14 @@
     style="@style/CodeFont"
     android:background="@drawable/circular_text_view"/>
 
+
+    <Button
+        android:layout_marginTop="140dp"
+        android:id="@+id/button_sign_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="or sign out"/>
+
     <include layout="@layout/content_bottom_sheet" />
 
 

@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
 import owlslubic.peptalkapp.models.ChecklistItemObject;
+import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.views.ChecklistActivity;
 import owlslubic.peptalkapp.views.CustomDialog;
 
@@ -55,7 +56,8 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
     }
 
     @Override
-    public void onItemDismiss(int position) {
+    public void onItemDismiss(int position, PepTalkObject peptalk) {
 
     }
+
 }

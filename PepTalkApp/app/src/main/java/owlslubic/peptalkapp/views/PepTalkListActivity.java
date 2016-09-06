@@ -1,6 +1,11 @@
 package owlslubic.peptalkapp.views;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +23,7 @@ import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 import owlslubic.peptalkapp.presenters.SimpleItemTouchHelperCallback;
 
-public class PepTalkListActivity extends AppCompatActivity implements OnStartDragListener {
+public class PepTalkListActivity extends AppCompatActivity {// implements OnStartDragListener {
 
     private static final String TAG = "PepTalkListActivity";
     private DatabaseReference mDbRef;
@@ -34,6 +39,7 @@ public class PepTalkListActivity extends AppCompatActivity implements OnStartDra
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
+//TODO inflate menu that has back home button, and maybe some sort of info overflow menu.. do i need it?
 
         //fab launches dialog
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_peptalk_list);
@@ -49,6 +55,7 @@ public class PepTalkListActivity extends AppCompatActivity implements OnStartDra
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        //TODO can i use the same adapter for both?
 //        FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder> adapter =
 //                new FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder>
 //                        (PepTalkObject.class, R.layout.card_peptalk, PepTalkViewHolder.class, dbRef.child("PepTalks")) {
@@ -76,26 +83,70 @@ public class PepTalkListActivity extends AppCompatActivity implements OnStartDra
 
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class,
                 R.layout.card_peptalk, PepTalkViewHolder.class, mDbRef.child("PepTalks"),
-                this, this);
+                this);//, this); took out the onstartdrag listener
         recyclerView.setAdapter(mFirebaseAdapter);
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);
+
+
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);//, this, mFirebaseAdapter.get);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
 
 
-        //TODO inflate menu that has back home button, and maybe some sort of info overflow menu.. do i need it?
+
     }
 
-    @Override
+/*    @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
 
     }
-
+*/
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mFirebaseAdapter.cleanup();
     }
+
+/*
+    //FOR SWIPE TO DISMISS
+    private void setUpItemTouchHelper() {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+
+            // we want to cache these and not allocate anything repeatedly in the onChildDraw method
+            Drawable background;
+            Drawable xMark;
+            int xMarkMargin;
+            boolean initiated;
+
+            private void init() {
+                background = new ColorDrawable(Color.RED);
+                xMark = ContextCompat.getDrawable(PepTalkListActivity.this, R.drawable.ic_menu_camera);//to be replaced with the trashcan icon
+                xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                xMarkMargin = (int) PepTalkListActivity.this.getResources().getDimension(R.dimen.ic_clear_margin);
+                initiated = true;
+            }
+
+            //not important ebcause we're not doing drag and drop
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int position = viewHolder.getAdapterPosition();
+
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        };
+    }
+*/
+
 }
