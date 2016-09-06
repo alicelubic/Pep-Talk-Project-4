@@ -83,18 +83,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Button button = (Button) findViewById(R.id.button_sign_out);//TODO this button should live in my nav drawer yo
         button.setOnClickListener(this);
 
-        //first check if the user is already signed in
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            // already signed in, so send them on their way
-            Toast.makeText(MainActivity.this, "Already signed in!", Toast.LENGTH_SHORT).show();
-//            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-            Log.d(TAG, "check if signed in: USER IS ALREADY SIGNED IN");
-        } else {
-            // not signed in
-            Log.d(TAG, "check if signed in: USER IS NOT SIGNED IN, COMMENCING GOOGLE SIGN IN");
+        Button button2 = (Button) findViewById(R.id.button_issignedin);
+        button2.setOnClickListener(this);
+        
 
-        }
     }
 
     public void myLoginMethod(){
@@ -102,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             // already signed in, so send them on their way
-            Toast.makeText(MainActivity.this, "Already signed in!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Already signed in, "+ auth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
             Log.d(TAG, "check if signed in: USER IS ALREADY SIGNED IN");
 //            finish();
         } else {
@@ -113,19 +105,90 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivityForResult(AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setProviders(
-                            AuthUI.EMAIL_PROVIDER,
-                            AuthUI.GOOGLE_PROVIDER)
+//                            AuthUI.GOOGLE_PROVIDER,
+                            AuthUI.EMAIL_PROVIDER)
+//                    .setIsSmartLockEnabled(false)
+//                    .setTheme(R.style)
                     .build(), RC_SIGN_IN);
 
-            //password smartlock disable/enable
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setIsSmartLockEnabled(false)//disabled while im in development mode, but it says that to enable it in prduction you can use a flag to control smartlock: .setIsSmartLockEnabled(!BuildConfig.DEBUG)
-                            .build(),
-                    RC_SIGN_IN);
+
         }
 
+
+    }
+
+    //handling the sign-in result
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // user is signed in!
+                Log.d(TAG, "onActivityResult: user is signed in");
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            } else {
+                // user is not signed in. Maybe just wait for the user to press
+                // "sign in" again, or show a message
+                Log.d(TAG, "onActivityResult: user is not signed in");
+                Toast.makeText(MainActivity.this, "sign in failed. try again yo", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+            case R.id.fablet_checklist:
+                CustomDialog.launchNewChecklistDialog(this);
+                mFrameLayout.getBackground().setAlpha(0);
+                mFrameLayout.setOnTouchListener(null);
+                mFabMenu.collapse();
+                break;
+            case R.id.fablet_peptalk:
+                CustomDialog.launchNewPeptalkDialog(this);
+                mFrameLayout.getBackground().setAlpha(0);
+                mFrameLayout.setOnTouchListener(null);
+                mFabMenu.collapse();
+                break;
+            case R.id.textview_main_circular:
+                //launch pep talk view
+                //but temporarily it'll be a signup thing
+//                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+//                startActivity(intent);
+
+                myLoginMethod();
+
+                //not sure if this makes the viewpager appear or?
+
+//                mViewPager.setAdapter(mCustomPagerAdapter);
+
+                break;
+            case R.id.button_sign_out:
+                AuthUI.getInstance()
+                        .signOut(this)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // user is now signed out
+                                Log.d(TAG, "SIGN OUT SUCCESSFUL");
+                                Toast.makeText(MainActivity.this, "you are now signed out", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                break;
+            case R.id.button_issignedin:
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                if(auth.getCurrentUser() !=null){
+                    Toast.makeText(MainActivity.this, "yup", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "nope", Toast.LENGTH_SHORT).show();
+                }
+
+
+        }
 
     }
 
@@ -269,7 +332,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-
     //NAV DRAWER MENU options
     @Override
     public void onBackPressed() {
@@ -361,75 +423,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
-
-
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-            case R.id.fablet_checklist:
-                CustomDialog.launchNewChecklistDialog(this);
-                mFrameLayout.getBackground().setAlpha(0);
-                mFrameLayout.setOnTouchListener(null);
-                mFabMenu.collapse();
-                break;
-            case R.id.fablet_peptalk:
-                CustomDialog.launchNewPeptalkDialog(this);
-                mFrameLayout.getBackground().setAlpha(0);
-                mFrameLayout.setOnTouchListener(null);
-                mFabMenu.collapse();
-                break;
-            case R.id.textview_main_circular:
-                //launch pep talk view
-                //but temporarily it'll be a signup thing
-//                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
-//                startActivity(intent);
-
-                myLoginMethod();
-
-               //not sure if this makes the viewpager appear or?
-
-//                mViewPager.setAdapter(mCustomPagerAdapter);
-
-                break;
-            case R.id.button_sign_out:
-                AuthUI.getInstance()
-                        .signOut(this)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            public void onComplete(@NonNull Task<Void> task) {
-                                // user is now signed out
-                                Log.d(TAG, "SIGN OUT SUCCESSFUL");
-                                Toast.makeText(MainActivity.this, "you are now signed out", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                break;
-
-
-
-        }
-
-    }
-
-
-    //handling the sign-in result
-    //this is an alternative to using firebase auth's authentication state listeners
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                // user is signed in!
-                Log.d(TAG, "onActivityResult: user is signed in");
-//                startActivity(new Intent(this, MainActivity.class));
-                finish();
-            } else {
-                // user is not signed in. Maybe just wait for the user to press
-                // "sign in" again, or show a message
-                Log.d(TAG, "onActivityResult: user is not signed in");
-                Toast.makeText(MainActivity.this, "sign in failed. try again yo", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
 
 
