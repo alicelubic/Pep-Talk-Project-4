@@ -8,7 +8,14 @@
         android:layout_margin="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="enter new checklist..."/>
+        android:hint="enter new checklist item..."/>
+
+    <EditText
+        android:id="@+id/edittext_new_checklist_notes"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="any notes on that item?"/>
 
     <Button
         android:id="@+id/button_new_checklist"

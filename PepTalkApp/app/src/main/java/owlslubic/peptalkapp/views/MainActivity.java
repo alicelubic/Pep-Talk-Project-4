@@ -105,9 +105,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivityForResult(AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setProviders(
-//                            AuthUI.GOOGLE_PROVIDER,
+//                            AuthUI.GOOGLE_PROVIDER,//GOOGLE DOESNT WORK THATS SAD
                             AuthUI.EMAIL_PROVIDER)
-//                    .setIsSmartLockEnabled(false)
+                    .setIsSmartLockEnabled(true)
 //                    .setTheme(R.style)
                     .build(), RC_SIGN_IN);
 
@@ -117,6 +117,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
+    public void addNewUserToDb(){
+
+       if( mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())!= null){
+            mDbRef.child("users").push().setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+       }
+    }
+
+
     //handling the sign-in result
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -125,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // user is signed in!
                 Log.d(TAG, "onActivityResult: user is signed in");
                 startActivity(new Intent(this, MainActivity.class));
-                finish();
+//                finish();
+
             } else {
                 // user is not signed in. Maybe just wait for the user to press
                 // "sign in" again, or show a message
@@ -181,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.button_issignedin:
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 if(auth.getCurrentUser() !=null){
-                    Toast.makeText(MainActivity.this, "yup", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "yup, "+ auth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Toast.makeText(MainActivity.this, "nope", Toast.LENGTH_SHORT).show();

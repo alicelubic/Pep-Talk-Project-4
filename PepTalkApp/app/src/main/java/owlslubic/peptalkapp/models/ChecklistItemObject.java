@@ -6,14 +6,16 @@ package owlslubic.peptalkapp.models;
 public class ChecklistItemObject {
     String text;
     String key;
+    String notes;
 //    boolean isChecked;
 
     public ChecklistItemObject() {}
 
-
-    public ChecklistItemObject(String key, String text){//}, boolean isChecked) {
+    public ChecklistItemObject(String key, String text, String notes){//}, boolean isChecked) {
         this.key = key;
         this.text = text;
+        this.notes = notes;
+
 //        this.isChecked = isChecked;
     }
 
@@ -31,6 +33,15 @@ public class ChecklistItemObject {
     }
     public void setKey(String key) {
         this.key = key;
+    }
+
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
 

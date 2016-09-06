@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -30,8 +31,9 @@ public class CustomDialog extends AlertDialog {
 
     private static final String TAG = "CustomDialog";
     private static DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-    private static DatabaseReference checklistRef = dbRef.child("Checklist");
-    private static DatabaseReference peptalkRef = dbRef.child("PepTalks");
+    private static DatabaseReference userRef = dbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+    private static DatabaseReference checklistRef = userRef.child("checklist");
+    private static DatabaseReference peptalkRef = userRef.child("peptalks");
 
 
     //dont think i need a constructor but whatever
@@ -160,16 +162,19 @@ public class CustomDialog extends AlertDialog {
         dialog.show();
 
         final EditText editText = (EditText) dialog.findViewById(R.id.edittext_new_checklist);
+        final EditText editText2 = (EditText) dialog.findViewById(R.id.edittext_new_checklist_notes);
         Button submit = (Button) dialog.findViewById(R.id.button_new_checklist);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String input = editText.getText().toString().trim();
+                String inputText = editText.getText().toString().trim();
+                String inputNotes = editText2.getText().toString().trim();
 
-                if (input.equalsIgnoreCase("") || input.equalsIgnoreCase(" ")) {
+
+                if (inputText.equalsIgnoreCase("") || inputText.equalsIgnoreCase(" ")) {
                     editText.setError("oops! please enter a valid title");
                 } else {
-                    writeNewChecklist(input);
+                    writeNewChecklist(inputText,inputNotes);
                     Toast.makeText(context, "added to checklist", Toast.LENGTH_SHORT).show();
                     //replace with snackbar
                     dialog.dismiss();
@@ -196,16 +201,23 @@ public class CustomDialog extends AlertDialog {
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
 
+        final EditText editText2 = (EditText) dialog.findViewById(R.id.edittext_edit_checklist_notes);
+        editText2.setText(check.getNotes());
+        editText2.setCursorVisible(true);
+        editText2.setFocusableInTouchMode(true);
+        editText2.requestFocus();
+
         Button submit = (Button) dialog.findViewById(R.id.button_edit_checklist);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String update = editText.getText().toString().trim();
+                String updateNotes = editText2.getText().toString().trim();
 
                 if (update.equalsIgnoreCase("") || update.equalsIgnoreCase(" ")) {
                     editText.setError("oops! please enter a valid title");
                 } else {
-                    updateChecklist(check, update);
+                    updateChecklist(check, update, updateNotes);
                     Toast.makeText(context, "checklist updated", Toast.LENGTH_SHORT).show();
                     //replace with snackbar
                     dialog.dismiss();
@@ -300,10 +312,14 @@ public class CustomDialog extends AlertDialog {
 
     }
 
-    public static void writeNewChecklist(String text) {
+    public static void writeNewChecklist(String text, String notes) {
+
+
+
+
         DatabaseReference itemKey = checklistRef.push();//this creates the unique key, but no data
         String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
-        final ChecklistItemObject item = new ChecklistItemObject(key, text);
+        final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
         itemKey.setValue(item);
 
         Log.d(TAG, "writeNewChecklist: new key is: " + key);
@@ -327,8 +343,10 @@ public class CustomDialog extends AlertDialog {
 
     }
 
-    public static void updateChecklist(ChecklistItemObject check, String text) {
+    public static void updateChecklist(ChecklistItemObject check, String text, String notes) {
         checklistRef.child(check.getKey()).child("text").setValue(text);
+        checklistRef.child(check.getKey()).child("notes").setValue(notes);
+
     }
 
 

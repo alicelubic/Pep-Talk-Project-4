@@ -9,6 +9,13 @@
         android:layout_height="50dp"
         android:inputType="textMultiLine"/>
 
+    <EditText
+        android:id="@+id/edittext_edit_checklist_notes"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint=""/>
+
     <Button
         android:id="@+id/button_edit_checklist"
         android:layout_width="wrap_content"
