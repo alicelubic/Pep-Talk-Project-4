@@ -1,6 +1,8 @@
 package owlslubic.peptalkapp.views;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -90,9 +92,65 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         initViews();
-        
+
+
+        //temp buttons
+        Button button1 = (Button) findViewById(R.id.tempbutton_fb);
+        Button button2 = (Button) findViewById(R.id.tempbutton_gmail);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                launchFacebook();
+            }
+        });
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchGmail();
+            }
+        });
+
+
+
 
     }
+
+    private boolean appInstalledOrNot(String uri){
+        PackageManager pm = getPackageManager();
+        boolean appInstalled;
+        try{
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            appInstalled = true;
+        }catch(PackageManager.NameNotFoundException e){
+            appInstalled = false;
+        }
+        return appInstalled;
+    }
+
+    public void launchGmail(){
+        boolean installed = appInstalledOrNot("com.google.android.gm");
+        if(installed){
+            Intent launchGmail = getPackageManager().getLaunchIntentForPackage("com.google.android.gm");
+            startActivity(launchGmail);
+        }else{
+            Toast.makeText(MainActivity.this, "Gmail is not currently installed on your device", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+    public void launchFacebook(){
+        boolean installed = appInstalledOrNot("com.facebook.katana");
+        if(installed){
+            Intent launchFb = getPackageManager().getLaunchIntentForPackage("com.facebook.katana");
+            startActivity(launchFb);
+        }
+        else{
+            Toast.makeText(MainActivity.this, "Facebook is not currently installed on your device", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     public void myLoginMethod() {
         //first check if the user is already signed in
@@ -168,25 +226,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                mViewPager.setAdapter(mCustomPagerAdapter);
 
                 break;
-            case R.id.button_sign_out:
-                AuthUI.getInstance()
-                        .signOut(this)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            public void onComplete(@NonNull Task<Void> task) {
-                                // user is now signed out
-                                Log.d(TAG, "SIGN OUT SUCCESSFUL");
-                                Toast.makeText(MainActivity.this, "you are now signed out", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                break;
-            case R.id.button_issignedin:
-
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    Toast.makeText(MainActivity.this, "yup, " + FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "nope", Toast.LENGTH_SHORT).show();
-                }
-                break;
             case R.id.button_navheader_signin:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     //already signed in, so sign em out
@@ -244,9 +283,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         mPepTalkTextView = (TextView) findViewById(R.id.textview_main_circular);
-
-        mPepTalkTextView.setText("");//temp
-
         mPepTalkTextView.setOnClickListener(this);
 
 
@@ -257,6 +293,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+
+
 
         //nav drawer setup
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -301,7 +339,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mBottomSheetBottomText = (TextView) findViewById(R.id.textview_bottomsheet_bottom);
         mBottomSheetTopText = (TextView) findViewById(R.id.textview_bottomsheet_top);
 
-  /*      //viewpager stuff i was trying but i knew it was too simple to be true
+
+        /*      //viewpager stuff i was trying but i knew it was too simple to be true
         //        if(mPepTalkList.isEmpty()){
         mPepTalkList= new ArrayList<>();
 //        }
@@ -309,6 +348,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mCustomPagerAdapter = new CustomPagerAdapter(MainActivity.this,getPepTalks());//this mght null pointer, if it doesn't have the list already?
 
 */
+
     }
 
 
@@ -361,8 +401,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
 
         } else if (id == R.id.nav_resources) {
-            Toast.makeText(MainActivity.this, "resources", Toast.LENGTH_SHORT).show();
-
             launchBottomSheetFromNav();
 
             mBottomSheetHeading.setText(R.string.more_resources_heading);
@@ -370,8 +408,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mBottomSheetBottomText.setText("");
 
         } else if (id == R.id.nav_instructions) {
-            Toast.makeText(MainActivity.this, "instructions", Toast.LENGTH_SHORT).show();
-
             launchBottomSheetFromNav();
 
             mBottomSheetHeading.setText(R.string.instuctions_heading);
@@ -380,22 +416,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         } else if (id == R.id.nav_about) {
-            Toast.makeText(MainActivity.this, "about!", Toast.LENGTH_SHORT).show();
-
             launchBottomSheetFromNav();
 
             mBottomSheetHeading.setText(R.string.about_heading);
             mBottomSheetTopText.setText(R.string.about);
             mBottomSheetBottomText.setText("");
-
-        } else if (id == R.id.nav_logout) {
-
-
-//            if (!isUserLoggedIn()){
-//                Log.i(TAG, "USER IS NOT LOGGED IN");
-//                mDrawer.closeDrawer(GravityCompat.START);
-//            }
-//            logUserOut();
 
         }
 
@@ -421,11 +446,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
-
-
-
-/*
 
 
 

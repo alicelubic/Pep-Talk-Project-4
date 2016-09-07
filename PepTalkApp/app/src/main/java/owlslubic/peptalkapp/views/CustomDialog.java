@@ -51,8 +51,10 @@ public class CustomDialog extends AlertDialog {
     //THESE METHODS LAUNCH THE CREATE AND EDIT DIALOGS
 
 
+
     //will static launch methods cause a problem?
     public static void launchNewPeptalkDialog(final Context context) {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
         final View layout = inflater.inflate(R.layout.dialog_new_peptalk, null);
