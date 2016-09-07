@@ -3,10 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="card_background_dark">#540339</color>
-    <color name="card_background_light">#7e466b</color>
-    <color name="card_very_light">#b46f9d</color>
-    <color name="card_very_dark">#301</color>
+
+    <color name="card_background_dark">#74C2E1</color>
+    <color name="card_background_light">#005B9A</color>
+    <color name="card_very_light">#0191C8</color>
+    <color name="card_very_dark">#303F9F</color>
 
     <color name="accent_dark">#b46f9d</color>
     <color name="accent">#540339</color>

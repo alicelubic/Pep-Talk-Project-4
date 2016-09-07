@@ -42,31 +42,31 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.CustomPagerAdapter;
+import owlslubic.peptalkapp.presenters.OnSwipeTouchListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private static final String TAG = "MainActivity";
-    private static final int RC_SIGN_IN = 9 ;
+    private static final int RC_SIGN_IN = 9;
 
     private BottomSheetBehavior mBottomSheetBehavior;
-    private TextView mBottomSheetHeading, mBottomSheetTopText, mBottomSheetBottomText, mPepTalkTextView;
+    private TextView mBottomSheetHeading, mBottomSheetTopText, mBottomSheetBottomText, mPepTalkTextView, mWelcomeTextView, mSigninPromptTextView;
     private FloatingActionsMenu mFabMenu;
+    private Button mSignInOrOutButton;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavigationView;
+    private View mHeaderView;
     private DrawerLayout mDrawer;
     private FrameLayout mFrameLayout;
     private DatabaseReference mDbRef;
-
-
-
-    FirebaseAuth mAuth;
-    FirebaseAuth.AuthStateListener mAuthListener;
 
 
     private ViewPager mViewPager;
@@ -74,6 +74,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CustomPagerAdapter mCustomPagerAdapter;
     private List<PepTalkObject> mPepTalkList;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //to handle offline usage - disk persistence
+        //TODO find where this can live
+        //Calls to setPersistenceEnabled() must be made before any other usage of FirebaseDatabase instance.
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,24 +90,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         initViews();
-
-
-        //temp button
-        Button button = (Button) findViewById(R.id.button_sign_out);//TODO this button should live in my nav drawer yo
-        button.setOnClickListener(this);
-
-        Button button2 = (Button) findViewById(R.id.button_issignedin);
-        button2.setOnClickListener(this);
-
+        
 
     }
 
-    public void myLoginMethod(){
+    public void myLoginMethod() {
         //first check if the user is already signed in
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             // already signed in, so send them on their way
-            Toast.makeText(MainActivity.this, "Already signed in, "+ auth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Already signed in, " + auth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
             Log.d(TAG, "check if signed in: USER IS ALREADY SIGNED IN");
 //            finish();
         } else {
@@ -140,9 +141,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-
-
     @Override
     public void onClick(View view) {
 
@@ -182,79 +180,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         });
                 break;
             case R.id.button_issignedin:
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                if(auth.getCurrentUser() !=null){
-                    Toast.makeText(MainActivity.this, "yup, "+ auth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
-                }
-                else{
+
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    Toast.makeText(MainActivity.this, "yup, " + FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
+                } else {
                     Toast.makeText(MainActivity.this, "nope", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.button_navheader_signin:
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    //already signed in, so sign em out
+                    AuthUI.getInstance().signOut(this);
+                    //so we sign out, and then change the display for signing back in
+                    mSignInOrOutButton.setText(R.string.sign_in);
+                    mSigninPromptTextView.setText(R.string.sign_in_prompt);
+                    mWelcomeTextView.setText(R.string.welcome_blurb);
+
+                } else {
+                    //needs to sign in
+                    myLoginMethod();
+                }
+                break;
 
 
         }
 
     }
-
-
-
-
-/*
-
-    //list to feed to viewpager adapter
-    public List<PepTalkObject> getPepTalks(){
-        mPepTalkList.add(new PepTalkObject("","test title","test body", false));
-
-        //the below will add updates but uh how to get existing ones?
-
-        mDbRef.child("PepTalks").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                mPepTalkList.add(dataSnapshot.getValue(PepTalkObject.class));
-                Log.d(TAG, "GET PEPTALKS onChildAdded: pep talk list size: "+ mPepTalkList.size());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                mPepTalkList.remove(dataSnapshot.getValue(PepTalkObject.class));
-                Log.d(TAG, "GET PEPTALKS onChildRemoved: removed peptalklist size: "+ mPepTalkList.size());
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-      trying the above method instead
-        mDbRef.child("PepTalks").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    mPepTalkList.add(snapshot.getValue(PepTalkObject.class));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-*/
-//
-//       return mPepTalkList;
-//   }
-
 
 
 
@@ -294,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mPepTalkTextView = (TextView) findViewById(R.id.textview_main_circular);
 
-        mPepTalkTextView.setText("Sign Up");//temp
+        mPepTalkTextView.setText("");//temp
 
         mPepTalkTextView.setOnClickListener(this);
 
@@ -315,6 +266,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        mHeaderView = mNavigationView.getHeaderView(0);
+        mWelcomeTextView = (TextView) mHeaderView.findViewById(R.id.textview_navheader_welcome);
+        mSigninPromptTextView = (TextView) mHeaderView.findViewById(R.id.textview_navheader_sign_in);
+        mSignInOrOutButton = (Button) mHeaderView.findViewById(R.id.button_navheader_signin);
+
+            mSignInOrOutButton.setOnClickListener(this);
+            Log.d(TAG, "SIGN IN BUTTON LISTENER HAS BEEN SET, button says: "+ mSignInOrOutButton.getText());
+            //not sure if this can live here because will it be updated accordingly? should be, since oncreate will be called before and after the login screen comes up
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                //already signed in, so set text to sign out
+                //TODO the below stuff might need to happen in the button onclick since the login screen doesnt open so oncreate is not called
+                mSignInOrOutButton.setText(R.string.sign_out);
+                mSigninPromptTextView.setText("");
+                mWelcomeTextView.setText(getString(R.string.welcome_back_user) +
+                        FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                //TODO fix that concatenation
+
+            } else {
+                //needs to sign in, set text to sign in
+                mSignInOrOutButton.setText(R.string.sign_in);
+                mSigninPromptTextView.setText(R.string.sign_in_prompt);
+                mWelcomeTextView.setText(R.string.welcome_blurb);
+            }
+
+
+
+
 
         //bottom sheet
         mBottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottomSheetLayout));
@@ -332,7 +310,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 */
     }
-
 
 
     //NAV DRAWER MENU options
@@ -427,9 +404,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
-
-
     //works
     private void launchBottomSheetFromNav() {
         //close nav drawer
@@ -448,29 +422,76 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-    private void insertContentOnNewAccountCreated(){
-        //TODO NEED TO FIND A WAY TO ONLY RUN THIS ONE TIME WHEN ACCOUNT IS CREATED
-        //there might be some sort of auth method for like "on authenticated", idk look into it
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
-                    .child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-           if(userRef.child("peptalks")==null)//meaning that the user and/or its children have not been added to the db bc nothing has been added yet
-            CustomDialog.writeNewChecklist("Prepopulated item 1", "notes");
-            CustomDialog.writeNewChecklist("Prepopulated item 2", "notes");
-            CustomDialog.writeNewChecklist("Prepopulated item 3", "notes");
-            CustomDialog.writeNewChecklist("Prepopulated item 4", "notes");
-
-            CustomDialog.writeNewPeptalk("Prepopulated peptalk 1", "Body");
-            CustomDialog.writeNewPeptalk("Prepopulated peptalk 2", "Body");
-            CustomDialog.writeNewPeptalk("Prepopulated peptalk 3", "Body");
-            CustomDialog.writeNewPeptalk("Prepopulated peptalk 4", "Body");
-        }
-    }
 
 
 
 /*
+
+
+
+
+/*
+
+    //list to feed to viewpager adapter
+    public List<PepTalkObject> getPepTalks(){
+        mPepTalkList.add(new PepTalkObject("","test title","test body", false));
+
+        //the below will add updates but uh how to get existing ones?
+
+        mDbRef.child("PepTalks").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                mPepTalkList.add(dataSnapshot.getValue(PepTalkObject.class));
+                Log.d(TAG, "GET PEPTALKS onChildAdded: pep talk list size: "+ mPepTalkList.size());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                mPepTalkList.remove(dataSnapshot.getValue(PepTalkObject.class));
+                Log.d(TAG, "GET PEPTALKS onChildRemoved: removed peptalklist size: "+ mPepTalkList.size());
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+      trying the above method instead
+        mDbRef.child("PepTalks").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    mPepTalkList.add(snapshot.getValue(PepTalkObject.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+//
+//       return mPepTalkList;
+//   }
+
+
+
+
+
+
 
 public void setupFrag(){
     FragmentManager manager = getSupportFragmentManager();
@@ -491,7 +512,27 @@ public void setupFrag(){
     getSupportFragmentManager().beginTransaction()
             .replace(R.id.framelayout_main_frag_container, new MyFragment())//we are replacing, not adding to the backstack. so if we hit back, it will just go away
             .commit();
+
+
+           ///
+
+
+
+
+
+
+
+
+
+
+
+
 */
+
+
+
+
+
 
 }
 

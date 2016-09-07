@@ -31,10 +31,12 @@
             app:headerLayout="@layout/nav_header_main"
             app:menu="@menu/activity_main_drawer" />
 
+
     </android.support.v4.widget.DrawerLayout>
 
     <FrameLayout
         android:id="@+id/frame_layout"
+        android:theme="@style/PepTalkTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white_overlay">
@@ -68,7 +70,7 @@
             fab:fab_plusIconColor="@color/white"
             fab:fab_icon="@drawable/ic_favorite_border_white_24dp"
             fab:fab_size="mini"
-            fab:fab_title="New Pep Talk" />
+            fab:fab_title="PepTalk" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fablet_checklist"
@@ -79,7 +81,7 @@
                 fab:fab_plusIconColor="@color/white"
                 fab:fab_icon="@drawable/ic_check_white_24dp"
                 fab:fab_size="mini"
-                fab:fab_title="New Checklist" />
+                fab:fab_title="Checklist" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </FrameLayout>

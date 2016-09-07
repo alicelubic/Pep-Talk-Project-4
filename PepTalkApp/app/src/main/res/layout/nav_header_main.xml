@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
-    android:background="@android:color/darker_gray"
+    android:background="@color/card_background_dark"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -13,24 +13,27 @@
 
     <!--android:background="@drawable/side_nav_bar"-->
 
-    <!--<ImageView-->
-    <!--android:key="@+key/imageView"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:paddingTop="@dimen/nav_header_vertical_spacing"-->
-    <!--android:src="@android:drawable/sym_def_app_icon" />-->
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/textview_navheader_welcome"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="6dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Pep Talk Time Y'all"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textview_navheader_sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="get readaY!" />
+        android:padding="6dp"
+        android:text="" />
+    <Button
+        android:id="@+id/button_navheader_signin"
+        android:text=""
+        android:padding="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

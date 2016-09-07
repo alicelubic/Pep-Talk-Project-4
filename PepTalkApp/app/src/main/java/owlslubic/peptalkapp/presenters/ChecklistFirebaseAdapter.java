@@ -1,6 +1,7 @@
 package owlslubic.peptalkapp.presenters;
 
 import android.content.Context;
+import android.transition.TransitionManager;
 import android.view.View;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -25,6 +26,8 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
 
     @Override
     protected void populateViewHolder(ChecklistViewHolder holder, final ChecklistItemObject model, int position) {
+
+
         holder.mItem.setText(model.getText());
 
         holder.mCard.setOnClickListener(new View.OnClickListener() {

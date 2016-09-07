@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.provider.ContactsContract;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +87,17 @@ public class CustomDialog extends AlertDialog {
                     writeNewPeptalk(titleInput, bodyInput);//, false);//setting all as false to start with
                     Log.i(TAG, "on submit click: title is " + titleInput);
                     Toast.makeText(context, "pep talk added", Toast.LENGTH_SHORT).show();
+
+                    //the problem is with getting the view of where it's going!
+//                    Snackbar.make(findViewById(R.id.drawer_layout), "I'm a Snackbar", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            //undo
+//                            Toast.makeText(MainActivity.this, "Snackbar Action", Toast.LENGTH_LONG).show();
+//                        }
+//                    }).show();
+//                }
+
                     dialog.dismiss();
                 }
 
@@ -319,6 +331,7 @@ public class CustomDialog extends AlertDialog {
 
 
     //THESE METHODS ACTUALLY INTERACT WITH DATABASE AND ARE USED IN THE DIALOGS
+    //TODO put these in an async task yo
 
     public static void writeNewChecklist(String text, String notes) {
         DatabaseReference itemKey = checklistRef.push();//this creates the unique key, but no data

@@ -23,5 +23,10 @@
     <string name="more_resources">Of all the stress management philosophies I\'ve subscribed to, and all the tips and tricks I\'ve used to get through mood lows or bad days, I have found that the concepts of Mindfulness benefit me most. \n\n
         Read about how guided meditations and mindfulness exercises can help you take an active approach to feeling better right now.
 </string>
+    <string name="welcome_blurb">Welcome blurb</string>
+    <string name="sign_in_prompt">Please sign in to get pep talkin\'</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="welcome_back_user">"Welcome back, "</string>
 
 </resources>
