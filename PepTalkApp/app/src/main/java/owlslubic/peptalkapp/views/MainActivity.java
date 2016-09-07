@@ -1,5 +1,6 @@
 package owlslubic.peptalkapp.views;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -101,55 +102,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 
-
-                launchFacebook();
+                launchDefaultSMS();
             }
         });
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchGmail();
+                launchDefaultEmail();
             }
         });
 
 
-
-
     }
 
-    private boolean appInstalledOrNot(String uri){
-        PackageManager pm = getPackageManager();
-        boolean appInstalled;
-        try{
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-            appInstalled = true;
-        }catch(PackageManager.NameNotFoundException e){
-            appInstalled = false;
-        }
-        return appInstalled;
-    }
 
-    public void launchGmail(){
-        boolean installed = appInstalledOrNot("com.google.android.gm");
-        if(installed){
-            Intent launchGmail = getPackageManager().getLaunchIntentForPackage("com.google.android.gm");
-            startActivity(launchGmail);
-        }else{
-            Toast.makeText(MainActivity.this, "Gmail is not currently installed on your device", Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
-    public void launchFacebook(){
-        boolean installed = appInstalledOrNot("com.facebook.katana");
-        if(installed){
-            Intent launchFb = getPackageManager().getLaunchIntentForPackage("com.facebook.katana");
-            startActivity(launchFb);
-        }
-        else{
-            Toast.makeText(MainActivity.this, "Facebook is not currently installed on your device", Toast.LENGTH_SHORT).show();
-        }
-    }
 
 
     public void myLoginMethod() {
@@ -247,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     //making a method to do this so the oncreate stays clean and pretty aww
     private void initViews() {
 
@@ -295,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
-
         //nav drawer setup
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mToggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -309,27 +273,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mSigninPromptTextView = (TextView) mHeaderView.findViewById(R.id.textview_navheader_sign_in);
         mSignInOrOutButton = (Button) mHeaderView.findViewById(R.id.button_navheader_signin);
 
-            mSignInOrOutButton.setOnClickListener(this);
-            Log.d(TAG, "SIGN IN BUTTON LISTENER HAS BEEN SET, button says: "+ mSignInOrOutButton.getText());
-            //not sure if this can live here because will it be updated accordingly? should be, since oncreate will be called before and after the login screen comes up
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                //already signed in, so set text to sign out
-                //TODO the below stuff might need to happen in the button onclick since the login screen doesnt open so oncreate is not called
-                mSignInOrOutButton.setText(R.string.sign_out);
-                mSigninPromptTextView.setText("");
-                mWelcomeTextView.setText(getString(R.string.welcome_back_user) +
-                        FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-                //TODO fix that concatenation
+        mSignInOrOutButton.setOnClickListener(this);
+        Log.d(TAG, "SIGN IN BUTTON LISTENER HAS BEEN SET, button says: " + mSignInOrOutButton.getText());
+        //not sure if this can live here because will it be updated accordingly? should be, since oncreate will be called before and after the login screen comes up
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            //already signed in, so set text to sign out
+            //TODO the below stuff might need to happen in the button onclick since the login screen doesnt open so oncreate is not called
+            mSignInOrOutButton.setText(R.string.sign_out);
+            mSigninPromptTextView.setText("");
+            mWelcomeTextView.setText(getString(R.string.welcome_back_user) +
+                    FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            //TODO fix that concatenation
 
-            } else {
-                //needs to sign in, set text to sign in
-                mSignInOrOutButton.setText(R.string.sign_in);
-                mSigninPromptTextView.setText(R.string.sign_in_prompt);
-                mWelcomeTextView.setText(R.string.welcome_blurb);
-            }
-
-
-
+        } else {
+            //needs to sign in, set text to sign in
+            mSignInOrOutButton.setText(R.string.sign_in);
+            mSigninPromptTextView.setText(R.string.sign_in_prompt);
+            mWelcomeTextView.setText(R.string.welcome_blurb);
+        }
 
 
         //bottom sheet
@@ -448,6 +409,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+    //launch external apps
+    private boolean appInstalledOrNot(String uri) {
+        PackageManager pm = getPackageManager();
+        boolean appInstalled;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            appInstalled = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            appInstalled = false;
+        }
+        return appInstalled;
+    }
+
+    public void launchDefaultEmail() {
+        boolean installed = appInstalledOrNot("com.google.android.gm");
+        if (installed) {
+            Intent emailLauncher = new Intent(Intent.ACTION_VIEW);
+            emailLauncher.setType("message/rfc822");
+            startActivity(emailLauncher);
+        } else {
+            Toast.makeText(MainActivity.this, "Gmail is not currently installed on your device", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void launchFacebook() {
+        boolean installed = appInstalledOrNot("com.facebook.katana");
+        if (installed) {
+            Intent launchFb = getPackageManager().getLaunchIntentForPackage("com.facebook.katana");
+            startActivity(launchFb);
+        } else {
+            Toast.makeText(MainActivity.this, "Facebook is not currently installed on your device", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void launchDefaultSMS() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setType("vnd.android-dir/mms-sms");
+        startActivity(intent);
+    }
+
 
 
 /*
@@ -548,10 +551,6 @@ public void setupFrag(){
 
 
 */
-
-
-
-
 
 
 }
