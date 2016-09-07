@@ -43,8 +43,6 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
-//TODO inflate menu that has back home button, and maybe some sort of info overflow menu.. do i need it?
-
         //fab launches dialog
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_peptalk_list);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -57,8 +55,10 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
 
         //recyclerview
 
-        mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
+        }
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -75,33 +75,6 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);//, this, mFirebaseAdapter.get);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
-
-        //TODO can i use the same adapter for both?
-//        FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder> adapter =
-//                new FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder>
-//                        (PepTalkObject.class, R.layout.card_peptalk, PepTalkViewHolder.class, dbRef.child("PepTalks")) {
-//                    @Override
-//                    protected void populateViewHolder(PepTalkViewHolder holder, final PepTalkObject model, int position) {
-//                        Log.i(TAG, "populateViewHolder: "+ model.getTitle());
-//                        holder.mTitle.setText(model.getTitle());
-//                        holder.mCard.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                //launches edit pep talk dialog
-//                                CustomDialog.launchEditPeptalkDialog(PepTalkListActivity.this, model);
-//                            }
-//                        });
-//                        holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
-//                            @Override
-//                            public boolean onLongClick(View view) {
-//                                //launches delete peptalk with are you sure? dialog
-//                                CustomDialog.launchDeletePepTalkDialog(model, PepTalkListActivity.this);
-//                                return true;
-//                            }
-//                        });
-//                    }
-//                };
-
 
 
     }

@@ -23,9 +23,6 @@
         <activity android:name=".views.ChecklistActivity"
             android:parentActivityName=".views.MainActivity"/>
 
-        <activity android:name=".views.SignUpActivity"
-            android:parentActivityName=".views.MainActivity"/>
-
         <!--widget business-->
         <receiver android:name=".presenters.MyWidgetProvider"
             android:label="Pep Talk Widget"

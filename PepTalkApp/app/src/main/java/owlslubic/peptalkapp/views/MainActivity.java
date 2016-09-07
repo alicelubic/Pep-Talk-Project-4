@@ -2,6 +2,7 @@ package owlslubic.peptalkapp.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
@@ -62,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FrameLayout mFrameLayout;
     private DatabaseReference mDbRef;
 
+
+
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -79,13 +82,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         initViews();
 
+
         //temp button
         Button button = (Button) findViewById(R.id.button_sign_out);//TODO this button should live in my nav drawer yo
         button.setOnClickListener(this);
 
         Button button2 = (Button) findViewById(R.id.button_issignedin);
         button2.setOnClickListener(this);
-        
+
 
     }
 
@@ -116,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
-
 
     //handling the sign-in result
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -158,10 +161,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.textview_main_circular:
                 //launch pep talk view
-                //but temporarily it'll be a signup thing
-//                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
-//                startActivity(intent);
 
+                //temporarily serving as my log in stuff
                 myLoginMethod();
 
                 //not sure if this makes the viewpager appear or?
@@ -447,35 +448,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+    private void insertContentOnNewAccountCreated(){
+        //TODO NEED TO FIND A WAY TO ONLY RUN THIS ONE TIME WHEN ACCOUNT IS CREATED
+        //there might be some sort of auth method for like "on authenticated", idk look into it
 
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
+                    .child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+           if(userRef.child("peptalks")==null)//meaning that the user and/or its children have not been added to the db bc nothing has been added yet
+            CustomDialog.writeNewChecklist("Prepopulated item 1", "notes");
+            CustomDialog.writeNewChecklist("Prepopulated item 2", "notes");
+            CustomDialog.writeNewChecklist("Prepopulated item 3", "notes");
+            CustomDialog.writeNewChecklist("Prepopulated item 4", "notes");
 
-
-
-    //temporarily moving this to custo dialog class
-
-//    public static void createUserWithEmailAndPassword(String email, String password) {
-//        mAuth.createUserWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        //"if sign in succeeds, the auth state listener will be notified and logic to handle the
-//                        // signed in user can be handled in the listener."
-//
-//                        //^not sure what logic they talkin bout but we'll see
-//                        if (task.isSuccessful()) {
-//                            Log.d(TAG, "onComplete: " + "CREATE USER WAS SUCCESSFUL");
-//                        }
-//
-//
-//                        //if sign in fails:
-//                        if (!task.isSuccessful()) {
-//                            Log.d(TAG, "onComplete: SIGN UP USER FAILED");
-//                        }
-//
-//                    }
-//                });
-//    }
-
+            CustomDialog.writeNewPeptalk("Prepopulated peptalk 1", "Body");
+            CustomDialog.writeNewPeptalk("Prepopulated peptalk 2", "Body");
+            CustomDialog.writeNewPeptalk("Prepopulated peptalk 3", "Body");
+            CustomDialog.writeNewPeptalk("Prepopulated peptalk 4", "Body");
+        }
+    }
 
 
 

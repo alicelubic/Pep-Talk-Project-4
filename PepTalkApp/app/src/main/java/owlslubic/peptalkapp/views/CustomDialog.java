@@ -31,9 +31,8 @@ public class CustomDialog extends AlertDialog {
 
     private static final String TAG = "CustomDialog";
     private static DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-    private static DatabaseReference userRef = dbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-    private static DatabaseReference checklistRef = userRef.child("checklist");
-    private static DatabaseReference peptalkRef = userRef.child("peptalks");
+    private static DatabaseReference checklistRef = dbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("checklist");
+    private static DatabaseReference peptalkRef = dbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("peptalks");
 
 
     //dont think i need a constructor but whatever
@@ -44,6 +43,11 @@ public class CustomDialog extends AlertDialog {
 
     //push appends data to a list, so it generates a unique key every time a new child is added,
     //which can be called upon with getKey
+
+
+
+
+    //THESE METHODS LAUNCH THE CREATE AND EDIT DIALOGS
 
 
     //will static launch methods cause a problem?
@@ -312,18 +316,16 @@ public class CustomDialog extends AlertDialog {
 
     }
 
+
+
+    //THESE METHODS ACTUALLY INTERACT WITH DATABASE AND ARE USED IN THE DIALOGS
+
     public static void writeNewChecklist(String text, String notes) {
-
-
-
-
         DatabaseReference itemKey = checklistRef.push();//this creates the unique key, but no data
         String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
         final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
         itemKey.setValue(item);
-
         Log.d(TAG, "writeNewChecklist: new key is: " + key);
-
     }
 
     public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {
@@ -331,7 +333,6 @@ public class CustomDialog extends AlertDialog {
         String key = pepKey.getKey();
         final PepTalkObject peptalk = new PepTalkObject(key, title, body, false);
         pepKey.setValue(peptalk);
-
     }
 
     public static void updatePepTalk(PepTalkObject peptalk, String title, String body) {
@@ -350,6 +351,9 @@ public class CustomDialog extends AlertDialog {
     }
 
 
+
+
+
     //this will be what is launched if all the checklist items are checked
     public void launchChecklistCompleteDialog() {
     }
@@ -358,54 +362,6 @@ public class CustomDialog extends AlertDialog {
     public void launchPeptalkDisplayDialog() {
     }
 
-
-
-/*    moving this to its own activity
-    public static void launchSignUpDialog(final Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View layout = inflater.inflate(R.layout.dialog_signup, null);
-        builder.setView(layout);
-        final AlertDialog dialog = builder.create();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);//next try adjust pan
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        dialog.show();
-
-        final EditText et_email = (EditText) dialog.findViewById(R.id.edittext_email);
-        final EditText et_pass = (EditText) dialog.findViewById(R.id.edittext_passs);
-        Button b = (Button) dialog.findViewById(R.id.button_sign_in);
-
-
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (et_email.getText() != null && et_pass != null) {
-                    String email = et_email.getText().toString().trim();
-                    String password = et_pass.getText().toString().trim();
-                    Log.i(TAG, "signUpDialog: email: " + email + " and pass: " + password);
-//                    MyFirebaseAuth.createUserWithEmailAndPassword(email, password);//it forced me to make the method static. address that, would ya?
-
-                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                    mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(context, "creating your account", Toast.LENGTH_SHORT).show();
-                            }
-                            if(!task.isSuccessful()){
-                                Toast.makeText(context, "account creation failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
-                }
-
-                dialog.dismiss();
-            }
-        });
-    }
-    */
 
     public static boolean setWidgetDefaultFromDialog(PepTalkObject pepTalkObject, boolean b) {
         pepTalkObject.setIsWidgetDefault(b);

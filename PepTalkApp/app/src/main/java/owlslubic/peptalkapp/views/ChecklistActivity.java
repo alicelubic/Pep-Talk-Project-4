@@ -47,34 +47,6 @@ public class ChecklistActivity extends AppCompatActivity {
                 ChecklistViewHolder.class, mChecklistRef,this);
         recyclerView.setAdapter(mFirebaseAdapter);
 
-//
-//        FirebaseRecyclerAdapter<ChecklistItemObject, ChecklistViewHolder> adapter =
-//                new FirebaseRecyclerAdapter<ChecklistItemObject, ChecklistViewHolder>
-//                        (ChecklistItemObject.class, R.layout.card_checklist, ChecklistViewHolder.class, dbRef.child("Checklist")) {
-//                    @Override
-//                    protected void populateViewHolder(ChecklistViewHolder holder, final ChecklistItemObject model, int position) {
-//                        Log.i(TAG, "populateViewHolder: " + model.getText());
-//                        holder.mItem.setText(model.getText());
-//
-//                        holder.mCard.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                CustomDialog.launchEditChecklistDialog(ChecklistActivity.this, model);
-//                            }
-//                        });
-//
-//                        holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
-//                            @Override
-//                            public boolean onLongClick(View view) {
-//                               CustomDialog.launchDeleteChecklistDialog(model,ChecklistActivity.this);
-//                                return true;
-//                            }
-//                        });
-//                    }
-//                };
-
-
-
 
         //fab for add new checklist item
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_checklist);
@@ -87,4 +59,6 @@ public class ChecklistActivity extends AppCompatActivity {
 
 
     }
+
+
 }
