@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="420dp"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:id="@+id/bottomSheetLayout"
     app:layout_behavior="@string/bottom_sheet_behavior"
     app:behavior_hideable="true"
-    android:background="@color/card_background_dark">
+    android:backgroundTint="@color/card_background_dark">
 
     <TextView
         android:id="@+id/textview_bottomSheetHeading"

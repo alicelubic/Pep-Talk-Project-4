@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import owlslubic.peptalkapp.R;
 
@@ -15,6 +16,8 @@ import owlslubic.peptalkapp.R;
  */
 public class MyWidgetProvider extends AppWidgetProvider {
     private static final String ACTION_CLICK = "ACTION_CLICK";
+    private static final String WIDGET_BUTTON = "owlslubic.peptalkapp.widget_button";
+    RemoteViews mRemoteViews;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -23,11 +26,15 @@ public class MyWidgetProvider extends AppWidgetProvider {
         for (int widgetId : allWidgetIds) {
 
 
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-            remoteViews.setTextViewText(R.id.textview_widget, "emergency \npeptalk");
+            mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+            mRemoteViews.setTextViewText(R.id.textview_widget, "emergency \npeptalk");
 
-            remoteViews.setOnClickPendingIntent(R.id.textview_widget,getPendingSelfIntent(context, ACTION_CLICK));
-            appWidgetManager.updateAppWidget(thisWidget, remoteViews);
+//            remoteViews.setOnClickPendingIntent(R.id.textview_widget,getPendingSelfIntent(context, ACTION_CLICK));
+//            appWidgetManager.updateAppWidget(thisWidget, remoteViews);
+            Intent intent = new Intent(WIDGET_BUTTON);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+            mRemoteViews.setOnClickPendingIntent(R.id.textview_widget, pendingIntent);
+
 
             //ok this is all good and fine, but i want to tap the widget and it will
             // change the text on that view to a peptalk set as default
@@ -54,9 +61,19 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
     }
 
-    protected PendingIntent getPendingSelfIntent(Context context, String action) {
-        Intent intent = new Intent(context, getClass());
-        intent.setAction(action);
-        return PendingIntent.getBroadcast(context, 0, intent, 0);
-    }
+
+//    @Override
+//    public void onReceive(Context context, Intent intent) {
+//        super.onReceive(context, intent);
+//
+//        if(WIDGET_BUTTON.equals(intent.getAction())){
+//            mRemoteViews.setTextViewText(R.id.textview_widget,"change!");
+//        }
+//    }
+//
+//    protected PendingIntent getPendingSelfIntent(Context context, String action) {
+//        Intent intent = new Intent(context, getClass());
+//        intent.setAction(action);
+//        return PendingIntent.getBroadcast(context, 0, intent, 0);
+//    }
 }

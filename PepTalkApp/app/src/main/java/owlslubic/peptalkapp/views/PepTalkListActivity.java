@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -135,6 +136,18 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
     }
 */
 
+
+    public void launchFragment(PepTalkObject model){
+        MyFragment frag = new MyFragment();
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.framelayout_peptalk_frag_container, new MyFragment());
+
+        frag.mTextViewTitle.setText(model.getTitle());
+        frag.mTextViewBody.setText(model.getBody());
+
+        ft.commit();
+    }
 
 
     private void insertContentOnNewAccountCreated() {

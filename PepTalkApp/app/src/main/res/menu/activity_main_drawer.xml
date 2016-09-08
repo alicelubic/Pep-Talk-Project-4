@@ -6,39 +6,45 @@
         <item
             android:id="@+id/nav_peptalks"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Pep Talks" />
+            android:title="@string/pep_talks" />
         <item
             android:id="@+id/nav_checklist"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Checklist" />
+            android:title="@string/feel_better_checklist" />
         <item
             android:id="@+id/nav_resources"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="More Resources" />
+            android:title="@string/more_resources" />
         <item
             android:id="@+id/nav_instructions"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Instructions" />
+            android:title="@string/instructions" />
 
         <item
             android:id="@+id/nav_about"
-            android:title="About"/>
-        <item
-            android:id="@+id/nav_logout"
-            android:title="logout"/>
+            android:title="@string/about"/>
+
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="jkfsnbjvuov" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="phone a friend" />
-        </menu>
-    </item>
+    <!--<item android:title=""/>-->
+    <!--<item android:title=""/>-->
+
+    <!--<item android:title="Why not reach out to a friend?"/>-->
+    <!--<item android:title="I know they'd love to hear from you">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_email"-->
+                <!--android:icon="@drawable/ic_menu_share"-->
+                <!--android:title="@string/email"/>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_text"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="@string/text"/>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_fb"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="@string/fb"/>-->
+        <!--</menu>-->
+    <!--</item>-->
 
 </menu>

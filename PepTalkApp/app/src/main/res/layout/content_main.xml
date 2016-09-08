@@ -17,20 +17,6 @@
     android:background="@drawable/circular_text_view"/>
 
 
-    <Button
-        android:layout_gravity="center"
-        android:id="@+id/tempbutton_fb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="facebook"/>
-    <Button
-        android:layout_margin="90dp"
-        android:id="@+id/tempbutton_gmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="gmail"/>
-
-
 
 
     <include layout="@layout/content_bottom_sheet" />

@@ -1,6 +1,7 @@
 package owlslubic.peptalkapp.presenters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
@@ -13,17 +14,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.views.CustomDialog;
+import owlslubic.peptalkapp.views.MyFragment;
 import owlslubic.peptalkapp.views.PepTalkListActivity;
 
 /**
  * Created by owlslubic on 9/1/16.
  */
+
 public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder> implements ItemTouchHelperAdapter{
     private DatabaseReference mRef;
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
+    PepTalkListActivity mActivity;
 
 
 
@@ -36,12 +41,26 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
 
     @Override
     protected void populateViewHolder(final PepTalkViewHolder holder, final PepTalkObject model, int position) {
+
         holder.mTitle.setText(model.getTitle());
         holder.mCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //launches edit pep talk dialog
-                CustomDialog.launchEditPeptalkDialog(mContext, model);
+//                CustomDialog.launchEditPeptalkDialog(mContext, model);
+
+                //display fragment LOL THIS DOESNT WORK
+
+//                mActivity = (PepTalkListActivity)mContext;
+//                FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
+//                ft.add(R.id.framelayout_peptalk_frag_container, new MyFragment());
+//
+//                holder.mFragTitle.setText(model.getTitle());
+//                holder.mFragBody.setText(model.getBody());
+//
+//                ft.commit();
+
+
             }
         });
         holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
@@ -52,6 +71,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
                 return true;
             }
         });
+
 
 
 
@@ -68,6 +88,9 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
 
     }
 
+
+
+
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         return false;
@@ -80,6 +103,10 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
 //        CustomDialog.launchDeletePepTalkDialog(peptalk, mContext);
 
 
+    }
+
+    public interface OnItemClickListener{
+        public void onItemClick(String title, String body);
     }
 
 

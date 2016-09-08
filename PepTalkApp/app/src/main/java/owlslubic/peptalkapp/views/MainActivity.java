@@ -27,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView mBottomSheetHeading, mBottomSheetTopText, mBottomSheetBottomText, mPepTalkTextView, mWelcomeTextView, mSigninPromptTextView;
     private FloatingActionsMenu mFabMenu;
     private Button mSignInOrOutButton;
+    private ImageButton mSms, mEmail, mFb;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavigationView;
@@ -95,27 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initViews();
 
 
-        //temp buttons
-        Button button1 = (Button) findViewById(R.id.tempbutton_fb);
-        Button button2 = (Button) findViewById(R.id.tempbutton_gmail);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                launchDefaultSMS();
-            }
-        });
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchDefaultEmail();
-            }
-        });
-
-
     }
-
-
 
 
     public void myLoginMethod() {
@@ -184,8 +166,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.textview_main_circular:
                 //launch pep talk view
 
-                //temporarily serving as my log in stuff
-                myLoginMethod();
 
                 //not sure if this makes the viewpager appear or?
 
@@ -202,10 +182,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mWelcomeTextView.setText(R.string.welcome_blurb);
 
                 } else {
-                    //needs to sign in
                     myLoginMethod();
                 }
                 break;
+            case R.id.imagebutton_sms:
+                launchDefaultSMS();
+                break;
+            case R.id.imagebutton_email:
+                launchDefaultEmail();
+                break;
+            case R.id.imagebutton_fb:
+                launchFacebook();
+                break;
+
 
 
         }
@@ -267,12 +256,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mToggle.syncState();
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
-
+        //nav login header
         mHeaderView = mNavigationView.getHeaderView(0);
         mWelcomeTextView = (TextView) mHeaderView.findViewById(R.id.textview_navheader_welcome);
         mSigninPromptTextView = (TextView) mHeaderView.findViewById(R.id.textview_navheader_sign_in);
         mSignInOrOutButton = (Button) mHeaderView.findViewById(R.id.button_navheader_signin);
-
         mSignInOrOutButton.setOnClickListener(this);
         Log.d(TAG, "SIGN IN BUTTON LISTENER HAS BEEN SET, button says: " + mSignInOrOutButton.getText());
         //not sure if this can live here because will it be updated accordingly? should be, since oncreate will be called before and after the login screen comes up
@@ -291,6 +279,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mSigninPromptTextView.setText(R.string.sign_in_prompt);
             mWelcomeTextView.setText(R.string.welcome_blurb);
         }
+        //nav bottom imagebuttons
+        mSms = (ImageButton) findViewById(R.id.imagebutton_sms);
+        mSms.setOnClickListener(this);
+        mEmail = (ImageButton) findViewById(R.id.imagebutton_email);
+        mEmail.setOnClickListener(this);
+        mFb = (ImageButton) findViewById(R.id.imagebutton_fb);
+        mFb.setOnClickListener(this);
+
 
 
         //bottom sheet
@@ -407,9 +403,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
-
-    //launch external apps
+    //launch external social apps
     private boolean appInstalledOrNot(String uri) {
         PackageManager pm = getPackageManager();
         boolean appInstalled;
