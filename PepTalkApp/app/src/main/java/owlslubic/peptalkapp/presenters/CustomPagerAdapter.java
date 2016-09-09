@@ -42,9 +42,9 @@ public class CustomPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        View view = mInflater.inflate(R.layout.fragment_peptalk, container, false);
-        mTextViewTitle = (TextView) view.findViewById(R.id.textview_frag_title);
-        mTextViewBody = (TextView) view.findViewById(R.id.textview_frag_body);
+        View view = mInflater.inflate(R.layout.dialog_view_peptalk, container, false);
+        mTextViewTitle = (TextView) view.findViewById(R.id.textview_pepview_title);
+        mTextViewBody = (TextView) view.findViewById(R.id.textview_pepview_body);
         if (mTextViewTitle != null && mTextViewBody != null){
             mTextViewTitle.setText(mPepTalkObjectList.get(position).getTitle());
             mTextViewBody.setText(mPepTalkObjectList.get(position).getBody());

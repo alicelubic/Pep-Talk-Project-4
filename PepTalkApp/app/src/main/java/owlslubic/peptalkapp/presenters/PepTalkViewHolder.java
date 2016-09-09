@@ -32,7 +32,7 @@ public class PepTalkViewHolder extends RecyclerView.ViewHolder{
         super(itemView);
         mTitle = (TextView) itemView.findViewById(R.id.textview_peptalk_title);
         mCard = (CardView) itemView.findViewById(R.id.cardview_peptalk);
-        
+
 
     }
 

@@ -3,7 +3,6 @@ package owlslubic.peptalkapp.views;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,7 @@ public class MyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_peptalk, container, false);
+        View view = inflater.inflate(R.layout.dialog_view_peptalk, container, false);
 
         return view;
     }
@@ -58,8 +57,8 @@ public class MyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //this is where i could set an onclick listener?
 
-        mTextViewTitle = (TextView) view.findViewById(R.id.textview_frag_title);
-        mTextViewBody = (TextView) view.findViewById(R.id.textview_frag_body);
+        mTextViewTitle = (TextView) view.findViewById(R.id.textview_pepview_title);
+        mTextViewBody = (TextView) view.findViewById(R.id.textview_pepview_body);
 //        if (mTextViewTitle != null && mTextViewBody != null){
 //
 //            mTextViewTitle.setText(mTitle);

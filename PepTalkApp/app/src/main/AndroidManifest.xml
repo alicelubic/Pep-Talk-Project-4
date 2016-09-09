@@ -2,12 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="owlslubic.peptalkapp">
 
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
         <activity
             android:name=".views.MainActivity"
             android:label="@string/app_name"
@@ -18,27 +24,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.PepTalkListActivity"
-            android:parentActivityName=".views.MainActivity"/>
-        <activity android:name=".views.ChecklistActivity"
-            android:parentActivityName=".views.MainActivity"/>
+        <activity
+            android:name=".views.PepTalkListActivity"
+            android:parentActivityName=".views.MainActivity" />
+        <activity
+            android:name=".views.ChecklistActivity"
+            android:parentActivityName=".views.MainActivity" />
 
-        <!--widget business-->
-        <receiver android:name=".presenters.MyWidgetProvider"
-            android:label="Pep Talk Widget"
-            android:icon="@drawable/ic_menu_hamburger_24dp">
+        <!-- widget business -->
+        <receiver
+            android:name=".presenters.MyWidgetProvider"
+            android:icon="@drawable/ic_menu_hamburger_24dp"
+            android:label="Pep Talk Widget">
             <intent-filter>
-                <action
-                    android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info"/>
-
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
         </receiver>
 
-
+        <activity android:name=".views.WebViewActivity"></activity>
     </application>
 
 </manifest>

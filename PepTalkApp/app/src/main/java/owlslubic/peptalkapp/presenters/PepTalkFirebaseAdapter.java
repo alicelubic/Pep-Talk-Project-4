@@ -48,6 +48,8 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             public void onClick(View view) {
                 //launches edit pep talk dialog
 //                CustomDialog.launchEditPeptalkDialog(mContext, model);
+                    CustomDialog.launchViewPepTalk(model,mContext);
+
 
                 //display fragment LOL THIS DOESNT WORK
 

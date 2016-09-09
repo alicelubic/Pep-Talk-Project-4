@@ -1,17 +1,11 @@
 package owlslubic.peptalkapp.views;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,43 +19,30 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.BuildConfig;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.CustomPagerAdapter;
-import owlslubic.peptalkapp.presenters.OnSwipeTouchListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9;
 
     private BottomSheetBehavior mBottomSheetBehavior;
-    private TextView mBottomSheetHeading, mBottomSheetTopText, mBottomSheetBottomText, mPepTalkTextView, mWelcomeTextView, mSigninPromptTextView;
+    private TextView mBottomSheetHeading, mBottomSheetTopText,
+            mBottomSheetBottomText, mPepTalkTextView, mWelcomeTextView, mSigninPromptTextView,
+            mResource1, mResource2, mResource3;
     private FloatingActionsMenu mFabMenu;
     private Button mSignInOrOutButton;
     private ImageButton mSms, mEmail, mFb;
@@ -194,8 +175,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.imagebutton_fb:
                 launchFacebook();
                 break;
+            case R.id.tv_resource1:
+                //webview didnt wanna work
+
+//                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+//                intent.putExtra("url", "https://www.headspace.com/");
+//                startActivity(intent);
+
+                //so this launches browser
+                Uri uri = Uri.parse("https://www.headspace.com/");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
 
 
+                break;
+            case R.id.tv_resource2:
+//                Intent intent2 = new Intent(MainActivity.this, WebViewActivity.class);
+//                intent2.putExtra("url", "http://www.befriendingourselves.com/Mindfulness.html");
+//                startActivity(intent2);
+                Uri uri2 = Uri.parse("http://www.befriendingourselves.com/Mindfulness.html");
+                Intent intent2 = new Intent(Intent.ACTION_VIEW, uri2);
+                startActivity(intent2);
+                break;
+            case R.id.tv_resource3:
+//                Intent intent3 = new Intent(MainActivity.this, WebViewActivity.class);
+//                intent3.putExtra("url", "http://self-compassion.org/");
+//                startActivity(intent3);
+                Uri uri3 = Uri.parse("http://self-compassion.org/");
+                Intent intent3 = new Intent(Intent.ACTION_VIEW, uri3);
+                startActivity(intent3);
+                break;
 
         }
 
@@ -229,13 +238,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
         com.getbase.floatingactionbutton.FloatingActionButton fabNewChecklist = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.fablet_checklist);
         com.getbase.floatingactionbutton.FloatingActionButton fabNewPeptalk = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.fablet_peptalk);
         fabNewChecklist.setOnClickListener(this);
         fabNewPeptalk.setOnClickListener(this);
 
 
+        //for launching our lil peptalks
         mPepTalkTextView = (TextView) findViewById(R.id.textview_main_circular);
         mPepTalkTextView.setOnClickListener(this);
 
@@ -271,7 +280,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mSigninPromptTextView.setText("");
             mWelcomeTextView.setText(getString(R.string.welcome_back_user) +
                     FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-            //TODO fix that concatenation
 
         } else {
             //needs to sign in, set text to sign in
@@ -288,13 +296,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mFb.setOnClickListener(this);
 
 
-
         //bottom sheet
         mBottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottomSheetLayout));
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         mBottomSheetHeading = (TextView) findViewById(R.id.textview_bottomSheetHeading);
         mBottomSheetBottomText = (TextView) findViewById(R.id.textview_bottomsheet_bottom);
         mBottomSheetTopText = (TextView) findViewById(R.id.textview_bottomsheet_top);
+        mResource1 = (TextView) findViewById(R.id.tv_resource1);
+        mResource1.setOnClickListener(this);
+        mResource2 = (TextView) findViewById(R.id.tv_resource2);
+        mResource2.setOnClickListener(this);
+        mResource3 = (TextView) findViewById(R.id.tv_resource3);
+        mResource3.setOnClickListener(this);
+
 
 
         /*      //viewpager stuff i was trying but i knew it was too simple to be true
@@ -361,8 +375,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             launchBottomSheetFromNav();
 
             mBottomSheetHeading.setText(R.string.more_resources_heading);
-            mBottomSheetTopText.setText(R.string.more_resources);
+            mBottomSheetTopText.setText(R.string.more_resources_text);
             mBottomSheetBottomText.setText("");
+            mResource1.setVisibility(View.VISIBLE);
+            mResource1.setText("Headspace");
+            mResource1.setTextColor(getResources().getColor(R.color.secondary_text));
+
+            mResource2.setVisibility(View.VISIBLE);
+            mResource1.setText("Befriending Ourselves");
+            mResource1.setTextColor(getResources().getColor(R.color.secondary_text));
+//
+//            mResource2.setVisibility(View.VISIBLE);
+//            mResource1.setText("Self-Compassion");
+//            mResource1.setTextColor(getResources().getColor(R.color.secondary_text));
+
 
         } else if (id == R.id.nav_instructions) {
             launchBottomSheetFromNav();

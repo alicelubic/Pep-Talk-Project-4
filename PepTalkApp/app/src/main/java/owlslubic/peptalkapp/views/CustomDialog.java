@@ -3,22 +3,20 @@ package owlslubic.peptalkapp.views;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.provider.ContactsContract;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Random;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
@@ -327,6 +325,31 @@ public class CustomDialog extends AlertDialog {
                 dialog.dismiss();
             }
         });
+
+    }
+
+    public static void launchViewPepTalk(final PepTalkObject peptalk, final Context context) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View layout = inflater.inflate(R.layout.dialog_view_peptalk, null);//using this layout because it was already there
+        builder.setView(layout);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        TextView title = (TextView) dialog.findViewById(R.id.textview_pepview_title);
+        TextView body = (TextView) dialog.findViewById(R.id.textview_pepview_body);
+        ImageButton edit = (ImageButton) dialog.findViewById(R.id.imagebutton_edit_peptalk);
+
+        title.setText(peptalk.getTitle());
+        body.setText(peptalk.getBody());
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchEditPeptalkDialog(context,peptalk);
+            }
+        });
+
 
     }
 
