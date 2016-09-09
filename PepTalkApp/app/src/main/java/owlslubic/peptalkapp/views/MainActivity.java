@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private BottomSheetBehavior mBottomSheetBehavior;
     private TextView mBottomSheetHeading, mBottomSheetTopText,
             mBottomSheetBottomText, mPepTalkTextView, mWelcomeTextView, mSigninPromptTextView,
-            mResource1, mResource2, mResource3;
+            mResource1, mResource2, mResource3, mResource4;
     private FloatingActionsMenu mFabMenu;
     private Button mSignInOrOutButton;
     private ImageButton mSms, mEmail, mFb;
@@ -205,6 +205,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent3 = new Intent(Intent.ACTION_VIEW, uri3);
                 startActivity(intent3);
                 break;
+            case R.id.tv_resource4:
+                Uri uri4 = Uri.parse("https://ottawamindfulnessclinic.com");
+                Intent intent4 = new Intent(Intent.ACTION_VIEW, uri4);
+                startActivity(intent4);
 
         }
 
@@ -308,6 +312,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mResource2.setOnClickListener(this);
         mResource3 = (TextView) findViewById(R.id.tv_resource3);
         mResource3.setOnClickListener(this);
+        mResource4 = (TextView) findViewById(R.id.tv_resource4);
+        mResource4.setOnClickListener(this);
 
 
 
@@ -377,17 +383,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mBottomSheetHeading.setText(R.string.more_resources_heading);
             mBottomSheetTopText.setText(R.string.more_resources_text);
             mBottomSheetBottomText.setText("");
-            mResource1.setVisibility(View.VISIBLE);
             mResource1.setText("Headspace");
-            mResource1.setTextColor(getResources().getColor(R.color.secondary_text));
-
-            mResource2.setVisibility(View.VISIBLE);
-            mResource1.setText("Befriending Ourselves");
-            mResource1.setTextColor(getResources().getColor(R.color.secondary_text));
-//
-//            mResource2.setVisibility(View.VISIBLE);
-//            mResource1.setText("Self-Compassion");
-//            mResource1.setTextColor(getResources().getColor(R.color.secondary_text));
+            mResource2.setText("Befriending Ourselves");
+            mResource3.setText("Self-Compassion");
+            mResource4.setText("Ottowa Mindfulness Clinic");
 
 
         } else if (id == R.id.nav_instructions) {

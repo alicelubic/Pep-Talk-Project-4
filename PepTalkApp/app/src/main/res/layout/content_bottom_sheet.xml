@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="500dp"
     android:background="@color/card_background_dark"
-    android:gravity="center_horizontal"
+    android:gravity="bottom|center"
     android:orientation="vertical"
     app:behavior_hideable="true"
     app:layout_behavior="@string/bottom_sheet_behavior">
@@ -37,32 +37,40 @@
         android:padding="6dp" />
 
 
+    <TextView
+        android:id="@+id/tv_resource1"
+        style="@style/CodeFont"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:textSize="18sp"
+        android:background="@color/card_very_dark"
+        android:alpha="2"/>
 
-        <TextView
-            android:id="@+id/tv_resource1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:padding="6dp"
-            android:layout_margin="6dp"/>
+    <TextView
+        android:id="@+id/tv_resource2"
+        style="@style/CodeFont"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:textSize="18sp"
+        android:background="@color/card_very_dark"
+        />
 
-        <TextView
-            android:id="@+id/tv_resource2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:padding="6dp"
-            android:layout_margin="6dp"/>
+    <TextView
+        android:id="@+id/tv_resource3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/tv_resource3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:padding="6dp"
-            android:layout_margin="6dp"/>
-
-
+    <TextView
+        android:id="@+id/tv_resource4"
+        style="@style/CodeFont"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:textSize="18sp" />
 
 
 </LinearLayout>

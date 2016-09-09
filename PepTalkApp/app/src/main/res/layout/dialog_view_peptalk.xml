@@ -9,7 +9,7 @@
         android:id="@+id/imagebutton_edit_peptalk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="edit"
+        android:contentDescription="@string/edit_pep_talk"
         android:src="@drawable/ic_mode_edit_black_24dp"
         android:background="@color/white"
         android:layout_gravity="top|end"/>
@@ -26,7 +26,9 @@
         android:layout_height="wrap_content"
         android:padding="6dp"
         android:layout_marginTop="16dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:scrollbars="vertical"
+        />
 
 
 </LinearLayout>

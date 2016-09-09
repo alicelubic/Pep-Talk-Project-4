@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="9"
+        android:maxLength="30"
         android:layout_marginBottom="16dp"
         android:hint="Enter title for this pep talk.."
         style="@style/CodeFont"/>
@@ -23,6 +24,7 @@
         android:ems="16"
         android:gravity="center_horizontal"
         android:inputType="textMultiLine"
+        android:scrollbars="vertical"
         android:hint="Hey buddy, you're great because..."
         style="@style/CodeFont"
         />

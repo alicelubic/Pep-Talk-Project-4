@@ -33,7 +33,7 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
         holder.mCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CustomDialog.launchEditChecklistDialog(mContext, model);
+                CustomDialog.launchViewChecklist(model, mContext);
             }
         });
 

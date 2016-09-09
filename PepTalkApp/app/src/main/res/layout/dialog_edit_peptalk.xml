@@ -3,7 +3,8 @@
     android:layout_width="420dp"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/card_background_light"
+    android:background="@color/card_very_light"
+    android:alpha="20"
     android:padding="16dp">
 
     <EditText
@@ -14,7 +15,7 @@
         android:layout_gravity="center"
         android:layout_margin="6dp"
         android:imeOptions="actionNext"
-        android:maxLength="140"/>
+        android:maxLength="30"/>
 
     <!--maybe eventually set the height of this to be fixed and then include a lil scrolly or something inside-->
 
@@ -24,7 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_below="@id/edittext_edit_peptalk_title"
-        android:imeOptions="actionDone"/>
+        android:imeOptions="actionDone"
+        android:scrollbars="vertical"/>
 
     <!--android:inputType="textMultiLine"-->
 

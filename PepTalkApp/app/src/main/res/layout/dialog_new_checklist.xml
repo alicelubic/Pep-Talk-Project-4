@@ -8,6 +8,7 @@
         android:layout_margin="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLength="30"
         android:hint="enter new checklist item..."/>
 
     <EditText
@@ -15,13 +16,16 @@
         android:layout_margin="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scrollbars="vertical"
         android:hint="any notes on that item?"/>
 
     <Button
         android:id="@+id/button_new_checklist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="done"/>
+        android:layout_gravity="end"
+        android:layout_marginEnd="16dp"
+        android:text="done"
+        android:layout_marginRight="16dp" />
 
 </LinearLayout>

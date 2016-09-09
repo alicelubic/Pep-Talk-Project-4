@@ -3,6 +3,7 @@ package owlslubic.peptalkapp.views;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,7 @@ public class CustomDialog extends AlertDialog {
 
         final EditText title = (EditText) dialog.findViewById(R.id.edittext_new_peptalk_title);
         final EditText body = (EditText) dialog.findViewById(R.id.edittext_new_peptalk);
+        body.setMovementMethod(new ScrollingMovementMethod());
         Button submit = (Button) dialog.findViewById(R.id.button_new_peptalk);
 
 
@@ -142,6 +144,7 @@ public class CustomDialog extends AlertDialog {
         editBody.setCursorVisible(true);
         editBody.setFocusableInTouchMode(true);
         editBody.requestFocus();
+        editBody.setMovementMethod(new ScrollingMovementMethod());
 
         Button b = (Button) dialog.findViewById(R.id.button_submit_edit_peptalk);
         b.setOnClickListener(new View.OnClickListener() {
@@ -218,6 +221,7 @@ public class CustomDialog extends AlertDialog {
         editText.requestFocus();
 
         final EditText editText2 = (EditText) dialog.findViewById(R.id.edittext_edit_checklist_notes);
+        editText2.setMovementMethod(new ScrollingMovementMethod());
         editText2.setText(check.getNotes());
         editText2.setCursorVisible(true);
         editText2.setFocusableInTouchMode(true);
@@ -330,15 +334,16 @@ public class CustomDialog extends AlertDialog {
 
     public static void launchViewPepTalk(final PepTalkObject peptalk, final Context context) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.full_screen_dialog);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View layout = inflater.inflate(R.layout.dialog_view_peptalk, null);//using this layout because it was already there
+        View layout = inflater.inflate(R.layout.dialog_view_peptalk, null);
         builder.setView(layout);
         final AlertDialog dialog = builder.create();
         dialog.show();
 
         TextView title = (TextView) dialog.findViewById(R.id.textview_pepview_title);
         TextView body = (TextView) dialog.findViewById(R.id.textview_pepview_body);
+        body.setMovementMethod(new ScrollingMovementMethod());
         ImageButton edit = (ImageButton) dialog.findViewById(R.id.imagebutton_edit_peptalk);
 
         title.setText(peptalk.getTitle());
@@ -353,6 +358,29 @@ public class CustomDialog extends AlertDialog {
 
     }
 
+    public static void launchViewChecklist(final ChecklistItemObject check, final Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.full_screen_dialog);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View layout = inflater.inflate(R.layout.dialog_view_peptalk, null);//using this layout because it was already there
+        builder.setView(layout);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        TextView title = (TextView) dialog.findViewById(R.id.textview_pepview_title);
+        TextView notes = (TextView) dialog.findViewById(R.id.textview_pepview_body);
+        notes.setMovementMethod(new ScrollingMovementMethod());
+        ImageButton edit = (ImageButton) dialog.findViewById(R.id.imagebutton_edit_peptalk);
+
+        title.setText(check.getText());
+        notes.setText(check.getNotes());
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchEditChecklistDialog(context,check);
+            }
+        });
+
+    }
 
 
     //THESE METHODS ACTUALLY INTERACT WITH DATABASE AND ARE USED IN THE DIALOGS
@@ -387,8 +415,6 @@ public class CustomDialog extends AlertDialog {
         checklistRef.child(check.getKey()).child("notes").setValue(notes);
 
     }
-
-
 
 
 
