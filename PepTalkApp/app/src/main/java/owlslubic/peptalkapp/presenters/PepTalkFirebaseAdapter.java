@@ -47,9 +47,15 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             //reuse for frags?
             holder.mFragTitle.setText(model.getTitle());
             holder.mFragBody.setText(model.getBody());
-//        holder.mFragCard.setOnClickListener(mContext);
+        holder.mFragCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //tell the frag to go home first
+                //setonclicklsitnerer to the card
+                CustomDialog.launchEditPeptalkDialog(mContext, model);
+            }
+        });
         }else {
-
             holder.mTitle.setText(model.getTitle());
             holder.mCard.setOnClickListener(new View.OnClickListener() {
                 @Override

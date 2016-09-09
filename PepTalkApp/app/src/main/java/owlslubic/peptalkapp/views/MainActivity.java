@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -104,9 +105,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
 
 
-
-
-
         //gotta get it from firebase, but for now, dummy data
         mDbRef = FirebaseDatabase.getInstance().getReference();
 
@@ -190,11 +188,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.textview_main_circular:
                 //launch pep talk view
-                setupFrag();
-
-                //not sure if this makes the viewpager appear or?
-//                mViewPager.setAdapter(mCustomPagerAdapter);
-
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    setupFrag();
+                }else{
+                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "Please sign in to view your peptalks", Snackbar.LENGTH_SHORT);
+                    snackbar.setAction("sign in", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //undo
+                            Toast.makeText(MainActivity.this, "Snackbar Action", Toast.LENGTH_LONG).show();
+                        }
+                    }).show();
+                }
                 break;
             case R.id.button_navheader_signin:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -438,7 +443,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             launchBottomSheetFromNav();
 
             mBottomSheetHeading.setText(R.string.instuctions_heading);
-            mBottomSheetTopText.setText(R.string.instructions);
+            mBottomSheetTopText.setText(R.string.instructions_text);
             mBottomSheetBottomText.setText("");
 
 
@@ -446,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             launchBottomSheetFromNav();
 
             mBottomSheetHeading.setText(R.string.about_heading);
-            mBottomSheetTopText.setText(R.string.about);
+            mBottomSheetTopText.setText(R.string.about_text);
             mBottomSheetBottomText.setText("");
 
         }
@@ -589,8 +594,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MyFragment fragment = new MyFragment();
         transaction.add(R.id.framelayout_main_frag_container, fragment);
         transaction.commit();
-
-
 
 
     }

@@ -2,9 +2,13 @@ package owlslubic.peptalkapp.views;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsCallback;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +60,6 @@ public class MyFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mTitle = getArguments().getString("title");
-//        mBody = getArguments().getString("body");
     }
 
     @Nullable
@@ -65,8 +67,6 @@ public class MyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_peptalk, container, false);
         mFragRecycler = (RecyclerView) view.findViewById(R.id.recyclerview_fragment);
-
-
         return view;
     }
 
@@ -74,26 +74,22 @@ public class MyFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //this is where i could set an onclick listener?
-
         mTextViewTitle = (TextView) view.findViewById(R.id.textview_pepview_title);
         mTextViewBody = (TextView) view.findViewById(R.id.textview_pepview_body);
-//        if (mTextViewTitle != null && mTextViewBody != null){
-//
-//            mTextViewTitle.setText(mTitle);
-//            mTextViewBody.setText(mBody);
-//        }
+        if(mTextViewBody!=null){
+            mTextViewBody.setMovementMethod(new ScrollingMovementMethod());
+        }
 
         //not sure where this will live
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
             mFragRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
             mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class, R.layout.frag_card,
                     PepTalkViewHolder.class, mPeptalkRef, view.getContext());
             mFragRecycler.setAdapter(mFirebaseAdapter);
-        }else{
-            Toast.makeText(view.getContext(), "not signed in!", Toast.LENGTH_SHORT).show();
-        }
+
+
+
 
     }
 
@@ -108,8 +104,8 @@ public class MyFragment extends Fragment {
 
 
 
-
 }
+
 //
 //public class MyViewPagerAdapter extends PagerAdapter{
 //

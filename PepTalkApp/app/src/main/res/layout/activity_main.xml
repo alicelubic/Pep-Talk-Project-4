@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -13,6 +21,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         tools:openDrawer="start">
+
 
         <include layout="@layout/content_main" />
 
@@ -43,10 +52,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:paddingBottom="3dp"
-                    android:background="@color/card_background_dark" />
+                    android:layout_marginStart="10dp"
+                    android:background="@color/card_background_dark"
+                    android:paddingBottom="3dp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -90,68 +99,68 @@
 
     </android.support.v4.widget.DrawerLayout>
 
-    <FrameLayout
-        android:id="@+id/framelayout_main_frag_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white_overlay"
-        android:theme="@style/PepTalkTheme">
+
 
         <FrameLayout
-            android:id="@+id/frame_layout"
+            android:id="@+id/framelayout_main_frag_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white_overlay"
             android:theme="@style/PepTalkTheme">
-        <!--this is the FAB from the third party library:-->
 
-        <!--android:layout_marginBottom="@dimen/activity_vertical_margin"-->
-        <!--android:layout_marginEnd="@dimen/activity_horizontal_margin"-->
-        <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
+            <FrameLayout
+                android:id="@+id/frame_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white_overlay"
+                android:theme="@style/PepTalkTheme">
+                <!--this is the FAB from the third party library:-->
 
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:id="@+id/fab_menu"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+                <!--android:layout_marginBottom="@dimen/activity_vertical_margin"-->
+                <!--android:layout_marginEnd="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
 
-            android:layout_gravity="end|bottom"
-            fab:fab_addButtonColorNormal="@color/accent"
-            fab:fab_addButtonColorPressed="@color/accent_dark"
-            fab:fab_addButtonPlusIconColor="@color/white"
-            fab:fab_addButtonStrokeVisible="false"
-            fab:fab_labelStyle="@style/menu_labels_style"
-            fab:fab_labelsPosition="left">
+                <com.getbase.floatingactionbutton.FloatingActionsMenu
+                    android:id="@+id/fab_menu"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+
+                    android:layout_gravity="end|bottom"
+                    fab:fab_addButtonColorNormal="@color/accent"
+                    fab:fab_addButtonColorPressed="@color/accent_dark"
+                    fab:fab_addButtonPlusIconColor="@color/white"
+                    fab:fab_addButtonStrokeVisible="false"
+                    fab:fab_labelStyle="@style/menu_labels_style"
+                    fab:fab_labelsPosition="left">
 
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fablet_peptalk"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/accent"
-                fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_icon="@drawable/ic_favorite_border_white_24dp"
-                fab:fab_plusIconColor="@color/white"
-                fab:fab_size="mini"
-                fab:fab_title="PepTalk" />
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fablet_peptalk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        fab:fab_colorNormal="@color/accent"
+                        fab:fab_colorPressed="@color/accent_dark"
+                        fab:fab_icon="@drawable/ic_favorite_border_white_24dp"
+                        fab:fab_plusIconColor="@color/white"
+                        fab:fab_size="mini"
+                        fab:fab_title="PepTalk" />
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fablet_checklist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/accent"
-                fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_icon="@drawable/ic_check_white_24dp"
-                fab:fab_plusIconColor="@color/white"
-                fab:fab_size="mini"
-                fab:fab_title="Checklist" />
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fablet_checklist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        fab:fab_colorNormal="@color/accent"
+                        fab:fab_colorPressed="@color/accent_dark"
+                        fab:fab_icon="@drawable/ic_check_white_24dp"
+                        fab:fab_plusIconColor="@color/white"
+                        fab:fab_size="mini"
+                        fab:fab_title="Checklist" />
 
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
-    </FrameLayout>
+                </com.getbase.floatingactionbutton.FloatingActionsMenu>
+            </FrameLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
+        </FrameLayout>
 
 </FrameLayout>
-</FrameLayout>
+    </android.support.design.widget.CoordinatorLayout>
