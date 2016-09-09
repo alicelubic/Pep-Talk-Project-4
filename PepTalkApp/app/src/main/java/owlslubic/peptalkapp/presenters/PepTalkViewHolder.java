@@ -23,8 +23,10 @@ import owlslubic.peptalkapp.views.PepTalkListActivity;
  */
 public class PepTalkViewHolder extends RecyclerView.ViewHolder{
     private static final String TAG = "PepTalkViewHolder";
-    public TextView mTitle;
+    public TextView mTitle, mFragTitle, mFragBody;
     public CardView mCard;
+
+    public CardView mFragCard;
 
 
 
@@ -33,6 +35,10 @@ public class PepTalkViewHolder extends RecyclerView.ViewHolder{
         mTitle = (TextView) itemView.findViewById(R.id.textview_peptalk_title);
         mCard = (CardView) itemView.findViewById(R.id.cardview_peptalk);
 
+        //not sure if thisl work
+        mFragCard = (CardView) itemView.findViewById(R.id.cardview_fragment);
+        mFragBody = (TextView) itemView.findViewById(R.id.textview_frag_body);
+        mFragTitle = (TextView) itemView.findViewById(R.id.textview_frag_title);
 
     }
 

@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -43,7 +44,6 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
 
 //        insertContentOnNewAccountCreated();
 
-
 //        getSupportActionBar().setTitle("Your Pep Talks");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -67,6 +67,8 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
 
 
 

@@ -17,6 +17,7 @@ import com.google.firebase.database.Query;
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.views.CustomDialog;
+import owlslubic.peptalkapp.views.MainActivity;
 import owlslubic.peptalkapp.views.MyFragment;
 import owlslubic.peptalkapp.views.PepTalkListActivity;
 
@@ -42,16 +43,23 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
     @Override
     protected void populateViewHolder(final PepTalkViewHolder holder, final PepTalkObject model, int position) {
 
-        holder.mTitle.setText(model.getTitle());
-        holder.mCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //launches edit pep talk dialog
+        if(mContext instanceof MainActivity){
+            //reuse for frags?
+            holder.mFragTitle.setText(model.getTitle());
+            holder.mFragBody.setText(model.getBody());
+//        holder.mFragCard.setOnClickListener(mContext);
+        }else {
+
+            holder.mTitle.setText(model.getTitle());
+            holder.mCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //launches edit pep talk dialog
 //                CustomDialog.launchEditPeptalkDialog(mContext, model);
-                    CustomDialog.launchViewPepTalk(model,mContext);
+                    CustomDialog.launchViewPepTalk(model, mContext);
 
 
-                //display fragment LOL THIS DOESNT WORK
+                    //display fragment LOL THIS DOESNT WORK
 
 //                mActivity = (PepTalkListActivity)mContext;
 //                FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
@@ -63,18 +71,16 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
 //                ft.commit();
 
 
-            }
-        });
-        holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                //launches delete peptalk with are you sure? dialog
-                CustomDialog.launchDeletePepTalkDialog(model, mContext);
-                return true;
-            }
-        });
-
-
+                }
+            });
+            holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    //launches delete peptalk with are you sure? dialog
+                    CustomDialog.launchDeletePepTalkDialog(model, mContext);
+                    return true;
+                }
+            });
 
 
 //        holder.mCard.setOnTouchListener(new View.OnTouchListener() {
@@ -87,6 +93,9 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
 //                return false;
 //            }
 //        });
+
+
+        }
 
     }
 

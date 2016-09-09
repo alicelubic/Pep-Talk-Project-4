@@ -4,13 +4,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,19 +31,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.CustomPagerAdapter;
+import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
+import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9;
+    private static final String USERS = "users";
+    private static final String PEPTALKS = "peptalks";
 
     private BottomSheetBehavior mBottomSheetBehavior;
     private TextView mBottomSheetHeading, mBottomSheetTopText,
@@ -53,12 +66,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout mDrawer;
     private FrameLayout mFrameLayout;
     private DatabaseReference mDbRef;
+    private DatabaseReference mPeptalkRef;
+    private FirebaseRecyclerAdapter mFirebaseAdapter;
 
 
     private ViewPager mViewPager;
     private PagerAdapter mPagerAdapter;
     private CustomPagerAdapter mCustomPagerAdapter;
     private List<PepTalkObject> mPepTalkList;
+
 
     @Override
     protected void onStart() {
@@ -76,6 +92,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         initViews();
+
+
+        mPepTalkList = new ArrayList<>();
+        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
+        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
+        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
+        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
+        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
+        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
+        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
+
+
+
+
+
+        //gotta get it from firebase, but for now, dummy data
+        mDbRef = FirebaseDatabase.getInstance().getReference();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            mPeptalkRef = FirebaseDatabase.getInstance().getReference().child("users")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("peptalks");
+        }
+        //makes sure to add a child or value whateverlistener that updates this list
+
+
+        //        RecyclerView.LayoutManager manager = new GridLayoutManager(this, .getSize(), GridLayoutManager.HORIZONTAL,false);
+
+        //fragtransaction in listener
 
 
     }
@@ -146,10 +190,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.textview_main_circular:
                 //launch pep talk view
-
+                setupFrag();
 
                 //not sure if this makes the viewpager appear or?
-
 //                mViewPager.setAdapter(mCustomPagerAdapter);
 
                 break;
@@ -209,6 +252,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Uri uri4 = Uri.parse("https://ottawamindfulnessclinic.com");
                 Intent intent4 = new Intent(Intent.ACTION_VIEW, uri4);
                 startActivity(intent4);
+                break;
+
 
         }
 
@@ -383,10 +428,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mBottomSheetHeading.setText(R.string.more_resources_heading);
             mBottomSheetTopText.setText(R.string.more_resources_text);
             mBottomSheetBottomText.setText("");
-            mResource1.setText("Headspace");
-            mResource2.setText("Befriending Ourselves");
-            mResource3.setText("Self-Compassion");
-            mResource4.setText("Ottowa Mindfulness Clinic");
+            mResource1.setText(R.string.resource_headspace);
+            mResource2.setText(R.string.resource_befriending);
+            mResource3.setText(R.string.resource_selfcompassion);
+            mResource4.setText(R.string.resource_mindfulness);
 
 
         } else if (id == R.id.nav_instructions) {
@@ -531,51 +576,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-
-
-
-
-public void setupFrag(){
-    FragmentManager manager = getSupportFragmentManager();
-    FragmentTransaction transaction = manager.beginTransaction();
-
-    mDbRef = FirebaseDatabase.getInstance().getReference();
-    //get the pep talks from the db and set it to this frag,
-    // then when I replace it on swipe, i get the next firebase bit
-
-//
-//    MyFragment fragment = MyFragment.newInstance();
-//    transaction.add(R.id.framelayout_main_frag_container, fragment);
-//    transaction.commit();
-
-
-
-//    upon swipe:
-    getSupportFragmentManager().beginTransaction()
-            .replace(R.id.framelayout_main_frag_container, new MyFragment())//we are replacing, not adding to the backstack. so if we hit back, it will just go away
-            .commit();
-
-
-           ///
-
-
-
-
-
-
-
-
-
-
-
-
 */
 
 
+    public void setupFrag() {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+
+//        mDbRef = FirebaseDatabase.getInstance().getReference();
+        //make a list of das peps from db
+
+        MyFragment fragment = new MyFragment();
+        transaction.add(R.id.framelayout_main_frag_container, fragment);
+        transaction.commit();
+
+
+
+
+    }
 }
-
-
-
-
-
 

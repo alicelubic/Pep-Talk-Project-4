@@ -38,6 +38,10 @@
     <string name="text">text</string>
     <string name="fb">fb</string>
     <string name="edit_pep_talk">edit pep talk</string>
+    <string name="resource_headspace">Headspace</string>
+    <string name="resource_befriending">Befriending Ourselves</string>
+    <string name="resource_selfcompassion">Self-Compassion</string>
+    <string name="resource_mindfulness">Ottowa Mindfulness Clinic</string>
 
 
 </resources>

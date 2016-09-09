@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/framelayout_main_frag_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -92,12 +91,18 @@
     </android.support.v4.widget.DrawerLayout>
 
     <FrameLayout
-        android:id="@+id/frame_layout"
+        android:id="@+id/framelayout_main_frag_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white_overlay"
         android:theme="@style/PepTalkTheme">
 
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_overlay"
+            android:theme="@style/PepTalkTheme">
         <!--this is the FAB from the third party library:-->
 
         <!--android:layout_marginBottom="@dimen/activity_vertical_margin"-->
@@ -148,4 +153,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+</FrameLayout>
 </FrameLayout>

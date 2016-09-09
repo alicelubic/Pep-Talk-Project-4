@@ -3,18 +3,30 @@ package owlslubic.peptalkapp.views;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
+import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
+import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 
 /**
  * Created by owlslubic on 9/5/16.
  */
 public class MyFragment extends Fragment {
+    private static final String USERS = "users";
+    private static final String PEPTALKS = "peptalks";
 
     //this is my staging area, i'll move it to main if thats where it should go..?
     //either the main act default display should be a frag also, or the main is an activity and these just show up atop it?
@@ -23,6 +35,10 @@ public class MyFragment extends Fragment {
     private PepTalkObject mPepTalk;
     public TextView mTextViewTitle;
     public TextView mTextViewBody;
+
+    public DatabaseReference mPeptalkRef;
+    public FirebaseRecyclerAdapter mFirebaseAdapter;
+    RecyclerView mFragRecycler;
 
     //i'm gonna use this to display the peptalk from the list activity
 
@@ -47,7 +63,9 @@ public class MyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_view_peptalk, container, false);
+        View view = inflater.inflate(R.layout.frag_peptalk, container, false);
+        mFragRecycler = (RecyclerView) view.findViewById(R.id.recyclerview_fragment);
+
 
         return view;
     }
@@ -64,6 +82,19 @@ public class MyFragment extends Fragment {
 //            mTextViewTitle.setText(mTitle);
 //            mTextViewBody.setText(mBody);
 //        }
+
+        //not sure where this will live
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
+            mFragRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
+            mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class, R.layout.frag_card,
+                    PepTalkViewHolder.class, mPeptalkRef, view.getContext());
+            mFragRecycler.setAdapter(mFirebaseAdapter);
+        }else{
+            Toast.makeText(view.getContext(), "not signed in!", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 
