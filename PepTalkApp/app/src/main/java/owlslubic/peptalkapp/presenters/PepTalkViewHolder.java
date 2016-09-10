@@ -44,6 +44,8 @@ public class PepTalkViewHolder extends RecyclerView.ViewHolder{
         mFragTitle = (TextView) itemView.findViewById(R.id.textview_frag_title);
         mEdit = (ImageButton) itemView.findViewById(R.id.button_frag_edit_peptalk);
 
+
+
     }
 
 

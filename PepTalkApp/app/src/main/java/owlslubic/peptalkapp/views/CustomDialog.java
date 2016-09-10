@@ -388,7 +388,7 @@ public class CustomDialog extends AlertDialog {
     public static void writeNewChecklist(String text, String notes) {
         DatabaseReference itemKey = checklistRef.push();//this creates the unique key, but no data
         String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
-        if(!checklistExists(key)) {
+        if(checklistExists(key)==false) {
             final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
             itemKey.setValue(item);
         }
@@ -399,6 +399,7 @@ public class CustomDialog extends AlertDialog {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
                     .child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("checklist");
+            Log.d(TAG, "checklistExists: checklist key is: "+checklistKey);
             if(userRef.child(checklistKey)==null){
                 return false;//if the user is logged in,
                 // and the checklist object does not already have a child with that key,

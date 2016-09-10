@@ -8,15 +8,36 @@
     android:id="@+id/coordinator_layout_main_activity"
     android:background="@color/card_background_light">
 
-<TextView
-    android:id="@+id/textview_main_circular"
-    android:layout_width="120dp"
-    android:layout_height="120dp"
-    android:layout_gravity="center"
-    style="@style/CodeFont"
-    android:background="@drawable/circular_text_view"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
 
+    <TextView
+        style="@style/CodeFont"
+        android:text="Need a pep talk?"
+        android:layout_gravity="center"
+        android:layout_marginBottom="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        style="@style/CodeFont"
+        android:text="tap below"
+        android:textSize="14sp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <ImageButton
+        android:id="@+id/imagebutton_main"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@mipmap/ic_launcher_big"
+        android:layout_gravity="center"
+        android:background="@color/card_background_light"/>
 
+    </LinearLayout>
 
 
     <include layout="@layout/content_bottom_sheet" />

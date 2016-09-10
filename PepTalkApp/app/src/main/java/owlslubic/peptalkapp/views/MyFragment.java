@@ -1,5 +1,6 @@
 package owlslubic.peptalkapp.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.customtabs.CustomTabsCallback;
@@ -9,9 +10,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 public class MyFragment extends Fragment {
     private static final String USERS = "users";
     private static final String PEPTALKS = "peptalks";
+    private static final String TAG = "MyFragment";
 
     //this is my staging area, i'll move it to main if thats where it should go..?
     //either the main act default display should be a frag also, or the main is an activity and these just show up atop it?
@@ -39,12 +43,13 @@ public class MyFragment extends Fragment {
     private PepTalkObject mPepTalk;
     public TextView mTextViewTitle;
     public TextView mTextViewBody;
+    public ImageButton mEdit, mBack;
 
     public DatabaseReference mPeptalkRef;
     public FirebaseRecyclerAdapter mFirebaseAdapter;
     RecyclerView mFragRecycler;
 
-    //i'm gonna use this to display the peptalk from the list activity
+    //i'm gonna use this to display the peptalk from the list activity too'?
 
 
 //    public static MyFragment newInstance(PepTalkObject peptalk){//}, String title, String body) {
@@ -67,28 +72,36 @@ public class MyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_peptalk, container, false);
         mFragRecycler = (RecyclerView) view.findViewById(R.id.recyclerview_fragment);
+        mBack = (ImageButton) view.findViewById(R.id.imagebutton_frag_back);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //this is where i could set an onclick listener?
+
         mTextViewTitle = (TextView) view.findViewById(R.id.textview_pepview_title);
         mTextViewBody = (TextView) view.findViewById(R.id.textview_pepview_body);
-        if(mTextViewBody!=null){
+
+
+
+        mBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), MainActivity.class));
+            }
+        });
+
+        if (mTextViewBody != null) {
             mTextViewBody.setMovementMethod(new ScrollingMovementMethod());
         }
-
-        //not sure where this will live
-            mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
-            mFragRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
-            mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class, R.layout.frag_card,
-                    PepTalkViewHolder.class, mPeptalkRef, view.getContext());
-            mFragRecycler.setAdapter(mFirebaseAdapter);
-
-
+        //setting up the recyclerview
+        mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
+        mFragRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
+        mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class, R.layout.frag_card,
+                PepTalkViewHolder.class, mPeptalkRef, view.getContext());
+        mFragRecycler.setAdapter(mFirebaseAdapter);
 
 
     }
@@ -100,8 +113,6 @@ public class MyFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
     }
-
-
 
 
 }

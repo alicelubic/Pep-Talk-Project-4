@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@color/card_very_light">
 
     <!--the recyclerview is here, the textviews are in the card-->
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</LinearLayout>
+
+    <ImageButton
+        android:id="@+id/imagebutton_frag_back"
+        android:src="@drawable/ic_arrow_back_white_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/card_very_light"
+        android:layout_gravity="top"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="12dp"
+        />
+</FrameLayout>

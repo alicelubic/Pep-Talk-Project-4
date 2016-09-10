@@ -26,16 +26,15 @@ import owlslubic.peptalkapp.views.PepTalkListActivity;
  * Created by owlslubic on 9/1/16.
  */
 
-public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder> implements ItemTouchHelperAdapter{
+public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder> implements ItemTouchHelperAdapter {
     private DatabaseReference mRef;
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
     PepTalkListActivity mActivity;
 
 
-
-    public PepTalkFirebaseAdapter(Class<PepTalkObject> modelClass, int modelLayout, Class<PepTalkViewHolder> viewHolderClass, Query ref, Context context){//OnStartDragListener onStartDragListener, Context context){
-        super(modelClass, modelLayout,viewHolderClass,ref);
+    public PepTalkFirebaseAdapter(Class<PepTalkObject> modelClass, int modelLayout, Class<PepTalkViewHolder> viewHolderClass, Query ref, Context context) {//OnStartDragListener onStartDragListener, Context context){
+        super(modelClass, modelLayout, viewHolderClass, ref);
         mRef = ref.getRef();
 //        mOnStartDragListener = onStartDragListener;
         mContext = context;
@@ -44,20 +43,22 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
     @Override
     protected void populateViewHolder(final PepTalkViewHolder holder, final PepTalkObject model, int position) {
 
-        if(mContext instanceof MainActivity){
-            //reuse for frags?
+        if (mContext instanceof MainActivity) {
+            //frags
             holder.mFragTitle.setText(model.getTitle());
             holder.mFragBody.setText(model.getBody());
             holder.mFragBody.setMovementMethod(new ScrollingMovementMethod());
-        holder.mEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //tell the frag to go home first
-                //setonclicklsitnerer to the card
-                CustomDialog.launchEditPeptalkDialog(mContext, model);
-            }
-        });
-        }else {
+
+            holder.mEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //tell the frag to go home first
+                    //setonclicklsitnerer to the card
+                    CustomDialog.launchEditPeptalkDialog(mContext, model);
+                }
+            });
+
+        } else {//it's in peptalkactivity
             holder.mTitle.setText(model.getTitle());
             holder.mCard.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -67,9 +68,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
                     CustomDialog.launchViewPepTalk(model, mContext);
                     //this should launch a fraggie
 
-
                     //display fragment LOL THIS DOESNT WORK
-
 
                 }
             });
@@ -100,8 +99,6 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
     }
 
 
-
-
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         return false;
@@ -116,7 +113,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
 
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         public void onItemClick(String title, String body);
     }
 

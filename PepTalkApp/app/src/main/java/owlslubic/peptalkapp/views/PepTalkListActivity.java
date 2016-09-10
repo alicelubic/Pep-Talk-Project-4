@@ -45,8 +45,8 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
 
 //        insertContentOnNewAccountCreated();
 
-//        getSupportActionBar().setTitle("Your Pep Talks");
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle("Your Pep Talks");
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         //fab launches dialog

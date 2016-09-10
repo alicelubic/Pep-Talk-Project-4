@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -15,9 +14,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,14 +34,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.CustomPagerAdapter;
-import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
-import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
+
+import static owlslubic.peptalkapp.views.CustomDialog.writeNewChecklist;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -55,11 +50,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private BottomSheetBehavior mBottomSheetBehavior;
     private TextView mBottomSheetHeading, mBottomSheetTopText,
-            mBottomSheetBottomText, mPepTalkTextView, mWelcomeTextView, mSigninPromptTextView,
+            mBottomSheetBottomText, mWelcomeTextView, mSigninPromptTextView,
             mResource1, mResource2, mResource3, mResource4;
     private FloatingActionsMenu mFabMenu;
     private Button mSignInOrOutButton;
-    private ImageButton mSms, mEmail, mFb;
+    private ImageButton mSms, mEmail, mFb, mLaunchFragMain, mFragBack;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavigationView;
@@ -95,18 +90,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initViews();
 
 
-        mPepTalkList = new ArrayList<>();
-        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
-        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
-        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
-        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
-        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
-        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
-        mPepTalkList.add(new PepTalkObject("1", "title", "body", false));
-
-
-        //gotta get it from firebase, but for now, dummy data
-        mDbRef = FirebaseDatabase.getInstance().getReference();
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             mPeptalkRef = FirebaseDatabase.getInstance().getReference().child("users")
@@ -157,6 +140,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 // user is signed in!
+
+                insertContentOnNewAccountCreated();
+                Log.d(TAG, "onActivityResult: INSERT CONTENT ON NEW ACCOUNT CREATED method");
+
                 Log.d(TAG, "onActivityResult: user is signed in");
                 startActivity(new Intent(this, MainActivity.class));
 //                finish();
@@ -186,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 mFrameLayout.setOnTouchListener(null);
                 mFabMenu.collapse();
                 break;
-            case R.id.textview_main_circular:
+            case R.id.imagebutton_main:
                 //launch pep talk view
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     setupFrag();
@@ -212,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 } else {
                     myLoginMethod();
-                    insertContentOnNewAccountCreated();
                 }
                 break;
             case R.id.imagebutton_sms:
@@ -226,17 +212,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.tv_resource1:
                 //webview didnt wanna work
-
 //                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
 //                intent.putExtra("url", "https://www.headspace.com/");
 //                startActivity(intent);
-
                 //so this launches browser
                 Uri uri = Uri.parse("https://www.headspace.com/");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
-
-
                 break;
             case R.id.tv_resource2:
 //                Intent intent2 = new Intent(MainActivity.this, WebViewActivity.class);
@@ -259,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent4 = new Intent(Intent.ACTION_VIEW, uri4);
                 startActivity(intent4);
                 break;
+
 
 
         }
@@ -300,8 +283,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         //for launching our lil peptalks
-        mPepTalkTextView = (TextView) findViewById(R.id.textview_main_circular);
-        mPepTalkTextView.setOnClickListener(this);
+        mLaunchFragMain = (ImageButton) findViewById(R.id.imagebutton_main);
+        mLaunchFragMain.setOnClickListener(this);
+
 
 
         //TODO fuck with the toolbar here
@@ -326,11 +310,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mSigninPromptTextView = (TextView) mHeaderView.findViewById(R.id.textview_navheader_sign_in);
         mSignInOrOutButton = (Button) mHeaderView.findViewById(R.id.button_navheader_signin);
         mSignInOrOutButton.setOnClickListener(this);
-        Log.d(TAG, "SIGN IN BUTTON LISTENER HAS BEEN SET, button says: " + mSignInOrOutButton.getText());
-        //not sure if this can live here because will it be updated accordingly? should be, since oncreate will be called before and after the login screen comes up
+
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             //already signed in, so set text to sign out
-            //TODO the below stuff might need to happen in the button onclick since the login screen doesnt open so oncreate is not called
             mSignInOrOutButton.setText(R.string.sign_out);
             mSigninPromptTextView.setText("");
             mWelcomeTextView.setText(getString(R.string.welcome_back_user) +
@@ -602,15 +584,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void insertContentOnNewAccountCreated() {
         //TODO NEED TO FIND A WAY TO ONLY RUN THIS ONE TIME WHEN ACCOUNT IS CREATED
-        //there might be some sort of auth method for like "on authenticated", idk look into it
+
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            CustomDialog.writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes));
-            CustomDialog.writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes));
-            CustomDialog.writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes));
-            CustomDialog.writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes));
-            CustomDialog.writeNewChecklist(getString(R.string.checklist_breathe),getString(R.string.checklist_breathe_notes));
-            CustomDialog.writeNewChecklist(getString(R.string.checklist_locations),getString(R.string.checklist_locations_notes));
+            writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes));
+            writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes));
+            writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes));
+            writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes));
+            writeNewChecklist(getString(R.string.checklist_breathe),getString(R.string.checklist_breathe_notes));
+            writeNewChecklist(getString(R.string.checklist_locations),getString(R.string.checklist_locations_notes));
 //
 //            CustomDialog.writeNewPeptalk("Prepopulated peptalk 1", "Body");
 //            CustomDialog.writeNewPeptalk("Prepopulated peptalk 2", "Body");

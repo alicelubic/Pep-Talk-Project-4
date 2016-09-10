@@ -32,8 +32,8 @@ public class ChecklistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checklist);
 
-//        getSupportActionBar().setTitle("Your Feel-Better Cheklist");
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle("Your Feel-Better Checklist");
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         //recyclerview setup
