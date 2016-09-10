@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -152,31 +153,12 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
     }
 
 
-    private void insertContentOnNewAccountCreated() {
-        //TODO NEED TO FIND A WAY TO ONLY RUN THIS ONE TIME WHEN ACCOUNT IS CREATED
-        //there might be some sort of auth method for like "on authenticated", idk look into it
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
-                    .child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            Log.d(TAG, "insertContentOnNewAccountCreated: this is in the beginning of the method, so this just means the currentuser is not null");
-
-            //TODO the below does not work so uh yeah
-            if (userRef.child("peptalks") == null) {//meaning that the user and/or its children have not been added to the db bc nothing has been added yet
-
-                Log.d(TAG, "insertContentOnNewAccountCreated: this log is from within the second if, thus userRef IS null");
-
-                CustomDialog.writeNewChecklist("Drink a glass of water", "Hydration will help you feel better, I promise");
-                CustomDialog.writeNewChecklist("Eat something", "Has it been a few hours since you last ate? Grab something with protein (nuts? hummus?) to get your body back on track");
-                CustomDialog.writeNewChecklist("Move your body", "Dance around for the length of a song, go for a walk around the block, something to get your blood flowing. It'll make you feel good.");
-                CustomDialog.writeNewChecklist("Step back, take a minute", "If you're feeling overwhelmed, take a moment to ground yourself. Feel your feet on the ground, you can get through this.");
 
 
-                CustomDialog.writeNewPeptalk("Prepopulated peptalk 1", "Body");
-                CustomDialog.writeNewPeptalk("Prepopulated peptalk 2", "Body");
-                CustomDialog.writeNewPeptalk("Prepopulated peptalk 3", "Body");
-                CustomDialog.writeNewPeptalk("Prepopulated peptalk 4", "Body");
-            }
-        }
-    }
+
+
+
+
+
+
 }

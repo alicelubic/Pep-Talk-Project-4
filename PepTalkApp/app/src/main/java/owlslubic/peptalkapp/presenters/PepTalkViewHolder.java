@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -28,7 +29,7 @@ public class PepTalkViewHolder extends RecyclerView.ViewHolder{
     public CardView mCard;
 
     public CardView mFragCard;
-    public Button mEdit;
+    public ImageButton mEdit;
 
 
 
@@ -41,7 +42,7 @@ public class PepTalkViewHolder extends RecyclerView.ViewHolder{
         mFragCard = (CardView) itemView.findViewById(R.id.cardview_fragment);
         mFragBody = (TextView) itemView.findViewById(R.id.textview_frag_body);
         mFragTitle = (TextView) itemView.findViewById(R.id.textview_frag_title);
-        mEdit = (Button) itemView.findViewById(R.id.button_frag_edit_peptalk);
+        mEdit = (ImageButton) itemView.findViewById(R.id.button_frag_edit_peptalk);
 
     }
 

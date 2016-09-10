@@ -8,97 +8,92 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:openDrawer="start">
+        android:layout_height="match_parent">
 
-
-        <include layout="@layout/content_main" />
-
-        <include
-            layout="@layout/app_bar_main"
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <android.support.design.widget.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:clipToPadding="false"
             android:fitsSystemWindows="true"
-            android:paddingBottom="96dp"
-            app:headerLayout="@layout/nav_header_main"
-            app:menu="@menu/activity_main_drawer"
-            app:theme="@style/NavigationDrawerStyle">
+            tools:openDrawer="start">
 
-            <LinearLayout
+            <include layout="@layout/content_main" />
+
+            <include
+                layout="@layout/app_bar_main"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="-120dp"
-                android:orientation="vertical">
+                android:layout_height="match_parent" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    android:background="@color/card_background_dark"
-                    android:paddingBottom="3dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:layout_marginStart="6dp"
-                    android:gravity="center_horizontal"
-                    android:text="If these pep talks aren't doing it for you, why not reach out to a friend?" />
+            <android.support.design.widget.NavigationView
+                android:id="@+id/nav_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:clipToPadding="false"
+                android:fitsSystemWindows="true"
+                android:paddingBottom="96dp"
+                app:headerLayout="@layout/nav_header_main"
+                app:menu="@menu/activity_main_drawer"
+                app:theme="@style/NavigationDrawerStyle">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="-120dp"
+                    android:orientation="vertical">
 
-                    <ImageButton
-                        android:id="@+id/imagebutton_sms"
+                    <TextView
+                        android:layout_width="300dp"
+                        android:layout_height="1dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@color/card_background_dark"
+                        android:paddingBottom="3dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:layout_marginStart="6dp"
+                        android:gravity="center_horizontal"
+                        android:text="If these pep talks aren't doing it for you, why not reach out to a friend?" />
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="6dp"
-                        android:src="@drawable/ic_menu_camera" />
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/imagebutton_email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="6dp"
-                        android:src="@drawable/ic_menu_camera" />
+                        <ImageButton
+                            android:id="@+id/imagebutton_sms"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:src="@drawable/ic_menu_camera" />
 
-                    <ImageButton
-                        android:id="@+id/imagebutton_fb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="6dp"
-                        android:src="@drawable/ic_menu_camera" />
+                        <ImageButton
+                            android:id="@+id/imagebutton_email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:src="@drawable/ic_menu_camera" />
 
+                        <ImageButton
+                            android:id="@+id/imagebutton_fb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:src="@drawable/ic_menu_camera" />
+
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
-        </android.support.design.widget.NavigationView>
+            </android.support.design.widget.NavigationView>
 
-    </android.support.v4.widget.DrawerLayout>
-
+        </android.support.v4.widget.DrawerLayout>
 
 
         <FrameLayout
@@ -162,5 +157,5 @@
 
         </FrameLayout>
 
-</FrameLayout>
-    </android.support.design.widget.CoordinatorLayout>
+    </FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

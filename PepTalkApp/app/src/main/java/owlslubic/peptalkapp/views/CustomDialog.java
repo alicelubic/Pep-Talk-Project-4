@@ -45,10 +45,7 @@ public class CustomDialog extends AlertDialog {
     //which can be called upon with getKey
 
 
-
-
     //THESE METHODS LAUNCH THE CREATE AND EDIT DIALOGS
-
 
 
     //will static launch methods cause a problem?
@@ -193,7 +190,7 @@ public class CustomDialog extends AlertDialog {
                 if (inputText.equalsIgnoreCase("") || inputText.equalsIgnoreCase(" ")) {
                     editText.setError("oops! please enter a valid title");
                 } else {
-                    writeNewChecklist(inputText,inputNotes);
+                    writeNewChecklist(inputText, inputNotes);
                     Toast.makeText(context, "added to checklist", Toast.LENGTH_SHORT).show();
                     //replace with snackbar
                     dialog.dismiss();
@@ -334,7 +331,7 @@ public class CustomDialog extends AlertDialog {
 
     public static void launchViewPepTalk(final PepTalkObject peptalk, final Context context) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.full_screen_dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.full_screen_dialog);
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.dialog_view_peptalk, null);
         builder.setView(layout);
@@ -351,15 +348,15 @@ public class CustomDialog extends AlertDialog {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchEditPeptalkDialog(context,peptalk);
+                launchEditPeptalkDialog(context, peptalk);
             }
         });
 
 
     }
 
-    public static void launchViewChecklist(final ChecklistItemObject check, final Context context){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.full_screen_dialog);
+    public static void launchViewChecklist(final ChecklistItemObject check, final Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.full_screen_dialog);
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.dialog_view_peptalk, null);//using this layout because it was already there
         builder.setView(layout);
@@ -376,7 +373,7 @@ public class CustomDialog extends AlertDialog {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchEditChecklistDialog(context,check);
+                launchEditChecklistDialog(context, check);
             }
         });
 
@@ -386,13 +383,31 @@ public class CustomDialog extends AlertDialog {
     //THESE METHODS ACTUALLY INTERACT WITH DATABASE AND ARE USED IN THE DIALOGS
     //TODO put these in an async task yo
 
+
+
     public static void writeNewChecklist(String text, String notes) {
         DatabaseReference itemKey = checklistRef.push();//this creates the unique key, but no data
         String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
-        final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
-        itemKey.setValue(item);
+        if(!checklistExists(key)) {
+            final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
+            itemKey.setValue(item);
+        }
         Log.d(TAG, "writeNewChecklist: new key is: " + key);
     }
+
+    public static boolean checklistExists(String checklistKey) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
+                    .child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("checklist");
+            if(userRef.child(checklistKey)==null){
+                return false;//if the user is logged in,
+                // and the checklist object does not already have a child with that key,
+                // write it
+            }
+        }
+        return true;//otherwise, that key is present, and don't write it
+    }
+
 
     public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {
         DatabaseReference pepKey = peptalkRef.push();
@@ -415,7 +430,6 @@ public class CustomDialog extends AlertDialog {
         checklistRef.child(check.getKey()).child("notes").setValue(notes);
 
     }
-
 
 
     //this will be what is launched if all the checklist items are checked

@@ -8,7 +8,6 @@
     android:gravity="center"
     android:orientation="vertical"
     app:behavior_hideable="true"
-
     android:layout_marginTop="30dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
@@ -19,6 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="6dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:text="" />
 
     <TextView
@@ -29,6 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:gravity="center_horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:padding="6dp" />
 
     <TextView
@@ -39,6 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:gravity="center_horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:padding="6dp" />
 
 
@@ -49,8 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
         android:textSize="18sp"
-        android:background="@color/card_very_dark"
-        android:alpha="2"/>
+        android:background="@color/card_background_light" />
 
     <TextView
         android:id="@+id/tv_resource2"
@@ -59,7 +63,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
         android:textSize="18sp"
-        android:background="@color/card_very_dark"
+        android:background="@color/card_background_light"
+
         />
 
     <TextView
@@ -67,7 +72,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
-        android:textSize="18sp" />
+        android:background="@color/card_background_light"
+        android:textSize="18sp"
+        style="@style/CodeFont"/>
 
     <TextView
         android:id="@+id/tv_resource4"
@@ -75,6 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
+        android:background="@color/card_background_light"
         android:textSize="18sp" />
 
 

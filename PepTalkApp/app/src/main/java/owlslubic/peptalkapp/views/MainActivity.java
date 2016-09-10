@@ -212,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 } else {
                     myLoginMethod();
+                    insertContentOnNewAccountCreated();
                 }
                 break;
             case R.id.imagebutton_sms:
@@ -595,6 +596,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.add(R.id.framelayout_main_frag_container, fragment);
         transaction.commit();
 
+
+    }
+
+
+    private void insertContentOnNewAccountCreated() {
+        //TODO NEED TO FIND A WAY TO ONLY RUN THIS ONE TIME WHEN ACCOUNT IS CREATED
+        //there might be some sort of auth method for like "on authenticated", idk look into it
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            CustomDialog.writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes));
+            CustomDialog.writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes));
+            CustomDialog.writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes));
+            CustomDialog.writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes));
+            CustomDialog.writeNewChecklist(getString(R.string.checklist_breathe),getString(R.string.checklist_breathe_notes));
+            CustomDialog.writeNewChecklist(getString(R.string.checklist_locations),getString(R.string.checklist_locations_notes));
+//
+//            CustomDialog.writeNewPeptalk("Prepopulated peptalk 1", "Body");
+//            CustomDialog.writeNewPeptalk("Prepopulated peptalk 2", "Body");
+//            CustomDialog.writeNewPeptalk("Prepopulated peptalk 3", "Body");
+//            CustomDialog.writeNewPeptalk("Prepopulated peptalk 4", "Body");
+        }
 
     }
 }

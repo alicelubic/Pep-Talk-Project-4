@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -47,7 +48,8 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             //reuse for frags?
             holder.mFragTitle.setText(model.getTitle());
             holder.mFragBody.setText(model.getBody());
-        holder.mFragCard.setOnClickListener(new View.OnClickListener() {
+            holder.mFragBody.setMovementMethod(new ScrollingMovementMethod());
+        holder.mEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //tell the frag to go home first
@@ -63,18 +65,10 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
                     //launches edit pep talk dialog
 //                CustomDialog.launchEditPeptalkDialog(mContext, model);
                     CustomDialog.launchViewPepTalk(model, mContext);
+                    //this should launch a fraggie
 
 
                     //display fragment LOL THIS DOESNT WORK
-
-//                mActivity = (PepTalkListActivity)mContext;
-//                FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
-//                ft.add(R.id.framelayout_peptalk_frag_container, new MyFragment());
-//
-//                holder.mFragTitle.setText(model.getTitle());
-//                holder.mFragBody.setText(model.getBody());
-//
-//                ft.commit();
 
 
                 }

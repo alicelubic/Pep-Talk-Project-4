@@ -26,25 +26,4 @@
 
     </group>
 
-    <!--<item android:title=""/>-->
-    <!--<item android:title=""/>-->
-
-    <!--<item android:title="Why not reach out to a friend?"/>-->
-    <!--<item android:title="I know they'd love to hear from you">-->
-        <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_email"-->
-                <!--android:icon="@drawable/ic_menu_share"-->
-                <!--android:title="@string/email"/>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_text"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="@string/text"/>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_fb"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="@string/fb"/>-->
-        <!--</menu>-->
-    <!--</item>-->
-
 </menu>
