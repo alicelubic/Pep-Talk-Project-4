@@ -82,8 +82,7 @@ public class MyFragment extends Fragment {
 
         mTextViewTitle = (TextView) view.findViewById(R.id.textview_pepview_title);
         mTextViewBody = (TextView) view.findViewById(R.id.textview_pepview_body);
-
-
+        
 
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
