@@ -380,15 +380,29 @@ public class CustomDialog extends AlertDialog {
     }
 
 
+
+
     //THESE METHODS ACTUALLY INTERACT WITH DATABASE AND ARE USED IN THE DIALOGS
     //TODO put these in an async task yo
+
+
+
+
+    /**       FOR PRE-POPULATED PEP TALKS..........
+     * i feel like this checklistExists method is on the right track, but it's not working, so clearly
+     * the other way to go is to have them somehow be read/writable before the uid rules, but i dont know how
+     * that would work considering the objects can't be stored until there is a uid
+     * somehow having them be readable by everyone, but when they edit it it is saved with a new key
+     * that is only visible to that user?*/
+
+
 
 
 
     public static void writeNewChecklist(String text, String notes) {
         DatabaseReference itemKey = checklistRef.push();//this creates the unique key, but no data
         String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
-        if(checklistExists(key)==false) {
+        if(!checklistExists(key)) {
             final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
             itemKey.setValue(item);
         }
@@ -398,7 +412,7 @@ public class CustomDialog extends AlertDialog {
     public static boolean checklistExists(String checklistKey) {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
-                    .child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("checklist");
+                    .child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());//.child("checklist");
             Log.d(TAG, "checklistExists: checklist key is: "+checklistKey);
             if(userRef.child(checklistKey)==null){
                 return false;//if the user is logged in,
@@ -408,6 +422,12 @@ public class CustomDialog extends AlertDialog {
         }
         return true;//otherwise, that key is present, and don't write it
     }
+
+
+
+
+
+
 
 
     public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {

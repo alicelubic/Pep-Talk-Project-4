@@ -10,9 +10,9 @@
         android:id="@+id/cardview_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="420dp"
         android:layout_gravity="center_vertical"
         android:layout_margin="16dp"
+        android:minHeight="420dp"
         card_view:cardBackgroundColor="@color/card_background_dark"
         card_view:cardCornerRadius="3dp"
         card_view:cardElevation="2dp"
@@ -27,11 +27,11 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/card_background_dark"
-                android:src="@drawable/ic_mode_edit_white_24dp"
-                android:layout_alignParentRight="true" />
+                android:src="@drawable/ic_mode_edit_white_24dp" />
 
             <TextView
                 android:id="@+id/textview_frag_title"

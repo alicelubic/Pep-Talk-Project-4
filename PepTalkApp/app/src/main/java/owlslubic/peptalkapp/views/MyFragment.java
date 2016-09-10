@@ -7,6 +7,7 @@ import android.support.customtabs.CustomTabsCallback;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
@@ -80,29 +81,28 @@ public class MyFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         mTextViewTitle = (TextView) view.findViewById(R.id.textview_pepview_title);
         mTextViewBody = (TextView) view.findViewById(R.id.textview_pepview_body);
-        
-
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), MainActivity.class));
             }
         });
-
         if (mTextViewBody != null) {
             mTextViewBody.setMovementMethod(new ScrollingMovementMethod());
         }
         //setting up the recyclerview
         mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
+
+
+
         mFragRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class, R.layout.frag_card,
                 PepTalkViewHolder.class, mPeptalkRef, view.getContext());
         mFragRecycler.setAdapter(mFirebaseAdapter);
-
-
     }
 
 
@@ -112,6 +112,7 @@ public class MyFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
     }
+
 
 
 }

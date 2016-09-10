@@ -31,8 +31,11 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -61,8 +64,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View mHeaderView;
     private DrawerLayout mDrawer;
     private FrameLayout mFrameLayout;
-    private DatabaseReference mDbRef;
-    private DatabaseReference mPeptalkRef;
+    private DatabaseReference mDbRef, mUsersRef;
+    private DatabaseReference mChecklistRef;
     private FirebaseRecyclerAdapter mFirebaseAdapter;
 
 
@@ -88,20 +91,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         initViews();
-
-
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            mPeptalkRef = FirebaseDatabase.getInstance().getReference().child("users")
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("peptalks");
-        }
-        //makes sure to add a child or value whateverlistener that updates this list
-
-
-        //        RecyclerView.LayoutManager manager = new GridLayoutManager(this, .getSize(), GridLayoutManager.HORIZONTAL,false);
-
-        //fragtransaction in listener
-
 
     }
 
@@ -141,7 +130,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (resultCode == RESULT_OK) {
                 // user is signed in!
 
-                insertContentOnNewAccountCreated();
+
+               /** insertContentOnNewAccountCreated(); this seemed like a good place, once the login is accepted **/
+
                 Log.d(TAG, "onActivityResult: INSERT CONTENT ON NEW ACCOUNT CREATED method");
 
                 Log.d(TAG, "onActivityResult: user is signed in");

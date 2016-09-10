@@ -69,7 +69,8 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
+//        RecyclerView.LayoutManager manager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
+//        recyclerView.setLayoutManager(manager);
 
 
 
