@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import owlslubic.peptalkapp.R;
+import owlslubic.peptalkapp.views.MainActivity;
 
 /**
  * Created by owlslubic on 9/5/16.
@@ -32,6 +33,10 @@ public class MyWidgetProvider extends AppWidgetProvider {
             intent.setAction(EMERGENCY_PEPTALK);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
+            //intent for opening config thing
+//            Intent intent = new Intent(context, MainActivity.class);
+//            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
+
             //layout and attach onclicklistener
             mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
             mRemoteViews.setOnClickPendingIntent(R.id.textview_widget, pendingIntent);
@@ -50,7 +55,15 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
         if (intent.getAction().equals(EMERGENCY_PEPTALK)) {
             Toast.makeText(context, "Yay it works!", Toast.LENGTH_SHORT).show();
-//            mRemoteViews.setTextViewText(R.id.textview_widget, "here it is!");
+            mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+            mRemoteViews.setTextViewText(R.id.textview_widget, "here it is!");
+
+            //update to reflect change
+            ComponentName componentName = new ComponentName(context, MyWidgetProvider.class);
+            AppWidgetManager.getInstance(context).updateAppWidget(componentName, mRemoteViews);
+
+            //and add a lil button that'll set it back
+
 
         }
 
