@@ -4,9 +4,11 @@
     android:minHeight="40dp"
     android:minWidth="40dp"
     android:updatePeriodMillis="900000"
-    android:configure="owlslubic.peptalkapp.views.MainActivity"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
+    android:previewImage="@drawable/ic_chat_bubble_outline_white_24dp"
     />
 
-<!--not sure what the configure does. we'll see-->
+    <!--android:configure="owlslubic.peptalkapp.views.MainActivity"-->
+<!--the configure thing tells it which activity to open to configure the widget settings-->
+<!--perhaps this is where they will decide which pep talk to put-->

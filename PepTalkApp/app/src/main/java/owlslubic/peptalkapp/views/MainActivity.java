@@ -11,8 +11,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
@@ -29,52 +27,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.List;
 
 import owlslubic.peptalkapp.R;
-import owlslubic.peptalkapp.models.PepTalkObject;
-import owlslubic.peptalkapp.presenters.CustomPagerAdapter;
 
+import static owlslubic.peptalkapp.views.CustomDialog.*;
 import static owlslubic.peptalkapp.views.CustomDialog.writeNewChecklist;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9;
-    private static final String USERS = "users";
-    private static final String PEPTALKS = "peptalks";
-
     private BottomSheetBehavior mBottomSheetBehavior;
-    private TextView mBottomSheetHeading, mBottomSheetTopText,
-            mBottomSheetBottomText, mWelcomeTextView, mSigninPromptTextView,
-            mResource1, mResource2, mResource3, mResource4;
+    private TextView mBottomSheetHeading, mBottomSheetTopText, mBottomSheetBottomText, mWelcomeTextView,
+            mSigninPromptTextView, mResource1, mResource2, mResource3, mResource4;
     private FloatingActionsMenu mFabMenu;
     private Button mSignInOrOutButton;
-    private ImageButton mSms, mEmail, mFb, mLaunchFragMain, mFragBack;
-    private Toolbar mToolbar;
-    private ActionBarDrawerToggle mToggle;
-    private NavigationView mNavigationView;
-    private View mHeaderView;
     private DrawerLayout mDrawer;
     private FrameLayout mFrameLayout;
     private SharedPreferences mPrefs;
-    private DatabaseReference mDbRef, mUsersRef;
-    private DatabaseReference mChecklistRef;
-    private FirebaseRecyclerAdapter mFirebaseAdapter;
-
-
-    private ViewPager mViewPager;
-    private PagerAdapter mPagerAdapter;
-    private CustomPagerAdapter mCustomPagerAdapter;
-    private List<PepTalkObject> mPepTalkList;
 
 
     @Override
@@ -87,11 +59,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +66,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         initViews();
-
-
-
     }
 
 
@@ -110,10 +74,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             // already signed in, so send them on their way
-            Toast.makeText(MainActivity.this, "Already signed in, " + auth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "You're already signed in", Snackbar.LENGTH_SHORT);
+            snackbar.show();
         } else {
-            // not signed in
-            //for sign in
+            // not already signed in, so let's sign em in or up!
             startActivityForResult(AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setProviders(
@@ -123,8 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .setTheme(R.style.AppTheme)
                     .build(), RC_SIGN_IN);
         }
-
-
     }
 
     //handling the sign-in result
@@ -132,22 +94,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
-                // user is signed in!
-
+                // user is signed in! populate account with peptalks if we haven't already (thanks shared prefs)
+                //TODO revisit this
+                /** since i'm using firebaseui library, i can't figure out how to access the specific methods like onAccoutnCreated
+                 * which is ideally where this would go, so this is my roundabout solution
+                 * although if you uninstall and reinstall, it resets the sharedprefs and adds the content again */
                 insertContentOnNewAccountCreated();
-                Log.d(TAG, "onActivityResult: INSERTCONTENT CALLED");
-
-                /** insertContentOnNewAccountCreated(); this seemed like a good place, once the login is accepted **/
-
-                Log.d(TAG, "onActivityResult: user is signed in");
                 startActivity(new Intent(this, MainActivity.class));
-//                finish();
-
             } else {
-                // user is not signed in. Maybe just wait for the user to press
-                // "sign in" again, or show a message
-                Log.d(TAG, "onActivityResult: user is not signed in");
-                Toast.makeText(MainActivity.this, "sign in failed. try again yo", Toast.LENGTH_SHORT).show();
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Oops! Sign in failed", Snackbar.LENGTH_SHORT);
+                snackbar.show();
             }
         }
     }
@@ -157,13 +113,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (view.getId()) {
             case R.id.fablet_checklist:
-                CustomDialog.launchNewChecklistDialog(this);
+                launchNewChecklistDialog(this);
                 mFrameLayout.getBackground().setAlpha(0);
                 mFrameLayout.setOnTouchListener(null);
                 mFabMenu.collapse();
                 break;
             case R.id.fablet_peptalk:
-                CustomDialog.launchNewPeptalkDialog(this);
+                launchNewPeptalkDialog(this);
                 mFrameLayout.getBackground().setAlpha(0);
                 mFrameLayout.setOnTouchListener(null);
                 mFabMenu.collapse();
@@ -177,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     snackbar.setAction("sign in", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //undo
+//                            myLoginMethod();
                             Toast.makeText(MainActivity.this, "Snackbar Action", Toast.LENGTH_LONG).show();
                         }
                     }).show();
@@ -187,11 +143,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     //already signed in, so sign em out
                     AuthUI.getInstance().signOut(this);
-                    resetPrefsOnSignOut();
-                    Log.d(TAG, "resetPrefOnSignOut: prefs first run: "+ mPrefs.getBoolean("FIRST_RUN", true));
+                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+//                    resetPrefsOnSignOut();
+//                    Log.d(TAG, "resetPrefOnSignOut: sharedprefs first run: " + mPrefs.getBoolean("FIRST_RUN", true));
 
                     //TODO once signed out, disable the onclicks for createnews for other stuff so that there is no null pointer on getUID
-
                     //so we sign out, and then change the display for signing back in
                     mSignInOrOutButton.setText(R.string.sign_in);
                     mSigninPromptTextView.setText(R.string.sign_in_prompt);
@@ -215,7 +172,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
 //                intent.putExtra("url", "https://www.headspace.com/");
 //                startActivity(intent);
-                //so this launches browser
+
+                //so this launches browser instead
                 Uri uri = Uri.parse("https://www.headspace.com/");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
@@ -246,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
-
 
     //making a method to do this so the oncreate stays clean and pretty aww
     private void initViews() {
@@ -282,14 +239,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         //for launching our lil peptalks
-        mLaunchFragMain = (ImageButton) findViewById(R.id.imagebutton_main);
+        ImageButton mLaunchFragMain = (ImageButton) findViewById(R.id.imagebutton_main);
         mLaunchFragMain.setOnClickListener(this);
 
 
         //TODO fuck with the toolbar here
         //toolbar
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_main);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
@@ -297,16 +254,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //nav drawer setup
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mToggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.setDrawerListener(mToggle);
-        mToggle.syncState();
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         //nav login header
-        mHeaderView = mNavigationView.getHeaderView(0);
-        mWelcomeTextView = (TextView) mHeaderView.findViewById(R.id.textview_navheader_welcome);
-        mSigninPromptTextView = (TextView) mHeaderView.findViewById(R.id.textview_navheader_sign_in);
-        mSignInOrOutButton = (Button) mHeaderView.findViewById(R.id.button_navheader_signin);
+        View headerView = navigationView.getHeaderView(0);
+        mWelcomeTextView = (TextView) headerView.findViewById(R.id.textview_navheader_welcome);
+        mSigninPromptTextView = (TextView) headerView.findViewById(R.id.textview_navheader_sign_in);
+        mSignInOrOutButton = (Button) headerView.findViewById(R.id.button_navheader_signin);
         mSignInOrOutButton.setOnClickListener(this);
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -323,12 +280,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mWelcomeTextView.setText(R.string.welcome_blurb);
         }
         //nav bottom imagebuttons
-        mSms = (ImageButton) findViewById(R.id.imagebutton_sms);
-        mSms.setOnClickListener(this);
-        mEmail = (ImageButton) findViewById(R.id.imagebutton_email);
-        mEmail.setOnClickListener(this);
-        mFb = (ImageButton) findViewById(R.id.imagebutton_fb);
-        mFb.setOnClickListener(this);
+        ImageButton sms = (ImageButton) findViewById(R.id.imagebutton_sms);
+        sms.setOnClickListener(this);
+        ImageButton emailButton = (ImageButton) findViewById(R.id.imagebutton_email);
+        emailButton.setOnClickListener(this);
+        ImageButton fbButton = (ImageButton) findViewById(R.id.imagebutton_fb);
+        fbButton.setOnClickListener(this);
 
 
         //bottom sheet
@@ -398,57 +355,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_peptalks) {
             Intent intent = new Intent(MainActivity.this, PepTalkListActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_checklist) {
             Intent intent = new Intent(MainActivity.this, ChecklistActivity.class);
             startActivity(intent);
-
         } else if (id == R.id.nav_resources) {
             launchBottomSheetFromNav();
-
             mBottomSheetHeading.setText(R.string.more_resources_heading);
             mBottomSheetTopText.setText(R.string.more_resources_text);
-            mBottomSheetBottomText.setText("");
             mResource1.setText(R.string.resource_headspace);
             mResource2.setText(R.string.resource_befriending);
             mResource3.setText(R.string.resource_selfcompassion);
             mResource4.setText(R.string.resource_mindfulness);
-
-
         } else if (id == R.id.nav_instructions) {
             launchBottomSheetFromNav();
-
             mBottomSheetHeading.setText(R.string.instuctions_heading);
             mBottomSheetTopText.setText(R.string.instructions_text);
-            mBottomSheetBottomText.setText("");
-
-
         } else if (id == R.id.nav_about) {
             launchBottomSheetFromNav();
-
             mBottomSheetHeading.setText(R.string.about_heading);
             mBottomSheetTopText.setText(R.string.about_text);
-            mBottomSheetBottomText.setText("");
-
         }
-
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-
-    //works
     private void launchBottomSheetFromNav() {
-        //close nav drawer
+        //first close nav drawer
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
         }
-
         //then open bottomsheet
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -459,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    //launch external social apps
+    //launch external social apps for "friend reachout"
     private boolean appInstalledOrNot(String uri) {
         PackageManager pm = getPackageManager();
         boolean appInstalled;
@@ -473,15 +412,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void launchDefaultEmail() {
-        boolean installed = appInstalledOrNot("com.google.android.gm");
-        if (installed) {
-            Intent emailLauncher = new Intent(Intent.ACTION_VIEW);
-            emailLauncher.setType("message/rfc822");
-            startActivity(emailLauncher);
-        } else {
-            Toast.makeText(MainActivity.this, "Gmail is not currently installed on your device", Toast.LENGTH_SHORT).show();
-        }
-
+        Intent emailLauncher = new Intent(Intent.ACTION_VIEW);
+        emailLauncher.addCategory(Intent.CATEGORY_DEFAULT);
+        emailLauncher.setType("message/rfc822");
+        startActivity(emailLauncher);
     }
 
     public void launchFacebook() {
@@ -495,11 +429,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void launchDefaultSMS() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.setType("vnd.android-dir/mms-sms");
-        startActivity(intent);
+        Intent smsLauncher = new Intent(Intent.ACTION_MAIN);
+        smsLauncher.addCategory(Intent.CATEGORY_DEFAULT);
+        smsLauncher.setType("vnd.android-dir/mms-sms");
+        startActivity(smsLauncher);
     }
+
+
+    public void setupFrag() {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        MyFragment fragment = new MyFragment();
+        transaction.add(R.id.framelayout_main_frag_container, fragment);
+        transaction.commit();
+    }
+
+
+    private void insertContentOnNewAccountCreated() {
+        //shared prefs to make sure this only runs one time, and it is reset on signout
+        //TODO make sure that it doesn't insert them again when the user signs back in later/after re-in
+        boolean b = false;
+        mPrefs = getSharedPreferences("PREFS_NAME", 0);
+        b = mPrefs.getBoolean("FIRST_RUN", false);
+        if (!b) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes));
+                writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes));
+                writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes));
+                writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes));
+                writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes));
+                writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes));
+                Log.d(TAG, "insertContentOnNewAccountCreated: this ran");
+
+                writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present));
+                writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions));
+                writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best));
+            }
+
+            mPrefs = getSharedPreferences("PREFS_NAME", 0);
+            SharedPreferences.Editor editor = mPrefs.edit();
+            editor.putBoolean("FIRST_RUN", true);
+            editor.commit();
+        }
+        Log.d(TAG, "insertContentOnNewAccountCreated: sharedprefs first run is: " + mPrefs.getBoolean("FIRST_RUN", false));
+    }
+
+    public void resetPrefsOnSignOut() {
+
+        mPrefs = getSharedPreferences("PREFS_NAME", 0);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putBoolean("FIRST_RUN", false);
+        editor.commit();
+    }
+
 
 
 
@@ -565,61 +547,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 */
 
 
-    public void setupFrag() {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
 
-//        mDbRef = FirebaseDatabase.getInstance().getReference();
-        //make a list of das peps from db
-
-        MyFragment fragment = new MyFragment();
-        transaction.add(R.id.framelayout_main_frag_container, fragment);
-        transaction.commit();
-
-
-    }
-
-
-    private void insertContentOnNewAccountCreated() {
-        //TODO NEED TO FIND A WAY TO ONLY RUN THIS ONE TIME WHEN ACCOUNT IS CREATED
-
-
-        boolean b = false;
-        mPrefs = getSharedPreferences("PREFS_NAME", 0);
-        b = mPrefs.getBoolean("FIRST_RUN", false);
-        if (!b) {
-
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes));
-                writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes));
-                writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes));
-                writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes));
-                writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes));
-                writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes));
-                Log.d(TAG, "insertContentOnNewAccountCreated: this ran");
-
-//            CustomDialog.writeNewPeptalk("Prepopulated peptalk 1", "Body");
-//            CustomDialog.writeNewPeptalk("Prepopulated peptalk 2", "Body");
-//            CustomDialog.writeNewPeptalk("Prepopulated peptalk 3", "Body");
-//            CustomDialog.writeNewPeptalk("Prepopulated peptalk 4", "Body");
-            }
-
-
-            mPrefs = getSharedPreferences("PREFS_NAME", 0);
-            SharedPreferences.Editor editor = mPrefs.edit();
-            editor.putBoolean("FIRST_RUN", true);
-            editor.commit();
-        }
-        Log.d(TAG, "insertContentOnNewAccountCreated: shared pref first run is: "+mPrefs.getBoolean("FIRST_RUN", false));
-
-
-    }
-    public void resetPrefsOnSignOut(){
-
-        mPrefs = getSharedPreferences("PREFS_NAME", 0);
-        SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putBoolean("FIRST_RUN", false);
-        editor.commit();
-    }
 }
 

@@ -34,7 +34,6 @@
         <!-- widget business -->
         <receiver
             android:name=".presenters.MyWidgetProvider"
-            android:icon="@drawable/ic_menu_hamburger_24dp"
             android:label="Pep Talk Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -45,7 +44,9 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
-        <activity android:name=".views.WebViewActivity"></activity>
+
+        <activity android:name=".views.WebViewActivity"
+            android:parentActivityName=".views.MainActivity" />
     </application>
 
 </manifest>
