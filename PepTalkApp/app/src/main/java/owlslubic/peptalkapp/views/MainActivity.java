@@ -1,6 +1,7 @@
 package owlslubic.peptalkapp.views;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View mHeaderView;
     private DrawerLayout mDrawer;
     private FrameLayout mFrameLayout;
+    private SharedPreferences mPrefs;
     private DatabaseReference mDbRef, mUsersRef;
     private DatabaseReference mChecklistRef;
     private FirebaseRecyclerAdapter mFirebaseAdapter;
@@ -86,11 +88,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initViews();
+
+
 
     }
 
@@ -101,12 +111,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (auth.getCurrentUser() != null) {
             // already signed in, so send them on their way
             Toast.makeText(MainActivity.this, "Already signed in, " + auth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "check if signed in: USER IS ALREADY SIGNED IN");
-//            finish();
         } else {
             // not signed in
-            Log.d(TAG, "check if signed in: USER IS NOT SIGNED IN, COMMENCING GOOGLE SIGN IN");
-
             //for sign in
             startActivityForResult(AuthUI.getInstance()
                     .createSignInIntentBuilder()
@@ -114,10 +120,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                            AuthUI.GOOGLE_PROVIDER,//GOOGLE DOESNT WORK THATS SAD
                             AuthUI.EMAIL_PROVIDER)
                     .setIsSmartLockEnabled(true)
-//                    .setTheme(R.style)
+                    .setTheme(R.style.AppTheme)
                     .build(), RC_SIGN_IN);
-
-
         }
 
 
@@ -130,10 +134,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (resultCode == RESULT_OK) {
                 // user is signed in!
 
+                insertContentOnNewAccountCreated();
+                Log.d(TAG, "onActivityResult: INSERTCONTENT CALLED");
 
-               /** insertContentOnNewAccountCreated(); this seemed like a good place, once the login is accepted **/
-
-                Log.d(TAG, "onActivityResult: INSERT CONTENT ON NEW ACCOUNT CREATED method");
+                /** insertContentOnNewAccountCreated(); this seemed like a good place, once the login is accepted **/
 
                 Log.d(TAG, "onActivityResult: user is signed in");
                 startActivity(new Intent(this, MainActivity.class));
@@ -168,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //launch pep talk view
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     setupFrag();
-                }else{
+                } else {
                     Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "Please sign in to view your peptalks", Snackbar.LENGTH_SHORT);
                     snackbar.setAction("sign in", new View.OnClickListener() {
                         @Override
@@ -183,6 +187,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     //already signed in, so sign em out
                     AuthUI.getInstance().signOut(this);
+                    resetPrefsOnSignOut();
+                    Log.d(TAG, "resetPrefOnSignOut: prefs first run: "+ mPrefs.getBoolean("FIRST_RUN", true));
+
+                    //TODO once signed out, disable the onclicks for createnews for other stuff so that there is no null pointer on getUID
+
                     //so we sign out, and then change the display for signing back in
                     mSignInOrOutButton.setText(R.string.sign_in);
                     mSigninPromptTextView.setText(R.string.sign_in_prompt);
@@ -234,7 +243,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
 
-
         }
 
     }
@@ -276,7 +284,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //for launching our lil peptalks
         mLaunchFragMain = (ImageButton) findViewById(R.id.imagebutton_main);
         mLaunchFragMain.setOnClickListener(this);
-
 
 
         //TODO fuck with the toolbar here
@@ -577,20 +584,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //TODO NEED TO FIND A WAY TO ONLY RUN THIS ONE TIME WHEN ACCOUNT IS CREATED
 
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes));
-            writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes));
-            writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes));
-            writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes));
-            writeNewChecklist(getString(R.string.checklist_breathe),getString(R.string.checklist_breathe_notes));
-            writeNewChecklist(getString(R.string.checklist_locations),getString(R.string.checklist_locations_notes));
-//
+        boolean b = false;
+        mPrefs = getSharedPreferences("PREFS_NAME", 0);
+        b = mPrefs.getBoolean("FIRST_RUN", false);
+        if (!b) {
+
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes));
+                writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes));
+                writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes));
+                writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes));
+                writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes));
+                writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes));
+                Log.d(TAG, "insertContentOnNewAccountCreated: this ran");
+
 //            CustomDialog.writeNewPeptalk("Prepopulated peptalk 1", "Body");
 //            CustomDialog.writeNewPeptalk("Prepopulated peptalk 2", "Body");
 //            CustomDialog.writeNewPeptalk("Prepopulated peptalk 3", "Body");
 //            CustomDialog.writeNewPeptalk("Prepopulated peptalk 4", "Body");
-        }
+            }
 
+
+            mPrefs = getSharedPreferences("PREFS_NAME", 0);
+            SharedPreferences.Editor editor = mPrefs.edit();
+            editor.putBoolean("FIRST_RUN", true);
+            editor.commit();
+        }
+        Log.d(TAG, "insertContentOnNewAccountCreated: shared pref first run is: "+mPrefs.getBoolean("FIRST_RUN", false));
+
+
+    }
+    public void resetPrefsOnSignOut(){
+
+        mPrefs = getSharedPreferences("PREFS_NAME", 0);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putBoolean("FIRST_RUN", false);
+        editor.commit();
     }
 }
 

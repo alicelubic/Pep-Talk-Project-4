@@ -60,12 +60,16 @@
         <item name="android:width">400dp</item>
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="PepTalkTheme" parent="Theme.AppCompat.Light.NoActionBar" >
-        <item name="colorPrimaryDark">@color/com_facebook_button_background_color</item>
-        <item name="colorPrimary">@color/com_facebook_button_background_color_selected</item>
-        <item name="colorAccent">@color/authui_colorActivated</item>
+        <item name="colorPrimaryDark">@color/mySecondaryBlue</item>
+        <item name="colorPrimary">@color/myPrimaryLightBlue</item>
+        <item name="colorAccent">@color/myAccentBlue</item>
+        <item name="android:textColor">#fafafa</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:typeface">serif</item>
     </style>
 
 </resources>

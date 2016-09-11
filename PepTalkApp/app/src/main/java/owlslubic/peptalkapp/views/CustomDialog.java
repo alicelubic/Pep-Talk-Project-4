@@ -387,7 +387,6 @@ public class CustomDialog extends AlertDialog {
 
 
 
-
     /**       FOR PRE-POPULATED PEP TALKS..........
      * i feel like this checklistExists method is on the right track, but it's not working, so clearly
      * the other way to go is to have them somehow be read/writable before the uid rules, but i dont know how
@@ -402,12 +401,13 @@ public class CustomDialog extends AlertDialog {
     public static void writeNewChecklist(String text, String notes) {
         DatabaseReference itemKey = checklistRef.push();//this creates the unique key, but no data
         String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
-        if(!checklistExists(key)) {
+//        if(!checklistExists(key)) {
             final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
             itemKey.setValue(item);
-        }
+//        }
         Log.d(TAG, "writeNewChecklist: new key is: " + key);
     }
+
 
     public static boolean checklistExists(String checklistKey) {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -422,9 +422,6 @@ public class CustomDialog extends AlertDialog {
         }
         return true;//otherwise, that key is present, and don't write it
     }
-
-
-
 
 
 
