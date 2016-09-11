@@ -4,12 +4,22 @@
     android:id="@+id/bottomSheetLayout"
     android:layout_width="match_parent"
     android:layout_height="550dp"
-    android:background="@color/card_background_dark"
+    android:background="@color/myPrimaryLightBlue"
     android:gravity="center"
     android:orientation="vertical"
     app:behavior_hideable="true"
     android:layout_marginTop="30dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <ImageButton
+        android:id="@+id/imagebutton_bottomsheet_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/chevron_down"
+        android:background="@color/myPrimaryLightBlue"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_gravity="top|end"/>
 
     <TextView
         android:id="@+id/textview_bottomSheetHeading"
@@ -17,7 +27,7 @@
         android:layout_gravity="top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="6dp"
+        android:paddingBottom="6dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:text="" />
@@ -54,7 +64,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
         android:textSize="18sp"
-        android:background="@color/card_background_light" />
+        android:padding="6dp"
+        android:background="@color/mySecondaryBlue" />
 
     <TextView
         android:id="@+id/tv_resource2"
@@ -63,7 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
         android:textSize="18sp"
-        android:background="@color/card_background_light"
+        android:padding="6dp"
+        android:background="@color/mySecondaryBlue"
 
         />
 
@@ -72,8 +84,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
-        android:background="@color/card_background_light"
+        android:background="@color/mySecondaryBlue"
         android:textSize="18sp"
+        android:padding="6dp"
         style="@style/CodeFont"/>
 
     <TextView
@@ -82,7 +95,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:background="@color/card_background_light"
+        android:background="@color/mySecondaryBlue"
         android:textSize="18sp" />
 
 

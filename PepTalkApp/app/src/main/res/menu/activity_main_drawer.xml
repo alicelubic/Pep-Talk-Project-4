@@ -5,24 +5,25 @@
 
         <item
             android:id="@+id/nav_peptalks"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_chat_black_24dp"
             android:title="@string/pep_talks" />
         <item
             android:id="@+id/nav_checklist"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_check_box_black_24dp"
             android:title="@string/feel_better_checklist" />
         <item
             android:id="@+id/nav_resources"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_add_box_black_24dp"
             android:title="@string/more_resources" />
         <item
             android:id="@+id/nav_instructions"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_info_black_24dp"
             android:title="@string/instructions" />
 
         <item
             android:id="@+id/nav_about"
-            android:title="@string/about"/>
+            android:title="@string/about"
+            android:icon="@drawable/cell_phone"/>
 
     </group>
 

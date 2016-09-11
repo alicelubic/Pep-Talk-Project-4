@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="6dp"
-    android:background="@color/card_background_light">
+    android:background="@color/mySecondaryBlue">
 
     <!--the code below adds another toolbar under the standard-->
 

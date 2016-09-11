@@ -11,7 +11,7 @@
     android:paddingTop="3dp"
     android:orientation="vertical"
     tools:context="owlslubic.peptalkapp.views.PepTalkListActivity"
-    android:background="@color/card_background_light">
+    android:background="@color/mySecondaryBlue">
 
 <FrameLayout
     android:layout_width="match_parent"

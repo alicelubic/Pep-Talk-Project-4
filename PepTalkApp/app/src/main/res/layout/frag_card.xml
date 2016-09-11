@@ -13,7 +13,7 @@
         android:layout_gravity="center_vertical"
         android:layout_margin="16dp"
         android:minHeight="420dp"
-        card_view:cardBackgroundColor="@color/card_background_dark"
+        card_view:cardBackgroundColor="@color/myPrimaryLightBlue"
         card_view:cardCornerRadius="3dp"
         card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
@@ -30,7 +30,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/card_background_dark"
+                android:background="@color/myPrimaryLightBlue"
                 android:src="@drawable/ic_mode_edit_white_24dp" />
 
             <TextView

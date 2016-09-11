@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/coordinator_layout_main_activity"
-    android:background="@color/card_background_light">
+    android:background="@color/mySecondaryBlue">
 
     <LinearLayout
         android:orientation="vertical"
@@ -31,11 +31,11 @@
         android:layout_height="wrap_content" />
     <ImageButton
         android:id="@+id/imagebutton_main"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
         android:src="@mipmap/ic_launcher_big"
         android:layout_gravity="center"
-        android:background="@color/card_background_light"/>
+        android:background="@color/mySecondaryBlue"/>
 
     </LinearLayout>
 

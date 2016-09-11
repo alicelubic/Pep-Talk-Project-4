@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/card_very_light" />
+            <solid android:color="@color/myAccentBlue" />
             <corners
                 android:bottomLeftRadius="60dp"
                 android:bottomRightRadius="60dp"

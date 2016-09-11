@@ -17,7 +17,7 @@
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/card_background_dark"
+            android:background="@color/myPrimaryLightBlue"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             android:navigationIcon="@drawable/ic_menu_hamburger_24dp"/>
 
