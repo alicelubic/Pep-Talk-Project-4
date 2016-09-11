@@ -3,13 +3,11 @@
     android:layout_width="420dp"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/myAccentBlue"
-    android:alpha="20"
     android:padding="16dp">
 
     <EditText
         android:id="@+id/edittext_edit_peptalk_title"
-        style="@style/CodeFont"
+        style="@style/CodeFont.Gray"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="center"
@@ -21,9 +19,9 @@
 
     <EditText
         android:id="@+id/edittext_edit_peptalk_body"
-        style="@style/CodeFont"
+        style="@style/CodeFont.Gray"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="100dp"
         android:layout_below="@id/edittext_edit_peptalk_title"
         android:imeOptions="actionDone"
         android:scrollbars="vertical"/>
@@ -32,30 +30,28 @@
 
     <Button
         android:id="@+id/button_nvm_edit_peptalk"
-        style="@style/CodeFont"
+        style="@style/CodeFont.Gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="6dp"
-        android:background="@color/myPrimaryLightBlue"
-        android:requiresFadingEdge="horizontal"
+        android:layout_marginLeft="16dp"
         android:text="cool"
-        android:paddingLeft="16dp"
+        android:textSize="16sp"
         />
 
     <Button
         android:id="@+id/button_submit_edit_peptalk"
-        style="@style/CodeFont"
+        style="@style/CodeFont.Gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="end"
-        android:background="@color/myPrimaryLightBlue"
-        android:paddingRight="16dp"
+        android:layout_marginRight="16dp"
+        android:textSize="16sp"
         android:requiresFadingEdge="horizontal"
         android:text="good" />
 

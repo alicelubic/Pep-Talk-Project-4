@@ -9,7 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLength="30"
-        android:hint="enter new checklist item..."/>
+        android:hint="enter new checklist item..."
+        style="@style/CodeFont.Gray"
+        />
 
     <EditText
         android:id="@+id/edittext_new_checklist_notes"
@@ -17,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
+        style="@style/CodeFont.Gray"
         android:hint="any notes on that item?"/>
 
     <Button
@@ -26,6 +29,8 @@
         android:layout_gravity="end"
         android:layout_marginEnd="16dp"
         android:text="done"
+        style="@style/CodeFont.Gray"
+        android:textSize="16sp"
         android:layout_marginRight="16dp" />
 
 </LinearLayout>

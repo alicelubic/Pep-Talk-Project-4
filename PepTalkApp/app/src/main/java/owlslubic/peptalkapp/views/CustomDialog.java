@@ -3,6 +3,7 @@ package owlslubic.peptalkapp.views;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,9 +31,9 @@ public class CustomDialog extends AlertDialog {
     //consider having cool lookin buttons for these dialogs yo
 
     private static final String TAG = "CustomDialog";
-    private static DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-    private static DatabaseReference checklistRef = dbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("checklist");
-    private static DatabaseReference peptalkRef = dbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("peptalks");
+    private static DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference();
+    private static DatabaseReference mChecklistRef;
+    private static DatabaseReference mPeptalkRef;
 
 
     //dont think i need a constructor but whatever
@@ -260,7 +261,7 @@ public class CustomDialog extends AlertDialog {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //this is what does the actual deleting
-                peptalkRef.child(peptalk.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
+                mPeptalkRef.child(peptalk.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         Log.i(TAG, "DELETE CHECKLIST error: " + databaseError.toString());
@@ -275,7 +276,7 @@ public class CustomDialog extends AlertDialog {
         dialog.setButton(BUTTON_POSITIVE, "yurp", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                peptalkRef.child(peptalk.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
+                mPeptalkRef.child(peptalk.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     }
@@ -301,7 +302,7 @@ public class CustomDialog extends AlertDialog {
         builder.setPositiveButton("yurp", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                checklistRef.child(check.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
+                mChecklistRef.child(check.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         Log.i(TAG, "DELETE CHECKLIST error: " + databaseError.toString());
@@ -316,7 +317,7 @@ public class CustomDialog extends AlertDialog {
         dialog.setButton(BUTTON_POSITIVE, "yurp", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                checklistRef.child(check.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
+                mChecklistRef.child(check.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     }
@@ -365,6 +366,7 @@ public class CustomDialog extends AlertDialog {
 
         TextView title = (TextView) dialog.findViewById(R.id.textview_pepview_title);
         TextView notes = (TextView) dialog.findViewById(R.id.textview_pepview_body);
+        notes.setTextSize(14);
         notes.setMovementMethod(new ScrollingMovementMethod());
         ImageButton edit = (ImageButton) dialog.findViewById(R.id.imagebutton_edit_peptalk);
 
@@ -386,67 +388,47 @@ public class CustomDialog extends AlertDialog {
     //TODO put these in an async task yo
 
 
-
-    /**       FOR PRE-POPULATED PEP TALKS..........
-     * i feel like this checklistExists method is on the right track, but it's not working, so clearly
-     * the other way to go is to have them somehow be read/writable before the uid rules, but i dont know how
-     * that would work considering the objects can't be stored until there is a uid
-     * somehow having them be readable by everyone, but when they edit it it is saved with a new key
-     * that is only visible to that user?*/
-
-
-
-
-
     public static void writeNewChecklist(String text, String notes) {
-        DatabaseReference itemKey = checklistRef.push();//this creates the unique key, but no data
-        String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
-//        if(!checklistExists(key)) {
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            mChecklistRef = mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("checklist");
+
+            DatabaseReference itemKey = mChecklistRef.push();//this creates the unique key, but no data
+            String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
             final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
             itemKey.setValue(item);
-//        }
-        Log.d(TAG, "writeNewChecklist: new key is: " + key);
-    }
-
-
-    public static boolean checklistExists(String checklistKey) {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
-                    .child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());//.child("checklist");
-            Log.d(TAG, "checklistExists: checklist key is: "+checklistKey);
-            if(userRef.child(checklistKey)==null){
-                return false;//if the user is logged in,
-                // and the checklist object does not already have a child with that key,
-                // write it
-            }
+            Log.d(TAG, "writeNewChecklist: new key is: " + key);
         }
-        return true;//otherwise, that key is present, and don't write it
     }
-
-
-
 
 
     public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {
-        DatabaseReference pepKey = peptalkRef.push();
-        String key = pepKey.getKey();
-        final PepTalkObject peptalk = new PepTalkObject(key, title, body, false);
-        pepKey.setValue(peptalk);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            mPeptalkRef = mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("peptalks");
+
+            DatabaseReference pepKey = mPeptalkRef.push();
+            String key = pepKey.getKey();
+            final PepTalkObject peptalk = new PepTalkObject(key, title, body, false);
+            pepKey.setValue(peptalk);
+        }
     }
 
     public static void updatePepTalk(PepTalkObject peptalk, String title, String body) {
-        peptalkRef.child(peptalk.getKey()).child("title").setValue(title);
-        peptalkRef.child(peptalk.getKey()).child("body").setValue(body);
-        //when boolean is set in the dialog, it'll be pulling this value from the object
-        //with a method like if whatever checkbox is selected, :
-//        setWidgetDefaultFromDialog(peptalk,true);then update the database
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            mPeptalkRef = mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("peptalks");
 
+            mPeptalkRef.child(peptalk.getKey()).child("title").setValue(title);
+            mPeptalkRef.child(peptalk.getKey()).child("body").setValue(body);
+            //when boolean is set in the dialog, it'll be pulling this value from the object
+        }
     }
 
     public static void updateChecklist(ChecklistItemObject check, String text, String notes) {
-        checklistRef.child(check.getKey()).child("text").setValue(text);
-        checklistRef.child(check.getKey()).child("notes").setValue(notes);
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            mChecklistRef = mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("checklist");
 
+            mChecklistRef.child(check.getKey()).child("text").setValue(text);
+            mChecklistRef.child(check.getKey()).child("notes").setValue(notes);
+        }
     }
 
 
@@ -461,9 +443,44 @@ public class CustomDialog extends AlertDialog {
 
     public static boolean setWidgetDefaultFromDialog(PepTalkObject pepTalkObject, boolean b) {
         pepTalkObject.setIsWidgetDefault(b);
-        peptalkRef.child(pepTalkObject.getKey()).child("isWidgetDefault").setValue(b);
-
+        mPeptalkRef.child(pepTalkObject.getKey()).child("isWidgetDefault").setValue(b);
         return b;
+    }
+
+    public static void launchAddWidgetTextDialog(final Context context){
+        //decided to just add text straight to this because grabbing the text from firebase has proved more complicated than expected
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View layout = inflater.inflate(R.layout.dialog_add_widget_text, null);
+        builder.setView(layout);
+        builder.setPositiveButton("cool", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        final EditText editText = (EditText) dialog.findViewById(R.id.edittext_dialog_widget);
+
+
+        dialog.getButton(BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String widgetText = editText.getText().toString().trim();
+
+                SharedPreferences prefs = context.getSharedPreferences("PEP_PREFS", 1);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("WIDGET_TEXT", widgetText);
+                editor.apply();
+                dialog.dismiss();
+            }
+        });
+
+
+
     }
 
 }

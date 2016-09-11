@@ -8,9 +8,9 @@
     <!--this is for the action bar and overflow menu-->
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/widget"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/emergency_pep_talk_widget"
         app:showAsAction="never" />
 
 

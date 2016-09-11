@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="26dp"
     android:gravity="center">
 
     <ImageButton
@@ -18,16 +18,17 @@
         android:id="@+id/textview_pepview_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="6dp"
+        style="@style/CodeFont.Gray"
         android:layout_gravity="center"/>
     <TextView
         android:id="@+id/textview_pepview_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="6dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="6dp"
         android:layout_gravity="center"
+        style="@style/CodeFont.Gray"
         android:scrollbars="vertical"
+        android:layout_marginBottom="6dp"
         />
 
 

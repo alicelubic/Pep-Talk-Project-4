@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/coordinator_layout_main_activity"
     android:background="@color/mySecondaryBlue">
 
     <LinearLayout
@@ -15,32 +14,28 @@
         android:layout_gravity="center_horizontal">
 
     <TextView
+        android:id="@+id/textview_main"
         style="@style/CodeFont"
-        android:text="Need a pep talk?"
-        android:layout_gravity="center"
-        android:layout_marginBottom="6dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        style="@style/CodeFont"
-        android:text="tap below"
-        android:textSize="14sp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="6dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <ImageButton
-        android:id="@+id/imagebutton_main"
-        android:layout_width="320dp"
-        android:layout_height="320dp"
-        android:src="@mipmap/ic_launcher_big"
-        android:layout_gravity="center"
-        android:background="@color/mySecondaryBlue"/>
+        android:text="Need a pep talk?\ntap here"
+        android:gravity="center"
+        android:layout_marginBottom="56dp"
+        android:paddingBottom="24dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@mipmap/ic_launcher_big"/>
+
+    <!--<ImageButton-->
+        <!--android:id="@+id/imagebutton_main"-->
+        <!--android:layout_width="320dp"-->
+        <!--android:layout_height="320dp"-->
+        <!--android:src="@mipmap/ic_launcher_big"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:background="@color/mySecondaryBlue"/>-->
 
     </LinearLayout>
 
 
-    <include layout="@layout/content_bottom_sheet" />
+
 
 
 </android.support.design.widget.CoordinatorLayout>

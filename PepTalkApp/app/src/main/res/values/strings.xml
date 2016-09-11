@@ -42,6 +42,7 @@
     <string name="resource_befriending">Befriending Ourselves</string>
     <string name="resource_selfcompassion">Self-Compassion</string>
     <string name="resource_mindfulness">Ottowa Mindfulness Clinic</string>
+
     <string name="checklist_water">Drink a glass of water</string>
     <string name="checklist_water_notes">Hydration will help you feel better, I promise</string>
     <string name="checklist_eat">Eat something</string>
@@ -54,12 +55,16 @@
     <string name="checklist_breathe_notes">Focus on really filling up your lungs, and then breathe all the way out, until you can\'t exhale any more. Do this a few times, it\'ll help you regroup.</string>
     <string name="checklist_locations">Change locations</string>
     <string name="checklist_locations_notes">Sometimes you just gotta get out of there. If you can, go to a different room or go visit someone, anything that\'ll give you a little change of scenery and a new perspective.</string>
+
     <string name="pep_past_present_title">That\'s the past, this is now</string>
-    <string name="pep_past_present">It’s easy to dwell on the past, and to convince yourself that the future will be the same way. But remember, you don’t know the future, and you can’t change what has already happened. You know what you can do? You can do something right now to get yourself going in the right direction. What can you do this minute that will get you back on track? Go do it! Don’t beat yourself up about what’s already happened. Move forward.</string>
+    <string name="pep_past_present">It’s easy to dwell on the past, and to convince yourself that the future will be the same way. But remember, you don\’t know the future, and you can\’t change what has already happened. You know what you can do? You can do something right now to get yourself going in the right direction. What can you do this minute that will get you back on track? Go do it! Don’t beat yourself up about what’s already happened. Move forward.</string>
     <string name="pep_facts_emotions_title">Facts vs. Emotions</string>
     <string name="pep_facts_emotions">Sometimes the facts don’t match up with how you feel, and that’s okay. You feel like the world is ending because of one situation, one decision, but take a moment and try to be objective. What are the facts of the situation? What could you do differently? What is the worst that can happen? Take a moment, and try to see the situation from the outside. It’s going to be okay.</string>
     <string name="pep_do_your_best_title">Do your best, it\'s all you can do</string>
-    <string name="pep_do_your_best">Body</string>
+    <string name="pep_do_your_best">You know you are trying hard, but it still doesn\’t feel like enough. There\’s always one more thing you can do, one more thing you have to do, and there always will be. All you can do is try your best in the moment, and maybe that\’s not your all-time best, but it\’s what you can manage right now. And in the next moment, do it again. It\’s all you can do.</string>
+    <string name="widget_prompt_blurb">You can write yourself a little \"emergency peptalk\" to come up on your homescreen when you tap the widget.</string>
+    <string name="emergency_pep_talk">Emergency\nPep Talk</string>
+    <string name="emergency_pep_talk_widget">emergency pep talk widget</string>
 
 
 </resources>

@@ -43,7 +43,6 @@
         <activity
             android:name=".views.WebViewActivity"
             android:parentActivityName=".views.MainActivity" />
-        <activity android:name=".views.WidgetConfigureActivity"></activity>
     </application>
 
 </manifest>

@@ -1,11 +1,14 @@
 package owlslubic.peptalkapp.views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -110,26 +114,45 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onClick(View view) {
-
         switch (view.getId()) {
             case R.id.fablet_checklist:
-                launchNewChecklistDialog(this);
-                mFrameLayout.getBackground().setAlpha(0);
-                mFrameLayout.setOnTouchListener(null);
-                mFabMenu.collapse();
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    launchNewChecklistDialog(this);
+                    mFrameLayout.getBackground().setAlpha(0);
+                    mFrameLayout.setOnTouchListener(null);
+                    mFabMenu.collapse();
+                } else {
+                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "Please sign in to add to checklist", Snackbar.LENGTH_SHORT);
+                    snackbar.setAction("sign in", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myLoginMethod();
+                        }
+                    }).show();
+                }
                 break;
             case R.id.fablet_peptalk:
-                launchNewPeptalkDialog(this);
-                mFrameLayout.getBackground().setAlpha(0);
-                mFrameLayout.setOnTouchListener(null);
-                mFabMenu.collapse();
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    launchNewPeptalkDialog(this);
+                    mFrameLayout.getBackground().setAlpha(0);
+                    mFrameLayout.setOnTouchListener(null);
+                    mFabMenu.collapse();
+                } else {
+                    Snackbar snackbar = Snackbar.make(view, "Please sign in to add a peptalk", Snackbar.LENGTH_SHORT);
+                    snackbar.setAction("sign in", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myLoginMethod();
+                        }
+                    }).show();
+                }
                 break;
-            case R.id.imagebutton_main:
+            case R.id.textview_main:
                 //launch pep talk view
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     setupFrag();
                 } else {
-                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "Please sign in to view your peptalks", Snackbar.LENGTH_SHORT);
+                    Snackbar snackbar = Snackbar.make(view, "Please sign in to view your peptalks", Snackbar.LENGTH_SHORT);
                     snackbar.setAction("sign in", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -143,10 +166,8 @@ public class MainActivity extends AppCompatActivity implements
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     //already signed in, so sign em out
                     AuthUI.getInstance().signOut(this);
-                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_SHORT);
+                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_LONG);
                     snackbar.show();
-//                    resetPrefsOnSignOut();
-//                    Log.d(TAG, "resetPrefOnSignOut: sharedprefs first run: " + mPrefs.getBoolean("FIRST_RUN", true));
 
                     //TODO once signed out, disable the onclicks for createnews for other stuff so that there is no null pointer on getUID
                     //so we sign out, and then change the display for signing back in
@@ -239,8 +260,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
         //for launching our lil peptalks
-        ImageButton mLaunchFragMain = (ImageButton) findViewById(R.id.imagebutton_main);
-        mLaunchFragMain.setOnClickListener(this);
+        TextView launchFragMain = (TextView) findViewById(R.id.textview_main);
+        launchFragMain.setOnClickListener(this);
 
 
         //TODO fuck with the toolbar here
@@ -292,7 +313,6 @@ public class MainActivity extends AppCompatActivity implements
         mBottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottomSheetLayout));
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         mBottomSheetHeading = (TextView) findViewById(R.id.textview_bottomSheetHeading);
-        mBottomSheetBottomText = (TextView) findViewById(R.id.textview_bottomsheet_bottom);
         mBottomSheetTopText = (TextView) findViewById(R.id.textview_bottomsheet_top);
         mResource1 = (TextView) findViewById(R.id.tv_resource1);
         mResource1.setOnClickListener(this);
@@ -303,16 +323,6 @@ public class MainActivity extends AppCompatActivity implements
         mResource4 = (TextView) findViewById(R.id.tv_resource4);
         mResource4.setOnClickListener(this);
 
-
-
-        /*      //viewpager stuff i was trying but i knew it was too simple to be true
-        //        if(mPepTalkList.isEmpty()){
-        mPepTalkList= new ArrayList<>();
-//        }
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        mCustomPagerAdapter = new CustomPagerAdapter(MainActivity.this,getPepTalks());//this mght null pointer, if it doesn't have the list already?
-
-*/
 
     }
 
@@ -336,17 +346,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {//this is in the overflow menu
-
+        if (id == R.id.widget) {
+            CustomDialog.launchAddWidgetTextDialog(this);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -357,15 +361,39 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = item.getItemId();
         if (id == R.id.nav_peptalks) {
-            Intent intent = new Intent(MainActivity.this, PepTalkListActivity.class);
-            startActivity(intent);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                Intent intent = new Intent(MainActivity.this, PepTalkListActivity.class);
+                startActivity(intent);
+            } else {
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to view pep talks", Snackbar.LENGTH_SHORT);
+                snackbar.setAction("sign in", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myLoginMethod();
+                    }
+                }).show();
+            }
         } else if (id == R.id.nav_checklist) {
-            Intent intent = new Intent(MainActivity.this, ChecklistActivity.class);
-            startActivity(intent);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                Intent intent = new Intent(MainActivity.this, ChecklistActivity.class);
+                startActivity(intent);
+            } else {
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to view checklist", Snackbar.LENGTH_SHORT);
+                snackbar.setAction("sign in", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myLoginMethod();
+                    }
+                }).show();
+            }
         } else if (id == R.id.nav_resources) {
             launchBottomSheetFromNav();
             mBottomSheetHeading.setText(R.string.more_resources_heading);
             mBottomSheetTopText.setText(R.string.more_resources_text);
+            mResource1.setVisibility(View.VISIBLE);
+            mResource2.setVisibility(View.VISIBLE);
+            mResource3.setVisibility(View.VISIBLE);
+            mResource4.setVisibility(View.VISIBLE);
             mResource1.setText(R.string.resource_headspace);
             mResource2.setText(R.string.resource_befriending);
             mResource3.setText(R.string.resource_selfcompassion);
@@ -374,10 +402,18 @@ public class MainActivity extends AppCompatActivity implements
             launchBottomSheetFromNav();
             mBottomSheetHeading.setText(R.string.instuctions_heading);
             mBottomSheetTopText.setText(R.string.instructions_text);
+            mResource1.setVisibility(View.INVISIBLE);
+            mResource2.setVisibility(View.INVISIBLE);
+            mResource3.setVisibility(View.INVISIBLE);
+            mResource4.setVisibility(View.INVISIBLE);
         } else if (id == R.id.nav_about) {
             launchBottomSheetFromNav();
             mBottomSheetHeading.setText(R.string.about_heading);
             mBottomSheetTopText.setText(R.string.about_text);
+            mResource1.setVisibility(View.INVISIBLE);
+            mResource2.setVisibility(View.INVISIBLE);
+            mResource3.setVisibility(View.INVISIBLE);
+            mResource4.setVisibility(View.INVISIBLE);
         }
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
@@ -446,8 +482,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private void insertContentOnNewAccountCreated() {
-        //shared prefs to make sure this only runs one time, and it is reset on signout
-        //TODO make sure that it doesn't insert them again when the user signs back in later/after re-in
+        //shared prefs to make sure this only runs one time
         boolean b = false;
         mPrefs = getSharedPreferences("PREFS_NAME", 0);
         b = mPrefs.getBoolean("FIRST_RUN", false);
@@ -482,69 +517,21 @@ public class MainActivity extends AppCompatActivity implements
         editor.commit();
     }
 
+    class FloatingActionButtonBehavior extends CoordinatorLayout.Behavior<FloatingActionButton>{
+        public FloatingActionButtonBehavior(Context context,AttributeSet attributeSet){}
 
+        @Override
+        public boolean layoutDependsOn(CoordinatorLayout parent, FloatingActionButton child, View dependency) {
+            return dependency instanceof Snackbar.SnackbarLayout;
+        }
 
-
-/*
-
-    //list to feed to viewpager adapter
-    public List<PepTalkObject> getPepTalks(){
-        mPepTalkList.add(new PepTalkObject("","test title","test body", false));
-
-        //the below will add updates but uh how to get existing ones?
-
-        mDbRef.child("PepTalks").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                mPepTalkList.add(dataSnapshot.getValue(PepTalkObject.class));
-                Log.d(TAG, "GET PEPTALKS onChildAdded: pep talk list size: "+ mPepTalkList.size());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                mPepTalkList.remove(dataSnapshot.getValue(PepTalkObject.class));
-                Log.d(TAG, "GET PEPTALKS onChildRemoved: removed peptalklist size: "+ mPepTalkList.size());
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-      trying the above method instead
-        mDbRef.child("PepTalks").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    mPepTalkList.add(snapshot.getValue(PepTalkObject.class));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-//
-//       return mPepTalkList;
-//   }
-
-
-
-*/
+        @Override
+        public boolean onDependentViewChanged(CoordinatorLayout parent, FloatingActionButton child, View dependency) {
+            float translationY = Math.min(0, dependency.getTranslationY() - dependency.getHeight());
+            child.setTranslationY(translationY);
+            return true;
+        }
+    }
 
 
 

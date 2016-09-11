@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottomSheetLayout"
     android:layout_width="match_parent"
-    android:layout_height="550dp"
+    android:layout_height="555dp"
     android:background="@color/myPrimaryLightBlue"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     app:behavior_hideable="true"
-    android:layout_marginTop="30dp"
+    android:layout_marginTop="16dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <ImageButton
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/chevron_down"
         android:background="@color/myPrimaryLightBlue"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="16dp"
         android:layout_gravity="top|end"/>
 
@@ -28,8 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="6dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:text="" />
 
     <TextView
@@ -41,20 +41,9 @@
         android:layout_marginTop="6dp"
         android:gravity="center_horizontal"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="12dp"
         android:padding="6dp" />
 
-    <TextView
-        android:id="@+id/textview_bottomsheet_bottom"
-        style="@style/CodeFont"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:gravity="center_horizontal"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:padding="6dp" />
 
 
     <TextView
@@ -62,41 +51,38 @@
         style="@style/CodeFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
         android:textSize="18sp"
-        android:padding="6dp"
-        android:background="@color/mySecondaryBlue" />
+        android:textColor="@color/mySecondaryBlue"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/tv_resource2"
         style="@style/CodeFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
         android:textSize="18sp"
-        android:padding="6dp"
-        android:background="@color/mySecondaryBlue"
-
+        android:visibility="invisible"
+        android:textColor="@color/mySecondaryBlue"
         />
 
     <TextView
         android:id="@+id/tv_resource3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
-        android:background="@color/mySecondaryBlue"
         android:textSize="18sp"
-        android:padding="6dp"
-        style="@style/CodeFont"/>
+        android:textColor="@color/mySecondaryBlue"
+        style="@style/CodeFont"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/tv_resource4"
         style="@style/CodeFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:background="@color/mySecondaryBlue"
-        android:textSize="18sp" />
+        android:layout_marginBottom="6dp"
+        android:textColor="@color/mySecondaryBlue"
+        android:textSize="18sp"
+        android:visibility="invisible"/>
 
 
 </LinearLayout>

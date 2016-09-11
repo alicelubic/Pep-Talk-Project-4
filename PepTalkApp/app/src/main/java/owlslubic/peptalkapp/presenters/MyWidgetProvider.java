@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import owlslubic.peptalkapp.views.MainActivity;
 public class MyWidgetProvider extends AppWidgetProvider {
     private static final String EMERGENCY_PEPTALK = "emergency_peptalk";
     private static final String TAG = "MyWidgetProvider";
+    private static final String UNDO = "undo";
     RemoteViews mRemoteViews;
 
     @Override
@@ -33,13 +35,15 @@ public class MyWidgetProvider extends AppWidgetProvider {
             intent.setAction(EMERGENCY_PEPTALK);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-            //intent for opening config thing
-//            Intent intent = new Intent(context, MainActivity.class);
-//            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
+            //intent for undo, setting it back to "emergency peptalk"
+            Intent intent2 = new Intent(context, MyWidgetProvider.class);
+            intent2.setAction(UNDO);
+            PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, 0, intent2, 0);
 
             //layout and attach onclicklistener
             mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-            mRemoteViews.setOnClickPendingIntent(R.id.textview_widget, pendingIntent);
+            mRemoteViews.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
+            mRemoteViews.setOnClickPendingIntent(R.id.imagebutton_widget, pendingIntent2);
 
             //then update i guess
             appWidgetManager.updateAppWidget(appWidgetId, mRemoteViews);
@@ -53,19 +57,21 @@ public class MyWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
 
+        SharedPreferences prefs = context.getSharedPreferences("PEP_PREFS", 0);
+        String text = prefs.getString("WIDGET_TEXT", "oops");
+        mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+
         if (intent.getAction().equals(EMERGENCY_PEPTALK)) {
             Toast.makeText(context, "Yay it works!", Toast.LENGTH_SHORT).show();
-            mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-            mRemoteViews.setTextViewText(R.id.textview_widget, "here it is!");
-
-            //update to reflect change
-            ComponentName componentName = new ComponentName(context, MyWidgetProvider.class);
-            AppWidgetManager.getInstance(context).updateAppWidget(componentName, mRemoteViews);
-
-            //and add a lil button that'll set it back
-
-
+            mRemoteViews.setTextViewText(R.id.textview_widget, text);
         }
+        else if(intent.getAction().equals(UNDO)){
+            mRemoteViews.setTextViewText(R.id.textview_widget, context.getString(R.string.emergency_pep_talk));
+        }
+
+        //update to reflect change
+        ComponentName componentName = new ComponentName(context, MyWidgetProvider.class);
+        AppWidgetManager.getInstance(context).updateAppWidget(componentName, mRemoteViews);
 
     }
 
