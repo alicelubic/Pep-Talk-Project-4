@@ -1,4 +1,4 @@
-# Pep Talk App
+# PepTalkPal
 
 #_Purpose, function, and design:_
 The purpose of this app is to provide a resource for what to do when you’re feeling badly. It offers pep talks on demand - because sometimes it’s hard to reach out to friends and family, or to console yourself sufficiently in the moment. The app encourages you to keep a strategy of what to do when it’s hard to remember where to begin, and it aims to empower the user to help themselves -- not preaching how they should live their lives, but offering a platform where they can keep resources that help them manage stress/deal with general moods. By being customizable, the goal is to be actually useful for the user, but not just a blank slate which can be intimidating (this is “a starting place”).
