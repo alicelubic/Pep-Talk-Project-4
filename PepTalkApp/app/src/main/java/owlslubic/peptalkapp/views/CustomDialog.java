@@ -56,6 +56,18 @@ public class CustomDialog extends AlertDialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         final View layout = inflater.inflate(R.layout.dialog_new_peptalk, null);
         builder.setView(layout);
+        builder.setNegativeButton("nevermind", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setPositiveButton("submit", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
         final AlertDialog dialog = builder.create();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);//next try adjust pan
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -65,17 +77,15 @@ public class CustomDialog extends AlertDialog {
         final EditText title = (EditText) dialog.findViewById(R.id.edittext_new_peptalk_title);
         final EditText body = (EditText) dialog.findViewById(R.id.edittext_new_peptalk);
         body.setMovementMethod(new ScrollingMovementMethod());
-        Button submit = (Button) dialog.findViewById(R.id.button_new_peptalk);
 
 
         //TODO set it so soft keyboard comes up automatically, and dialog accomodates it... coordinator maybe/
         //TODO set max char length for the title edittext and account for invalid input with error
 
         //this works
-        submit.setOnClickListener(new View.OnClickListener() {
+        dialog.getButton(BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String titleInput = title.getText().toString().trim();
                 String bodyInput = body.getText().toString().trim();
 
@@ -87,36 +97,13 @@ public class CustomDialog extends AlertDialog {
                     writeNewPeptalk(titleInput, bodyInput);//, false);//setting all as false to start with
                     Log.i(TAG, "on submit click: title is " + titleInput);
                     Toast.makeText(context, "pep talk added", Toast.LENGTH_SHORT).show();
-
-                    //the problem is with getting the view of where it's going!
-//                    Snackbar.make(findViewById(R.id.drawer_layout), "I'm a Snackbar", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            //undo
-//                            Toast.makeText(MainActivity.this, "Snackbar Action", Toast.LENGTH_LONG).show();
-//                        }
-//                    }).show();
-//                }
-
                     dialog.dismiss();
                 }
-
-                //snackbar - DOES NOT WORK but i'd like it to
-                //if the view is main act, use that layout.
-                //if the view is peptalkact, use that layout
-//                if (context.getClass() == MainActivity.class) {
-//                    Snackbar snackbar = Snackbar.make(view.findViewById(R.id.coordinator_layout_main_activity), "Pep talk added", Snackbar.LENGTH_SHORT);
-//                    snackbar.show();
-//                } else if (context.getClass() == PepTalkListActivity.class) {
-//                    Snackbar snackbar = Snackbar.make(view.findViewById(R.id.coordinator_layout_peptalklist_activity), "Pep talk added", Snackbar.LENGTH_SHORT);
-//                    snackbar.show();
-//                }
-
-
             }
         });
 
     }
+
 
     //works
     public static void launchEditPeptalkDialog(final Context context, final PepTalkObject peptalk) {//don't think i need position with the firebaseadapter}, int position) {
@@ -125,6 +112,18 @@ public class CustomDialog extends AlertDialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.dialog_edit_peptalk, null);
         builder.setView(layout);
+        builder.setNegativeButton("nvm", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //dismiss
+            }
+        });
+        builder.setPositiveButton("done", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
 
         final AlertDialog dialog = builder.create();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -144,8 +143,8 @@ public class CustomDialog extends AlertDialog {
         editBody.requestFocus();
         editBody.setMovementMethod(new ScrollingMovementMethod());
 
-        Button b = (Button) dialog.findViewById(R.id.button_submit_edit_peptalk);
-        b.setOnClickListener(new View.OnClickListener() {
+
+        dialog.getButton(BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String title = editTitle.getText().toString().trim();
@@ -162,11 +161,8 @@ public class CustomDialog extends AlertDialog {
                     //replace with snackbar
                     dialog.dismiss();
                 }
-
-
             }
         });
-
     }
 
     public static void launchNewChecklistDialog(final Context context) {
@@ -174,14 +170,27 @@ public class CustomDialog extends AlertDialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.dialog_new_checklist, null);
         builder.setView(layout);
+        builder.setNegativeButton("nvm", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setPositiveButton("done", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
         final AlertDialog dialog = builder.create();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         dialog.show();
 
         final EditText editText = (EditText) dialog.findViewById(R.id.edittext_new_checklist);
         final EditText editText2 = (EditText) dialog.findViewById(R.id.edittext_new_checklist_notes);
-        Button submit = (Button) dialog.findViewById(R.id.button_new_checklist);
-        submit.setOnClickListener(new View.OnClickListener() {
+
+
+        dialog.getButton(BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String inputText = editText.getText().toString().trim();
@@ -196,11 +205,8 @@ public class CustomDialog extends AlertDialog {
                     //replace with snackbar
                     dialog.dismiss();
                 }
-
-
             }
         });
-
     }
 
     public static void launchEditChecklistDialog(final Context context, final ChecklistItemObject check) {
@@ -208,6 +214,18 @@ public class CustomDialog extends AlertDialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.dialog_edit_checklist, null);
         builder.setView(layout);
+        builder.setNegativeButton("nvm", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setPositiveButton("done", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
         final AlertDialog dialog = builder.create();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         dialog.show();
@@ -225,8 +243,7 @@ public class CustomDialog extends AlertDialog {
         editText2.setFocusableInTouchMode(true);
         editText2.requestFocus();
 
-        Button submit = (Button) dialog.findViewById(R.id.button_edit_checklist);
-        submit.setOnClickListener(new View.OnClickListener() {
+        dialog.getButton(BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String update = editText.getText().toString().trim();
@@ -243,8 +260,6 @@ public class CustomDialog extends AlertDialog {
 
             }
         });
-
-
     }
 
 
@@ -454,6 +469,12 @@ public class CustomDialog extends AlertDialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.dialog_add_widget_text, null);
         builder.setView(layout);
+        builder.setNegativeButton("nvm", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
         builder.setPositiveButton("cool", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -462,7 +483,6 @@ public class CustomDialog extends AlertDialog {
         });
         final AlertDialog dialog = builder.create();
         dialog.show();
-
         final EditText editText = (EditText) dialog.findViewById(R.id.edittext_dialog_widget);
 
 
@@ -475,6 +495,7 @@ public class CustomDialog extends AlertDialog {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("WIDGET_TEXT", widgetText);
                 editor.apply();
+                Toast.makeText(context, "Text set to widget", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });

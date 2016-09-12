@@ -18,24 +18,15 @@
 
     <EditText
         android:id="@+id/edittext_new_peptalk"
-        style="@style/CodeFont"
+        style="@style/CodeFont.Gray"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:hint="Hey buddy, you're great because..."
         android:inputType="textMultiLine"
         android:scrollbars="vertical" />
     <!--android:imeOptions="actionDone"-->
 
-    <Button
-        android:id="@+id/button_new_peptalk"
-        style="@style/CodeFont.Gray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="30dp"
-        android:text="done"
-        android:textSize="16sp" />
 
 
 </LinearLayout>

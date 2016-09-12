@@ -118,8 +118,10 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.fablet_checklist:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     launchNewChecklistDialog(this);
+
                     mFrameLayout.getBackground().setAlpha(0);
                     mFrameLayout.setOnTouchListener(null);
+
                     mFabMenu.collapse();
                 } else {
                     Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "Please sign in to add to checklist", Snackbar.LENGTH_SHORT);
@@ -236,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements
         mFabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
+
                 mFrameLayout.getBackground().setAlpha(140);
                 mFrameLayout.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -517,21 +520,6 @@ public class MainActivity extends AppCompatActivity implements
         editor.commit();
     }
 
-    class FloatingActionButtonBehavior extends CoordinatorLayout.Behavior<FloatingActionButton>{
-        public FloatingActionButtonBehavior(Context context,AttributeSet attributeSet){}
-
-        @Override
-        public boolean layoutDependsOn(CoordinatorLayout parent, FloatingActionButton child, View dependency) {
-            return dependency instanceof Snackbar.SnackbarLayout;
-        }
-
-        @Override
-        public boolean onDependentViewChanged(CoordinatorLayout parent, FloatingActionButton child, View dependency) {
-            float translationY = Math.min(0, dependency.getTranslationY() - dependency.getHeight());
-            child.setTranslationY(translationY);
-            return true;
-        }
-    }
 
 
 

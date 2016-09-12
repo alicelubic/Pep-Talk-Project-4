@@ -9,9 +9,9 @@
     android:id="@+id/coordinator_layout_main_activity"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
         <android.support.v4.widget.DrawerLayout
             android:id="@+id/drawer_layout"
@@ -136,7 +136,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_gravity="end|bottom"
 
-                    app:layout_behavior="owlslubic.peptalkapp.FloatingActionButtonBehavior"
+                    app:layout_behavior="owlslubic.peptalkapp.FloatingActionsMenuBehavior"
 
                     fab:fab_addButtonColorNormal="@color/myAccentBlue"
                     fab:fab_addButtonColorPressed="@color/mySecondaryBlue"
@@ -175,7 +175,7 @@
         <!--</FrameLayout>-->
 
 
-    </FrameLayout>
+    <!--</FrameLayout>-->
     <!--having this outside the frame layout is how we get it to cover da fab-->
     <include layout="@layout/content_bottom_sheet" />
 

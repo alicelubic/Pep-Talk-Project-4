@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="420dp"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:padding="16dp">
 
@@ -9,7 +9,7 @@
         android:id="@+id/edittext_edit_peptalk_title"
         style="@style/CodeFont.Gray"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="6dp"
         android:imeOptions="actionNext"
@@ -21,39 +21,11 @@
         android:id="@+id/edittext_edit_peptalk_body"
         style="@style/CodeFont.Gray"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/edittext_edit_peptalk_title"
         android:imeOptions="actionDone"
         android:scrollbars="vertical"/>
 
     <!--android:inputType="textMultiLine"-->
-
-    <Button
-        android:id="@+id/button_nvm_edit_peptalk"
-        style="@style/CodeFont.Gray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="16dp"
-        android:text="cool"
-        android:textSize="16sp"
-        />
-
-    <Button
-        android:id="@+id/button_submit_edit_peptalk"
-        style="@style/CodeFont.Gray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="end"
-        android:layout_marginRight="16dp"
-        android:textSize="16sp"
-        android:requiresFadingEdge="horizontal"
-        android:text="good" />
-
 
 </RelativeLayout>

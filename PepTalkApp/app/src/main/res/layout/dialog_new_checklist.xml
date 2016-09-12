@@ -22,15 +22,5 @@
         style="@style/CodeFont.Gray"
         android:hint="any notes on that item?"/>
 
-    <Button
-        android:id="@+id/button_new_checklist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginEnd="16dp"
-        android:text="done"
-        style="@style/CodeFont.Gray"
-        android:textSize="16sp"
-        android:layout_marginRight="16dp" />
 
 </LinearLayout>
