@@ -48,15 +48,26 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             holder.mFragTitle.setText(model.getTitle());
             holder.mFragBody.setText(model.getBody());
             holder.mFragBody.setMovementMethod(new ScrollingMovementMethod());
-
-            holder.mEdit.setOnClickListener(new View.OnClickListener() {
+            holder.mFragBody.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //tell the frag to go home first
-                    //setonclicklsitnerer to the card
-                    CustomDialog.launchEditPeptalkDialog(mContext, model);
+                    if (holder.mEdit.getVisibility() == View.INVISIBLE) {
+                    holder.mEdit.setVisibility(View.VISIBLE);
+                    }else if (holder.mEdit.getVisibility() == View.VISIBLE) {
+                        holder.mEdit.setVisibility(View.INVISIBLE);
+                    }
                 }
             });
+//            if (holder.mEdit.getVisibility() == View.VISIBLE) {
+                holder.mEdit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //setonclicklsitnerer to the card
+                        CustomDialog.launchEditPeptalkDialog(mContext, model);
+                    }
+                });
+//            }
+
 
         } else {//it's in peptalkactivity
             holder.mTitle.setText(model.getTitle());

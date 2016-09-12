@@ -51,6 +51,4 @@ public class PepTalkObject {
         this.isWidgetDefault = isWidgetDefault;
     }
 
-    //TODO but for whatever reason, the widget parameter is not showing up in the database. figure out why
-
 }

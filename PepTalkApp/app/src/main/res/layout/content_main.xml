@@ -16,13 +16,13 @@
     <TextView
         android:id="@+id/textview_main"
         style="@style/CodeFont"
-        android:text="Need a pep talk?\ntap here"
+        android:text=""
         android:gravity="center"
         android:layout_marginBottom="56dp"
-        android:paddingBottom="24dp"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:background="@mipmap/ic_launcher_big"/>
+        android:paddingBottom="10dp"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:background="@mipmap/launcher_sans_bevel"/>
 
     <!--<ImageButton-->
         <!--android:id="@+id/imagebutton_main"-->

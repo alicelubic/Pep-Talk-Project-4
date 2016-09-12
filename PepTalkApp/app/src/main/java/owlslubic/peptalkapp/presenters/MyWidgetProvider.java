@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -43,13 +44,11 @@ public class MyWidgetProvider extends AppWidgetProvider {
             //layout and attach onclicklistener
             mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
             mRemoteViews.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-            mRemoteViews.setOnClickPendingIntent(R.id.imagebutton_widget, pendingIntent2);
+            mRemoteViews.setOnClickPendingIntent(R.id.textview_widget_reset, pendingIntent2);
 
             //then update i guess
             appWidgetManager.updateAppWidget(appWidgetId, mRemoteViews);
-
         }
-
     }
 
 
@@ -64,9 +63,12 @@ public class MyWidgetProvider extends AppWidgetProvider {
         if (intent.getAction().equals(EMERGENCY_PEPTALK)) {
             Toast.makeText(context, "Yay it works!", Toast.LENGTH_SHORT).show();
             mRemoteViews.setTextViewText(R.id.textview_widget, text);
+            mRemoteViews.setViewVisibility(R.id.textview_widget_reset, View.VISIBLE);
         }
         else if(intent.getAction().equals(UNDO)){
             mRemoteViews.setTextViewText(R.id.textview_widget, context.getString(R.string.emergency_pep_talk));
+            mRemoteViews.setViewVisibility(R.id.textview_widget_reset, View.INVISIBLE);
+
         }
 
         //update to reflect change

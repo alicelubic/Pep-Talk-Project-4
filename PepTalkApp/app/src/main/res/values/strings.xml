@@ -1,10 +1,9 @@
 <resources>
-    <string name="app_name">PepTalkNow!</string>
+    <string name="app_name">PepTalkPal</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
     <string name="add_a_new_pep_talk">Add a New Pep Talk</string>
     <string name="more_resources_heading">More Resources</string>
     <string name="instuctions_heading">Instructions</string>
@@ -24,9 +23,9 @@
         Read about how guided meditations and mindfulness exercises can help you take an active approach to feeling better right now.
 </string>
     <string name="welcome_blurb">Welcome blurb</string>
-    <string name="sign_in_prompt">Please sign in to get pep talkin\'</string>
-    <string name="sign_in">Sign In</string>
-    <string name="sign_out">Sign Out</string>
+    <string name="sign_in_prompt">sign in to get goin\'</string>
+    <string name="sign_in">sign in</string>
+    <string name="sign_out">sign out</string>
     <string name="welcome_back_user">"Welcome back, "</string>
     <string name="pep_talks">Pep Talks</string>
     <string name="feel_better_checklist">Feel-Better Checklist</string>
@@ -65,6 +64,13 @@
     <string name="widget_prompt_blurb">You can write yourself a little \"emergency peptalk\" to come up on your homescreen when you tap the widget.</string>
     <string name="emergency_pep_talk">Emergency\nPep Talk</string>
     <string name="emergency_pep_talk_widget">emergency pep talk widget</string>
+    <string name="live_in_the_moment_title">Live in the moment</string>
+    <string name="live_in_the_moment">While “stop and smell the roses” may feel trite and overwrought, the message is an important one: we get stuck on planning, worrying, thinking about what’s going to happen, and forget that this, right now, is part of our life too. Don’t wait to live your life.</string>
+    <string name="doing_and_not_doing_title">Doing, and not doing</string>
+    <string name="doing_and_not_doing">There is so much pressure to take action, to push forward, to “just do it”, but you still have a choice. Maybe pushing yourself to be proactive isn’t the right thing for you right now, and it’s easy to forget that “no” is still an option. Being proactive is a choice, and it’s okay to delay! Procrastination is not the end of the world! Whatever is on your mind, it’s not life or death. Take your time. Give yourself permission to just not do it.</string>
+    <string name="exercise_guilt_title">Exercise guilt</string>
+    <string name="exercise_guilt">With so many sources and studies saying so many different things about what’s best for your body, it can be hard to know what’s right for you. Yes, exercise is necessary, but give yourself permission to not go overboard. You’re not a bad person if you don’t hit the gym. It’s okay to say “I won’t go today” without making a deal with yourself, “but I’ll go tomorrow to make up for it”. Let the guilt go, and go tomorrow because you want to, not because you feel guilty.</string>
+    <string name="need_a_pep_talk">Need a pep talk?\ntap here</string>
 
 
 </resources>

@@ -24,12 +24,14 @@
 
             <ImageButton
                 android:id="@+id/button_frag_edit_peptalk"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:visibility="invisible"
                 android:background="@color/myPrimaryLightBlue"
                 android:src="@drawable/ic_mode_edit_white_24dp" />
 
@@ -40,7 +42,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/button_frag_edit_peptalk"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:textStyle="bold" />
 
             <TextView

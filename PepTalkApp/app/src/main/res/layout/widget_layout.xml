@@ -11,20 +11,22 @@
         android:id="@+id/textview_widget"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
         android:gravity="center"
         android:layout_margin="6dp"
         android:text="@string/emergency_pep_talk"
         android:textSize="14sp"
         style="@style/CodeFont"/>
 
-    <ImageButton
-        android:id="@+id/imagebutton_widget"
+    <TextView
+        android:id="@+id/textview_widget_reset"
+        style="@style/CodeFont"
+        android:text="ok I'm good, set it back"
+        android:textSize="12sp"
+        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:foregroundGravity="bottom"
-        android:src="@drawable/undo_button"
-        android:layout_margin="20dp"
-        android:layout_gravity="end|bottom"/>
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="6dp" />
+
 
 </FrameLayout>

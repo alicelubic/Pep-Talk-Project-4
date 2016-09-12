@@ -403,6 +403,7 @@ public class CustomDialog extends AlertDialog {
     //TODO put these in an async task yo
 
 
+    //TODO write a new "if this exists don't add it" method that actually works
     public static void writeNewChecklist(String text, String notes) {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
             mChecklistRef = mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("checklist");

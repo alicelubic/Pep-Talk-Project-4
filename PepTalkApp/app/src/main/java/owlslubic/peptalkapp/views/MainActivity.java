@@ -1,14 +1,16 @@
 package owlslubic.peptalkapp.views;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -16,7 +18,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,9 +25,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,10 +45,10 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9;
     private BottomSheetBehavior mBottomSheetBehavior;
-    private TextView mBottomSheetHeading, mBottomSheetTopText, mBottomSheetBottomText, mWelcomeTextView,
-            mSigninPromptTextView, mResource1, mResource2, mResource3, mResource4;
+    private TextView mBottomSheetHeading, mBottomSheetTopText, mWelcomeTextView,
+            mSigninPromptTextView, mSigninTextView, mResource1, mResource2, mResource3, mResource4, mLaunchFragMain;
     private FloatingActionsMenu mFabMenu;
-    private Button mSignInOrOutButton;
+    private ImageView mSignInOrOutButton;
     private DrawerLayout mDrawer;
     private FrameLayout mFrameLayout;
     private SharedPreferences mPrefs;
@@ -56,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-
         //to handle offline usage - disk persistence
         //TODO find where this can live
         //Calls to setPersistenceEnabled() must be made before any other usage of FirebaseDatabase instance.
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         initViews();
+        checkNetworkStatus();
     }
 
 
@@ -81,15 +82,52 @@ public class MainActivity extends AppCompatActivity implements
             Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "You're already signed in", Snackbar.LENGTH_SHORT);
             snackbar.show();
         } else {
-            // not already signed in, so let's sign em in or up!
-            startActivityForResult(AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setProviders(
+            //now make sure there is internet or else it won't work
+            ConnectivityManager cm =
+                    (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            final boolean isConnected = activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting();
+
+            if (!isConnected) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("No network connection detected");
+                builder.setMessage("You won't be able to sign in until connection is restored");
+                builder.setPositiveButton("Check network", new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (isConnected) {
+                            Snackbar snackbar = Snackbar.make(getCurrentFocus(), "And we're back! Connection restored", Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+                            dialogInterface.dismiss();
+//                        Toast.makeText(MainActivity.this, "Connection restored!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Snackbar snackbar = Snackbar.make(getCurrentFocus(), "Still no luck, try again later", Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                            dialogInterface.dismiss();
+//                        Toast.makeText(MainActivity.this, "Still no luck, try again later", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("k", new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                // yes internet, but not already signed in, so let's sign em in or up!
+                startActivityForResult(AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setProviders(
 //                            AuthUI.GOOGLE_PROVIDER,//GOOGLE DOESNT WORK THATS SAD
-                            AuthUI.EMAIL_PROVIDER)
-                    .setIsSmartLockEnabled(true)
-                    .setTheme(R.style.AppTheme)
-                    .build(), RC_SIGN_IN);
+                                AuthUI.EMAIL_PROVIDER)
+                        .setIsSmartLockEnabled(true)
+                        .setTheme(R.style.AppTheme)
+                        .build(), RC_SIGN_IN);
+            }
         }
     }
 
@@ -105,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements
                  * although if you uninstall and reinstall, it resets the sharedprefs and adds the content again */
                 insertContentOnNewAccountCreated();
                 startActivity(new Intent(this, MainActivity.class));
+                mLaunchFragMain.setText(R.string.need_a_pep_talk);
             } else {
                 Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Oops! Sign in failed", Snackbar.LENGTH_SHORT);
                 snackbar.show();
@@ -164,16 +203,16 @@ public class MainActivity extends AppCompatActivity implements
                     }).show();
                 }
                 break;
-            case R.id.button_navheader_signin:
+            case R.id.navheader_signin:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     //already signed in, so sign em out
                     AuthUI.getInstance().signOut(this);
                     Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_LONG);
                     snackbar.show();
 
-                    //TODO once signed out, disable the onclicks for createnews for other stuff so that there is no null pointer on getUID
                     //so we sign out, and then change the display for signing back in
-                    mSignInOrOutButton.setText(R.string.sign_in);
+                    mLaunchFragMain.setText("");
+                    mSigninTextView.setText(R.string.sign_in);
                     mSigninPromptTextView.setText(R.string.sign_in_prompt);
                     mWelcomeTextView.setText(R.string.welcome_blurb);
 
@@ -222,8 +261,11 @@ public class MainActivity extends AppCompatActivity implements
                 Intent intent4 = new Intent(Intent.ACTION_VIEW, uri4);
                 startActivity(intent4);
                 break;
-
-
+            case R.id.imagebutton_bottomsheet_down:
+                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+                break;
         }
 
     }
@@ -263,8 +305,13 @@ public class MainActivity extends AppCompatActivity implements
 
 
         //for launching our lil peptalks
-        TextView launchFragMain = (TextView) findViewById(R.id.textview_main);
-        launchFragMain.setOnClickListener(this);
+        mLaunchFragMain = (TextView) findViewById(R.id.textview_main);
+        mLaunchFragMain.setOnClickListener(this);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            mLaunchFragMain.setText(R.string.need_a_pep_talk);
+        } else {
+            mLaunchFragMain.setText("");
+        }
 
 
         //TODO fuck with the toolbar here
@@ -286,20 +333,20 @@ public class MainActivity extends AppCompatActivity implements
         //nav login header
         View headerView = navigationView.getHeaderView(0);
         mWelcomeTextView = (TextView) headerView.findViewById(R.id.textview_navheader_welcome);
-        mSigninPromptTextView = (TextView) headerView.findViewById(R.id.textview_navheader_sign_in);
-        mSignInOrOutButton = (Button) headerView.findViewById(R.id.button_navheader_signin);
-        mSignInOrOutButton.setOnClickListener(this);
+        mSigninPromptTextView = (TextView) headerView.findViewById(R.id.textview_navheader_signin);
+        mSigninTextView = (TextView) headerView.findViewById(R.id.navheader_signin);
+        mSigninTextView.setOnClickListener(this);
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             //already signed in, so set text to sign out
-            mSignInOrOutButton.setText(R.string.sign_out);
+            mSigninTextView.setText(R.string.sign_out);
             mSigninPromptTextView.setText("");
             mWelcomeTextView.setText(getString(R.string.welcome_back_user) +
                     FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
         } else {
             //needs to sign in, set text to sign in
-            mSignInOrOutButton.setText(R.string.sign_in);
+            mSigninTextView.setText(R.string.sign_in);
             mSigninPromptTextView.setText(R.string.sign_in_prompt);
             mWelcomeTextView.setText(R.string.welcome_blurb);
         }
@@ -313,6 +360,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         //bottom sheet
+        ImageButton down = (ImageButton) findViewById(R.id.imagebutton_bottomsheet_down);
         mBottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottomSheetLayout));
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         mBottomSheetHeading = (TextView) findViewById(R.id.textview_bottomSheetHeading);
@@ -325,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements
         mResource3.setOnClickListener(this);
         mResource4 = (TextView) findViewById(R.id.tv_resource4);
         mResource4.setOnClickListener(this);
+        down.setOnClickListener(this);
 
 
     }
@@ -351,8 +400,19 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.widget) {
-            CustomDialog.launchAddWidgetTextDialog(this);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                CustomDialog.launchAddWidgetTextDialog(this);
+            }else{
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to mess with your widget", Snackbar.LENGTH_SHORT);
+                snackbar.setAction("sign in", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myLoginMethod();
+                    }
+                }).show();
+            }
             return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -428,9 +488,9 @@ public class MainActivity extends AppCompatActivity implements
             mDrawer.closeDrawer(GravityCompat.START);
         }
         //then open bottomsheet
-        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        }
+//        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+//            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//        } i think the collapsed thing is just makin it wonky
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
@@ -497,11 +557,14 @@ public class MainActivity extends AppCompatActivity implements
                 writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes));
                 writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes));
                 writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes));
-                Log.d(TAG, "insertContentOnNewAccountCreated: this ran");
 
                 writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present));
                 writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions));
                 writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best));
+                writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment));
+                writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing));
+                writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt));
+
             }
 
             mPrefs = getSharedPreferences("PREFS_NAME", 0);
@@ -520,7 +583,44 @@ public class MainActivity extends AppCompatActivity implements
         editor.commit();
     }
 
+    public void checkNetworkStatus() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        final boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        if (!isConnected) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("No network connection detected");
+            builder.setMessage("You may not be able to access your pep talks from our database until connection is restored");
+            builder.setPositiveButton("Check network", new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if (isConnected) {
+                        Snackbar snackbar = Snackbar.make(getCurrentFocus(), "And we're back! Connection restored", Snackbar.LENGTH_SHORT);
+                        snackbar.show();
+                        dialogInterface.dismiss();
+//                        Toast.makeText(MainActivity.this, "Connection restored!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar snackbar = Snackbar.make(getCurrentFocus(), "Still no luck, try again later", Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                        dialogInterface.dismiss();
+//                        Toast.makeText(MainActivity.this, "Still no luck, try again later", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+            builder.setNegativeButton("k", new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            final AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
 
 
 }

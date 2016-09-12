@@ -1,42 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@color/myPrimaryLightBlue"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingLeft="6dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <!--android:background="@drawable/side_nav_bar"-->
-
+    <!--<ImageView-->
+        <!--android:id="@+id/button_navheader_signin"-->
+        <!--android:layout_width="90dp"-->
+        <!--android:layout_height="90dp"-->
+        <!--android:layout_gravity="end|bottom"-->
+        <!--android:background="@color/myPrimaryLightBlue"-->
+        <!--android:src="@mipmap/launcher_sans_bevel_white"-->
+        <!--/>-->
 
     <TextView
         android:id="@+id/textview_navheader_welcome"
+        style="@style/CodeFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="6dp"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:layout_marginTop="16dp"
-        android:textSize="22sp"
-        android:text=""
-        style="@style/CodeFont"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:layout_alignParentTop="true"
+        android:paddingLeft="6dp"
+        android:paddingTop="40dp"
+        android:text="Welcome Blurb"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/textview_navheader_sign_in"
+        android:id="@+id/textview_navheader_signin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14dp"
-        android:padding="6dp"
-        android:text="" />
-    <Button
-        android:id="@+id/button_navheader_signin"
-        android:background="@color/secondary_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:paddingLeft="6dp"
+        android:paddingTop="2dp"
+        android:layout_below="@id/textview_navheader_welcome"
+        android:text="sign in to get goin'"
+        android:textSize="14sp" />
 
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/navheader_signin"
+        android:textSize="10sp"
+        android:textColor="@color/white"
+        android:text="sign in"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="32dp"
+        android:paddingTop="38dp"
+        android:layout_width="99dp"
+        android:layout_height="99dp"
+        android:background="@mipmap/launcher_sans_bevel_white"/>
+
+    <!--<Button-->
+    <!--android:id="@+id/button_navheader_signin"-->
+    <!--android:text="sign in"-->
+    <!--android:layout_gravity="end"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/mySecondaryBlue"-->
+    <!--/>-->
+
+
+
+</RelativeLayout>
