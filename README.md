@@ -25,5 +25,6 @@ I had lots of plans for this app, lots of features I wanted to implement, but fr
 
 
   <img src="Screenshot_20160912-163238.png" width="220" height="400" > 
+  <img src="Screenshot_20160912-174120.png" width="220" height="400" >
   <img src="Screenshot_20160912-163245.png" width="220" height="400" > 
   <img src="Screenshot_20160912-163304.png" width="220" height="400" >
