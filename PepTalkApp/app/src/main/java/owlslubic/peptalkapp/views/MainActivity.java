@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
 
@@ -55,19 +56,14 @@ public class MainActivity extends AppCompatActivity implements
 
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        //to handle offline usage - disk persistence
-        //TODO find where this can live
-        //Calls to setPersistenceEnabled() must be made before any other usage of FirebaseDatabase instance.
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-    }
-
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //to handle offline usage - disk persistence
+        //TODO where can this live that it won't make stuff crash?
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
 
         initViews();
         checkNetworkStatus();
@@ -231,14 +227,14 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.tv_resource1:
                 //webview didnt wanna work
-//                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-//                intent.putExtra("url", "https://www.headspace.com/");
-//                startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+                intent.putExtra("url", "https://www.headspace.com/");
+                startActivity(intent);
 
                 //so this launches browser instead
-                Uri uri = Uri.parse("https://www.headspace.com/");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+//                Uri uri = Uri.parse("https://www.headspace.com/");
+//                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//                startActivity(intent);
                 break;
             case R.id.tv_resource2:
 //                Intent intent2 = new Intent(MainActivity.this, WebViewActivity.class);

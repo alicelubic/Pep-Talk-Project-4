@@ -5,177 +5,170 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/coordinator_layout_main_activity"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<FrameLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
 
-        <android.support.v4.widget.DrawerLayout
-            android:id="@+id/drawer_layout"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
+
+        <include layout="@layout/content_main" />
+
+        <include
+            layout="@layout/app_bar_main"
             android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:clipToPadding="false"
             android:fitsSystemWindows="true"
-            tools:openDrawer="start">
+            android:paddingBottom="96dp"
+            app:headerLayout="@layout/nav_header_main"
+            app:menu="@menu/activity_main_drawer"
+            app:theme="@style/NavigationDrawerStyle">
 
-            <include layout="@layout/content_main" />
-
-            <include
-                layout="@layout/app_bar_main"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="120dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="-120dp"
+                android:orientation="vertical">
 
-            <android.support.design.widget.NavigationView
-                android:id="@+id/nav_view"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:clipToPadding="false"
-                android:fitsSystemWindows="true"
-                android:paddingBottom="96dp"
-                app:headerLayout="@layout/nav_header_main"
-                app:menu="@menu/activity_main_drawer"
-                app:theme="@style/NavigationDrawerStyle">
+                <TextView
+                    android:layout_width="200dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@color/myPrimaryLightBlue"
+                    android:paddingBottom="3dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginStart="6dp"
+                    android:gravity="center_horizontal"
+                    android:text="If these pep talks aren't doing it for you, why not reach out to a friend?" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="-120dp"
-                    android:orientation="vertical">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="200dp"
-                        android:layout_height="1dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="6dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@color/myPrimaryLightBlue"
-                        android:paddingBottom="3dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
-                        android:layout_marginStart="6dp"
-                        android:gravity="center_horizontal"
-                        android:text="If these pep talks aren't doing it for you, why not reach out to a friend?" />
-
-                    <LinearLayout
+                    <ImageButton
+                        android:id="@+id/imagebutton_sms"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="6dp">
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/white"
+                        android:src="@drawable/sms_speech_bubble" />
 
-                        <ImageButton
-                            android:layout_gravity="center_horizontal"
-                            android:id="@+id/imagebutton_sms"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="6dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="6dp"
-                            android:background="@color/white"
-                            android:src="@drawable/sms_speech_bubble" />
+                    <ImageButton
+                        android:id="@+id/imagebutton_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:background="@color/white"
+                        android:src="@drawable/ic_email" />
 
-                        <ImageButton
-                            android:id="@+id/imagebutton_email"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="6dp"
-                            android:layout_marginRight="6dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@color/white"
-                            android:layout_marginBottom="12dp"
-                            android:src="@drawable/ic_email" />
+                    <ImageButton
+                        android:id="@+id/imagebutton_fb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/white"
+                        android:src="@drawable/facebook_logo" />
 
-                        <ImageButton
-                            android:id="@+id/imagebutton_fb"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="6dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@color/white"
-                            android:src="@drawable/facebook_logo" />
-
-                    </LinearLayout>
                 </LinearLayout>
+            </LinearLayout>
 
-            </android.support.design.widget.NavigationView>
+        </android.support.design.widget.NavigationView>
 
-        </android.support.v4.widget.DrawerLayout>
-
-
-        <FrameLayout
-            android:id="@+id/framelayout_main_frag_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white_overlay"
-            android:theme="@style/PepTalkTheme"/>
-
-            <FrameLayout
-                android:id="@+id/frame_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white_overlay"
-                android:theme="@style/PepTalkTheme">
+    </android.support.v4.widget.DrawerLayout>
 
 
-                <!--this is the FAB from the third party library:-->
-
-                <com.getbase.floatingactionbutton.FloatingActionsMenu
-                    android:id="@+id/fab_menu"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_gravity="end|bottom"
-
-                    app:layout_behavior="owlslubic.peptalkapp.FloatingActionsMenuBehavior"
-
-                    fab:fab_addButtonColorNormal="@color/myAccentBlue"
-                    fab:fab_addButtonColorPressed="@color/mySecondaryBlue"
-                    fab:fab_addButtonPlusIconColor="@color/white"
-                    fab:fab_addButtonStrokeVisible="false"
-                    fab:fab_labelStyle="@style/menu_labels_style"
-                    fab:fab_labelsPosition="left">
-
-                    <com.getbase.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fablet_peptalk"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        fab:fab_colorNormal="@color/myAccentBlue"
-                        fab:fab_colorPressed="@color/mySecondaryBlue"
-                        fab:fab_icon="@drawable/ic_chat_bubble_outline_white_24dp"
-                        fab:fab_plusIconColor="@color/white"
-                        fab:fab_size="mini"
-                        fab:fab_title="PepTalk" />
-
-                    <com.getbase.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fablet_checklist"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        fab:fab_colorNormal="@color/myAccentBlue"
-                        fab:fab_colorPressed="@color/mySecondaryBlue"
-                        fab:fab_icon="@drawable/ic_check_white_24dp"
-                        fab:fab_plusIconColor="@color/white"
-                        fab:fab_size="mini"
-                        fab:fab_title="Checklist" />
-
-                </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-            </FrameLayout>
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_overlay"
+        android:theme="@style/PepTalkTheme">
 
 
-        <!--</FrameLayout>-->
+        <!--this is the FAB from the third party library:-->
+
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/fab_menu"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+
+            app:layout_behavior="owlslubic.peptalkapp.FloatingActionsMenuBehavior"
+
+            fab:fab_addButtonColorNormal="@color/myAccentBlue"
+            fab:fab_addButtonColorPressed="@color/mySecondaryBlue"
+            fab:fab_addButtonPlusIconColor="@color/white"
+            fab:fab_addButtonStrokeVisible="false"
+            fab:fab_labelStyle="@style/menu_labels_style"
+            fab:fab_labelsPosition="left">
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fablet_peptalk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/myAccentBlue"
+                fab:fab_colorPressed="@color/mySecondaryBlue"
+                fab:fab_icon="@drawable/ic_chat_bubble_outline_white_24dp"
+                fab:fab_plusIconColor="@color/white"
+                fab:fab_size="mini"
+                fab:fab_title="PepTalk" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fablet_checklist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/myAccentBlue"
+                fab:fab_colorPressed="@color/mySecondaryBlue"
+                fab:fab_icon="@drawable/ic_check_white_24dp"
+                fab:fab_plusIconColor="@color/white"
+                fab:fab_size="mini"
+                fab:fab_title="Checklist" />
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/framelayout_main_frag_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_overlay"
+        android:theme="@style/PepTalkTheme" />
 
 
-    <!--</FrameLayout>-->
     <!--having this outside the frame layout is how we get it to cover da fab-->
     <include layout="@layout/content_bottom_sheet" />
 
