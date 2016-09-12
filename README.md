@@ -23,3 +23,7 @@ An unsolved problem in my app is that when I insert the pep talks and checklist 
 The biggest hurdle was just getting through this emotionally.
 I had lots of plans for this app, lots of features I wanted to implement, but from the beginning I kept my focus on the core functionality of the app and I'm glad I did so. The result is that this is my MVP, and I look forward to tinkering and adding all the features I want. But honestly, the hardest part is trying not to be disappointed in myself for not magically banging out some awesome project. But I walk away with what really counts... the knowledge!
 
+
+  <img src="Screenshot_20160912-163238.png"> 
+  <img src="Screenshot_20160912-163245.png"> 
+  <img src="Screenshot_20160912-163304.png">
