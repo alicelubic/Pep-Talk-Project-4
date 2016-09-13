@@ -11,12 +11,15 @@
 
     <string name="about_text">This app is for anyone who could use a pep talk when you\'re feeling down. \n\n
         Stress and negative emotions can make it hard to think straight leaving them you stuck in that rut. \n\n
-        This app reminds you to take a moment to ground yourself, and helps you take an active approach to feeling better.\n\n\nCredit for the lovely icon goes to Jane Ruby.</string>
+        This app reminds you to take a moment to ground yourself, and helps you take an active approach to feeling better.
+        </string>
 
     <string name="instructions_text">
-        Swipe through pep talks, and add and edit as many as you need. \n\n
-         Create a checklist of actions or suggestions that make you feel better.\n\n
-        Visit the resources page if these pep talks aren\'t doing it for you. There are some great techniques to help you get through this.
+        To use this app, you must create an account, but don\'t worry, we won\'t share your information with anyone.\n\n
+        Swipe horizontally through pep talks from the main screen, tap on the text to see the edit option to customize it, and go to the Pep Talks list to add and edit as many as you need. Hold down on a pep talk in the list to delete it. \n\n
+        Create a checklist of actions or suggestions that make you feel better, and tap on them to see some notes about each.\n\n
+        Visit the resources page if these pep talks aren\'t doing it for you. There are some great techniques to help you get through this.\n\n
+        Use the menu on the top right to write yourself a little emergency pep talk that will show up in a homescreen widget. Add the widget to your home screen, and tap on it to receive your own little emergency peptalk, then tap \"done\" to reset it in order to keep that message for your eyes only.
     </string>
 
     <string name="more_resources_text">Of all the stress management philosophies we\'ve explored, and all the tips and tricks we\'ve used to get through mood lows or bad days, we\'ve have found that the concepts of Mindfulness benefit us most. \n\n

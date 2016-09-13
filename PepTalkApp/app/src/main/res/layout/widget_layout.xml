@@ -20,13 +20,14 @@
     <TextView
         android:id="@+id/textview_widget_reset"
         style="@style/CodeFont"
-        android:text="ok I'm good, set it back"
-        android:textSize="12sp"
+        android:text="done"
+        android:textSize="14sp"
         android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="6dp" />
+        android:layout_marginBottom="16dp"
+        android:padding="16dp"/>
 
 
 </FrameLayout>
