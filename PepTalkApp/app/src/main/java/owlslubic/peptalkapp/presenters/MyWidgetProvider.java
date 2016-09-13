@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.views.MainActivity;
@@ -61,7 +60,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
         mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
         if (intent.getAction().equals(EMERGENCY_PEPTALK)) {
-            Toast.makeText(context, "Yay it works!", Toast.LENGTH_SHORT).show();
             mRemoteViews.setTextViewText(R.id.textview_widget, text);
             mRemoteViews.setViewVisibility(R.id.textview_widget_reset, View.VISIBLE);
         }

@@ -40,15 +40,17 @@
 
     <TextView
         android:id="@+id/navheader_signin"
-        android:textSize="10sp"
+        android:textSize="13sp"
         android:textColor="@color/white"
-        android:text="sign in"
+        android:text="LOGIN"
+        android:textStyle="bold"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:paddingLeft="32dp"
-        android:paddingTop="38dp"
-        android:layout_width="99dp"
-        android:layout_height="99dp"
+        android:paddingTop="45dp"
+        android:paddingLeft="36dp"
+        android:paddingBottom="16dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:background="@mipmap/launcher_sans_bevel_white"/>
 
     <!--<Button-->

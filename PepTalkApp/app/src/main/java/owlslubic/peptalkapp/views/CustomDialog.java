@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.design.widget.Snackbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,13 +57,13 @@ public class CustomDialog extends AlertDialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         final View layout = inflater.inflate(R.layout.dialog_new_peptalk, null);
         builder.setView(layout);
-        builder.setNegativeButton("nevermind", new OnClickListener() {
+        builder.setNegativeButton("nvm", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
         });
-        builder.setPositiveButton("submit", new OnClickListener() {
+        builder.setPositiveButton("done", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -79,9 +80,6 @@ public class CustomDialog extends AlertDialog {
         body.setMovementMethod(new ScrollingMovementMethod());
 
 
-        //TODO set it so soft keyboard comes up automatically, and dialog accomodates it... coordinator maybe/
-        //TODO set max char length for the title edittext and account for invalid input with error
-
         //this works
         dialog.getButton(BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +94,7 @@ public class CustomDialog extends AlertDialog {
                 } else {
                     writeNewPeptalk(titleInput, bodyInput);//, false);//setting all as false to start with
                     Log.i(TAG, "on submit click: title is " + titleInput);
+//                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_peptalklist_activity), "Please sign in to add to checklist", Snackbar.LENGTH_SHORT);
                     Toast.makeText(context, "pep talk added", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
@@ -266,13 +265,13 @@ public class CustomDialog extends AlertDialog {
     public static void launchDeletePepTalkDialog(final PepTalkObject peptalk, final Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setNegativeButton("nevermind", new OnClickListener() {
+        builder.setNegativeButton("nvm", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //dismiss
             }
         });
-        builder.setPositiveButton("yurp", new OnClickListener() {
+        builder.setPositiveButton("yep", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //this is what does the actual deleting
@@ -288,7 +287,7 @@ public class CustomDialog extends AlertDialog {
         builder.setTitle("Are you sure you want to delete your \"" + peptalk.getTitle() + "\" peptalk?");
         final AlertDialog dialog = builder.create();
         dialog.show();
-        dialog.setButton(BUTTON_POSITIVE, "yurp", new OnClickListener() {
+        dialog.setButton(BUTTON_POSITIVE, "yep", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mPeptalkRef.child(peptalk.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
@@ -309,7 +308,7 @@ public class CustomDialog extends AlertDialog {
     public static void launchDeleteChecklistDialog(final ChecklistItemObject check, final Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setNegativeButton("nevermind", new OnClickListener() {
+        builder.setNegativeButton("nvm", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
             }

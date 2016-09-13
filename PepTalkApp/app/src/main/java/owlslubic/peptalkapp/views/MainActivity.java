@@ -29,7 +29,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -96,12 +95,10 @@ public class MainActivity extends AppCompatActivity implements
                             Snackbar snackbar = Snackbar.make(getCurrentFocus(), "And we're back! Connection restored", Snackbar.LENGTH_SHORT);
                             snackbar.show();
                             dialogInterface.dismiss();
-//                        Toast.makeText(MainActivity.this, "Connection restored!", Toast.LENGTH_SHORT).show();
                         } else {
                             Snackbar snackbar = Snackbar.make(getCurrentFocus(), "Still no luck, try again later", Snackbar.LENGTH_LONG);
                             snackbar.show();
                             dialogInterface.dismiss();
-//                        Toast.makeText(MainActivity.this, "Still no luck, try again later", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -193,8 +190,14 @@ public class MainActivity extends AppCompatActivity implements
                     snackbar.setAction("sign in", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                            myLoginMethod();
-                            Toast.makeText(MainActivity.this, "Snackbar Action", Toast.LENGTH_LONG).show();
+                            myLoginMethod();
+                            Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to add to checklist", Snackbar.LENGTH_SHORT);
+                            snackbar.setAction("sign in", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myLoginMethod();
+                                }
+                            }).show();
                         }
                     }).show();
                 }
@@ -519,7 +522,8 @@ public class MainActivity extends AppCompatActivity implements
             Intent launchFb = getPackageManager().getLaunchIntentForPackage("com.facebook.katana");
             startActivity(launchFb);
         } else {
-            Toast.makeText(MainActivity.this, "Facebook is not currently installed on your device", Toast.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Facebook is not currently installed on your device", Snackbar.LENGTH_SHORT);
+            snackbar.show();
         }
     }
 
@@ -531,7 +535,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    public void setupFrag() {
+    public void setupFrag()
+    {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         MyFragment fragment = new MyFragment();
@@ -598,12 +603,10 @@ public class MainActivity extends AppCompatActivity implements
                         Snackbar snackbar = Snackbar.make(getCurrentFocus(), "And we're back! Connection restored", Snackbar.LENGTH_SHORT);
                         snackbar.show();
                         dialogInterface.dismiss();
-//                        Toast.makeText(MainActivity.this, "Connection restored!", Toast.LENGTH_SHORT).show();
                     } else {
                         Snackbar snackbar = Snackbar.make(getCurrentFocus(), "Still no luck, try again later", Snackbar.LENGTH_LONG);
                         snackbar.show();
                         dialogInterface.dismiss();
-//                        Toast.makeText(MainActivity.this, "Still no luck, try again later", Toast.LENGTH_LONG).show();
                     }
                 }
             });

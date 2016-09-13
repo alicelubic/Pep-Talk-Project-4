@@ -11,7 +11,7 @@
 
     <string name="about_text">This app is for anyone who could use a pep talk when you\'re feeling down. \n\n
         Stress and negative emotions can make it hard to think straight leaving them you stuck in that rut. \n\n
-        This app reminds you to take a moment to ground yourself, and helps you take an active approach to feeling better.</string>
+        This app reminds you to take a moment to ground yourself, and helps you take an active approach to feeling better.\n\n\nCredit for the lovely icon goes to Jane Ruby.</string>
 
     <string name="instructions_text">
         Swipe through pep talks, and add and edit as many as you need. \n\n
@@ -22,10 +22,10 @@
     <string name="more_resources_text">Of all the stress management philosophies we\'ve explored, and all the tips and tricks we\'ve used to get through mood lows or bad days, we\'ve have found that the concepts of Mindfulness benefit us most. \n\n
         Read about how guided meditations and mindfulness exercises can help you take an active approach to feeling better right now.
 </string>
-    <string name="welcome_blurb">Welcome blurb</string>
+    <string name="welcome_blurb">Welcome to PepTalkPal</string>
     <string name="sign_in_prompt">sign in to get goin\'</string>
-    <string name="sign_in">sign in</string>
-    <string name="sign_out">sign out</string>
+    <string name="sign_in">LOGIN</string>
+    <string name="sign_out">LOGOUT</string>
     <string name="welcome_back_user">"Welcome back, "</string>
     <string name="pep_talks">Pep Talks</string>
     <string name="feel_better_checklist">Feel-Better Checklist</string>
@@ -71,6 +71,7 @@
     <string name="exercise_guilt_title">Exercise guilt</string>
     <string name="exercise_guilt">With so many sources and studies saying so many different things about what’s best for your body, it can be hard to know what’s right for you. Yes, exercise is necessary, but give yourself permission to not go overboard. You’re not a bad person if you don’t hit the gym. It’s okay to say “I won’t go today” without making a deal with yourself, “but I’ll go tomorrow to make up for it”. Let the guilt go, and go tomorrow because you want to, not because you feel guilty.</string>
     <string name="need_a_pep_talk">Need a pep talk?\ntap here</string>
+    <string name="icon_credit">Credit for the lovely icon goes to Jane Ruby.</string>
 
 
 </resources>
