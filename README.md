@@ -28,8 +28,9 @@ Smaller unsolved problem is that I cannot get my FloatingActionsMenu to work wit
 The biggest hurdle was just getting through this emotionally.
 I had lots of plans for this app, lots of features I wanted to implement, but from the beginning I kept my focus on the core functionality of the app and I'm glad I did so. The result is that this is my MVP, and I look forward to tinkering and adding all the features I want. But honestly, the hardest part is trying not to be disappointed in myself for not magically banging out some awesome project. But I walk away with what really counts... the knowledge!
 
-
-  <img src="Screenshot_20160912-163238.png" width="220" height="400" > 
-  <img src="Screenshot_20160912-174120.png" width="220" height="400" >
-  <img src="Screenshot_20160912-163245.png" width="220" height="400" > 
-  <img src="Screenshot_20160912-163304.png" width="220" height="400" >
+<p align="center">
+  <img src="./Screenshots/Screenshot_20160912-163238.png" width="220" height="400" > 
+  <img src="./Screenshots/Screenshot_20160912-174120.png" width="220" height="400" >
+  <img src="./Screenshots/Screenshot_20160912-163245.png" width="220" height="400" > 
+  <img src="./Screenshots/Screenshot_20160912-163304.png" width="220" height="400" >
+</p>
