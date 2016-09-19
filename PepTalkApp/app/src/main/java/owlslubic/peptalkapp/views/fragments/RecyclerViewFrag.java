@@ -1,4 +1,4 @@
-package owlslubic.peptalkapp.views;
+package owlslubic.peptalkapp.views.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,14 +29,15 @@ import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
+import owlslubic.peptalkapp.views.MainActivity;
 
 /**
  * Created by owlslubic on 9/5/16.
  */
-public class MyFragment extends Fragment {
+public class RecyclerViewFrag extends Fragment {
     private static final String USERS = "users";
     private static final String PEPTALKS = "peptalks";
-    private static final String TAG = "MyFragment";
+    private static final String TAG = "RecyclerViewFrag";
 
     //this is my staging area, i'll move it to main if thats where it should go..?
     //either the main act default display should be a frag also, or the main is an activity and these just show up atop it?
@@ -94,11 +95,10 @@ public class MyFragment extends Fragment {
         if (mTextViewBody != null) {
             mTextViewBody.setMovementMethod(new ScrollingMovementMethod());
         }
+
         //setting up the recyclerview
         mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
-
-
 
         mFragRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class, R.layout.frag_card,

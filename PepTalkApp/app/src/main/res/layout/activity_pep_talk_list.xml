@@ -22,10 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <FrameLayout
-        android:id="@+id/framelayout_peptalk_frag_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <!--<FrameLayout-->
+        <!--android:id="@+id/framelayout_peptalk_frag_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"/>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_peptalk_list"
@@ -35,4 +35,11 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_white_24dp"/>
 </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/peptalk_activity_frag_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_overlay"
+        android:theme="@style/PepTalkTheme" />
 </android.support.design.widget.CoordinatorLayout>

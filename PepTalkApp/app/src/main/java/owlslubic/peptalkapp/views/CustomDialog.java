@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
+import owlslubic.peptalkapp.views.fragments.EditFrag;
 
 /**
  * Created by owlslubic on 8/30/16.
@@ -50,58 +53,57 @@ public class CustomDialog extends AlertDialog {
     //THESE METHODS LAUNCH THE CREATE AND EDIT DIALOGS
 
 
-    //will static launch methods cause a problem?
-    public static void launchNewPeptalkDialog(final Context context) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        final View layout = inflater.inflate(R.layout.dialog_new_peptalk, null);
-        builder.setView(layout);
-        builder.setNegativeButton("nvm", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        builder.setPositiveButton("done", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        final AlertDialog dialog = builder.create();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);//next try adjust pan
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        dialog.show();
-
-
-        final EditText title = (EditText) dialog.findViewById(R.id.edittext_new_peptalk_title);
-        final EditText body = (EditText) dialog.findViewById(R.id.edittext_new_peptalk);
-        body.setMovementMethod(new ScrollingMovementMethod());
-
-
-        //this works
-        dialog.getButton(BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String titleInput = title.getText().toString().trim();
-                String bodyInput = body.getText().toString().trim();
-
-                if (titleInput.equalsIgnoreCase("") || titleInput.equalsIgnoreCase(" ")) {
-                    title.setError("oops! please enter a valid title");
-                } else if (bodyInput.equalsIgnoreCase("") || bodyInput.equalsIgnoreCase(" ")) {
-                    body.setError("oops! please enter valid text");
-                } else {
-                    writeNewPeptalk(titleInput, bodyInput);//, false);//setting all as false to start with
-                    Log.i(TAG, "on submit click: title is " + titleInput);
-//                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_peptalklist_activity), "Please sign in to add to checklist", Snackbar.LENGTH_SHORT);
-                    Toast.makeText(context, "pep talk added", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                }
-            }
-        });
-
-    }
+//    public static void launchNewPeptalkDialog(final Context context) {
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        LayoutInflater inflater = LayoutInflater.from(context);
+//        final View layout = inflater.inflate(R.layout.dialog_new_peptalk, null);
+//        builder.setView(layout);
+//        builder.setNegativeButton("nvm", new OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//        builder.setPositiveButton("done", new OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//        final AlertDialog dialog = builder.create();
+//        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);//next try adjust pan
+//        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+//        dialog.show();
+//
+//
+//        final EditText title = (EditText) dialog.findViewById(R.id.edittext_new_peptalk_title);
+//        final EditText body = (EditText) dialog.findViewById(R.id.edittext_new_peptalk);
+//        body.setMovementMethod(new ScrollingMovementMethod());
+//
+//
+//        //this works
+//        dialog.getButton(BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String titleInput = title.getText().toString().trim();
+//                String bodyInput = body.getText().toString().trim();
+//
+//                if (titleInput.equalsIgnoreCase("") || titleInput.equalsIgnoreCase(" ")) {
+//                    title.setError("oops! please enter a valid title");
+//                } else if (bodyInput.equalsIgnoreCase("") || bodyInput.equalsIgnoreCase(" ")) {
+//                    body.setError("oops! please enter valid text");
+//                } else {
+//                    writeNewPeptalk(titleInput, bodyInput);//, false);//setting all as false to start with
+//                    Log.i(TAG, "on submit click: title is " + titleInput);
+////                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_peptalklist_activity), "Please sign in to add to checklist", Snackbar.LENGTH_SHORT);
+//                    Toast.makeText(context, "pep talk added", Toast.LENGTH_SHORT).show();
+//                    dialog.dismiss();
+//                }
+//            }
+//        });
+//
+//    }
 
 
     //works
@@ -164,49 +166,49 @@ public class CustomDialog extends AlertDialog {
         });
     }
 
-    public static void launchNewChecklistDialog(final Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View layout = inflater.inflate(R.layout.dialog_new_checklist, null);
-        builder.setView(layout);
-        builder.setNegativeButton("nvm", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        builder.setPositiveButton("done", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        final AlertDialog dialog = builder.create();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        dialog.show();
-
-        final EditText editText = (EditText) dialog.findViewById(R.id.edittext_new_checklist);
-        final EditText editText2 = (EditText) dialog.findViewById(R.id.edittext_new_checklist_notes);
-
-
-        dialog.getButton(BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String inputText = editText.getText().toString().trim();
-                String inputNotes = editText2.getText().toString().trim();
-
-
-                if (inputText.equalsIgnoreCase("") || inputText.equalsIgnoreCase(" ")) {
-                    editText.setError("oops! please enter a valid title");
-                } else {
-                    writeNewChecklist(inputText, inputNotes);
-                    Toast.makeText(context, "added to checklist", Toast.LENGTH_SHORT).show();
-                    //replace with snackbar
-                    dialog.dismiss();
-                }
-            }
-        });
-    }
+//    public static void launchNewChecklistDialog(final Context context) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        LayoutInflater inflater = LayoutInflater.from(context);
+//        View layout = inflater.inflate(R.layout.dialog_new_checklist, null);
+//        builder.setView(layout);
+//        builder.setNegativeButton("nvm", new OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//        builder.setPositiveButton("done", new OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//        final AlertDialog dialog = builder.create();
+//        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+//        dialog.show();
+//
+//        final EditText editText = (EditText) dialog.findViewById(R.id.edittext_new_checklist);
+//        final EditText editText2 = (EditText) dialog.findViewById(R.id.edittext_new_checklist_notes);
+//
+//
+//        dialog.getButton(BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String inputText = editText.getText().toString().trim();
+//                String inputNotes = editText2.getText().toString().trim();
+//
+//
+//                if (inputText.equalsIgnoreCase("") || inputText.equalsIgnoreCase(" ")) {
+//                    editText.setError("oops! please enter a valid title");
+//                } else {
+//                    writeNewChecklist(inputText, inputNotes);
+//                    Toast.makeText(context, "added to checklist", Toast.LENGTH_SHORT).show();
+//                    //replace with snackbar
+//                    dialog.dismiss();
+//                }
+//            }
+//        });
+//    }
 
     public static void launchEditChecklistDialog(final Context context, final ChecklistItemObject check) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -403,29 +405,29 @@ public class CustomDialog extends AlertDialog {
 
 
     //TODO write a new "if this exists don't add it" method that actually works
-    public static void writeNewChecklist(String text, String notes) {
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
-            mChecklistRef = mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("checklist");
+//    public static void writeNewChecklist(String text, String notes) {
+//        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+//            mChecklistRef = mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("checklist");
+//
+//            DatabaseReference itemKey = mChecklistRef.push();//this creates the unique key, but no data
+//            String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
+//            final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
+//            itemKey.setValue(item);
+//            Log.d(TAG, "writeNewChecklist: new key is: " + key);
+//        }
+//    }
 
-            DatabaseReference itemKey = mChecklistRef.push();//this creates the unique key, but no data
-            String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
-            final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
-            itemKey.setValue(item);
-            Log.d(TAG, "writeNewChecklist: new key is: " + key);
-        }
-    }
-
-
-    public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            mPeptalkRef = mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("peptalks");
-
-            DatabaseReference pepKey = mPeptalkRef.push();
-            String key = pepKey.getKey();
-            final PepTalkObject peptalk = new PepTalkObject(key, title, body, false);
-            pepKey.setValue(peptalk);
-        }
-    }
+        //moved to frag class
+//    public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {
+//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//            mPeptalkRef = mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("peptalks");
+//
+//            DatabaseReference pepKey = mPeptalkRef.push();
+//            String key = pepKey.getKey();
+//            final PepTalkObject peptalk = new PepTalkObject(key, title, body, false);
+//            pepKey.setValue(peptalk);
+//        }
+//    }
 
     public static void updatePepTalk(PepTalkObject peptalk, String title, String body) {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -503,6 +505,9 @@ public class CustomDialog extends AlertDialog {
 
 
     }
+
+
+
 
 }
 

@@ -1,26 +1,21 @@
 package owlslubic.peptalkapp.presenters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.views.CustomDialog;
 import owlslubic.peptalkapp.views.MainActivity;
-import owlslubic.peptalkapp.views.MyFragment;
 import owlslubic.peptalkapp.views.PepTalkListActivity;
+import owlslubic.peptalkapp.views.fragments.EditFrag;
 
 /**
  * Created by owlslubic on 9/1/16.
@@ -30,7 +25,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
     private DatabaseReference mRef;
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
-    PepTalkListActivity mActivity;
+
 
 
     public PepTalkFirebaseAdapter(Class<PepTalkObject> modelClass, int modelLayout, Class<PepTalkViewHolder> viewHolderClass, Query ref, Context context) {//OnStartDragListener onStartDragListener, Context context){
@@ -48,7 +43,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             holder.mFragTitle.setText(model.getTitle());
             holder.mFragBody.setText(model.getBody());
             holder.mFragBody.setMovementMethod(new ScrollingMovementMethod());
-            holder.mFragBody.setOnClickListener(new View.OnClickListener() {
+            holder.mFragCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (holder.mEdit.getVisibility() == View.INVISIBLE) {
@@ -58,31 +53,32 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
                     }
                 }
             });
-//            if (holder.mEdit.getVisibility() == View.VISIBLE) {
                 holder.mEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //setonclicklsitnerer to the card
-                        CustomDialog.launchEditPeptalkDialog(mContext, model);
+//                        CustomDialog.launchEditPeptalkDialog(mContext, model);
+                        //TODO pass model data and launch edit fragment!
                     }
                 });
-//            }
 
 
-        } else {//it's in peptalkactivity
+
+        }
+
+        else {//not in main activity, it's in peptalkactivity
             holder.mTitle.setText(model.getTitle());
             holder.mCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //launches edit pep talk dialog
-//                CustomDialog.launchEditPeptalkDialog(mContext, model);
                     CustomDialog.launchViewPepTalk(model, mContext);
-                    //this should launch a fraggie
-
-                    //display fragment LOL THIS DOESNT WORK
+                    //TODO pass model data and launch view fragment!
 
                 }
             });
+
+
+
+
             holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -93,6 +89,9 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             });
 
 
+
+
+            /**swipey shit*/
 //        holder.mCard.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -124,9 +123,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
 
     }
 
-    public interface OnItemClickListener {
-        public void onItemClick(String title, String body);
-    }
+
 
 
 }

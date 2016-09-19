@@ -33,13 +33,14 @@ import android.widget.TextView;
 import com.firebase.ui.auth.AuthUI;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
+import owlslubic.peptalkapp.models.PepTalkObject;
+import owlslubic.peptalkapp.views.fragments.EditFrag;
+import owlslubic.peptalkapp.views.fragments.NewFrag;
+import owlslubic.peptalkapp.views.fragments.RecyclerViewFrag;
 
 import static owlslubic.peptalkapp.views.CustomDialog.*;
-import static owlslubic.peptalkapp.views.CustomDialog.writeNewChecklist;
-
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -48,10 +49,8 @@ public class MainActivity extends AppCompatActivity implements
     private TextView mBottomSheetHeading, mBottomSheetTopText, mWelcomeTextView,
             mSigninPromptTextView, mSigninTextView, mResource1, mResource2, mResource3, mResource4, mLaunchFragMain;
     private FloatingActionsMenu mFabMenu;
-    private ImageView mSignInOrOutButton;
     private DrawerLayout mDrawer;
     private FrameLayout mFrameLayout;
-    private SharedPreferences mPrefs;
 
 
     @Override
@@ -69,207 +68,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    public void myLoginMethod() {
-        //first check if the user is already signed in
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            // already signed in, so send them on their way
-            Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "You're already signed in", Snackbar.LENGTH_SHORT);
-            snackbar.show();
-        } else {
-            //now make sure there is internet or else it won't work
-            ConnectivityManager cm =
-                    (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-            final boolean isConnected = activeNetwork != null &&
-                    activeNetwork.isConnectedOrConnecting();
-
-            if (!isConnected) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("No network connection detected");
-                builder.setMessage("You won't be able to sign in until connection is restored");
-                builder.setPositiveButton("Check network", new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (isConnected) {
-                            Snackbar snackbar = Snackbar.make(getCurrentFocus(), "And we're back! Connection restored", Snackbar.LENGTH_SHORT);
-                            snackbar.show();
-                            dialogInterface.dismiss();
-                        } else {
-                            Snackbar snackbar = Snackbar.make(getCurrentFocus(), "Still no luck, try again later", Snackbar.LENGTH_LONG);
-                            snackbar.show();
-                            dialogInterface.dismiss();
-                        }
-                    }
-                });
-                builder.setNegativeButton("k", new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                final AlertDialog dialog = builder.create();
-                dialog.show();
-            } else {
-                // yes internet, but not already signed in, so let's sign em in or up!
-                startActivityForResult(AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setProviders(
-//                            AuthUI.GOOGLE_PROVIDER,//GOOGLE DOESNT WORK THATS SAD
-                                AuthUI.EMAIL_PROVIDER)
-                        .setIsSmartLockEnabled(true)
-                        .setTheme(R.style.AppTheme)
-                        .build(), RC_SIGN_IN);
-            }
-        }
-    }
-
-    //handling the sign-in result
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                // user is signed in! populate account with peptalks if we haven't already (thanks shared prefs)
-                //TODO revisit this
-                /** since i'm using firebaseui library, i can't figure out how to access the specific methods like onAccoutnCreated
-                 * which is ideally where this would go, so this is my roundabout solution
-                 * although if you uninstall and reinstall, it resets the sharedprefs and adds the content again */
-                insertContentOnNewAccountCreated();
-                startActivity(new Intent(this, MainActivity.class));
-                mLaunchFragMain.setText(R.string.need_a_pep_talk);
-            } else {
-                Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Oops! Sign in failed", Snackbar.LENGTH_SHORT);
-                snackbar.show();
-            }
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.fablet_checklist:
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    launchNewChecklistDialog(this);
-
-                    mFrameLayout.getBackground().setAlpha(0);
-                    mFrameLayout.setOnTouchListener(null);
-
-                    mFabMenu.collapse();
-                } else {
-                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "Please sign in to add to checklist", Snackbar.LENGTH_SHORT);
-                    snackbar.setAction("sign in", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            myLoginMethod();
-                        }
-                    }).show();
-                }
-                break;
-            case R.id.fablet_peptalk:
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    launchNewPeptalkDialog(this);
-                    mFrameLayout.getBackground().setAlpha(0);
-                    mFrameLayout.setOnTouchListener(null);
-                    mFabMenu.collapse();
-                } else {
-                    Snackbar snackbar = Snackbar.make(view, "Please sign in to add a peptalk", Snackbar.LENGTH_SHORT);
-                    snackbar.setAction("sign in", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            myLoginMethod();
-                        }
-                    }).show();
-                }
-                break;
-            case R.id.textview_main:
-                //launch pep talk view
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    setupFrag();
-                } else {
-                    Snackbar snackbar = Snackbar.make(view, "Please sign in to view your peptalks", Snackbar.LENGTH_SHORT);
-                    snackbar.setAction("sign in", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            myLoginMethod();
-                            Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to add to checklist", Snackbar.LENGTH_SHORT);
-                            snackbar.setAction("sign in", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    myLoginMethod();
-                                }
-                            }).show();
-                        }
-                    }).show();
-                }
-                break;
-            case R.id.navheader_signin:
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    //already signed in, so sign em out
-                    AuthUI.getInstance().signOut(this);
-                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_LONG);
-                    snackbar.show();
-
-                    //so we sign out, and then change the display for signing back in
-                    mLaunchFragMain.setText("");
-                    mSigninTextView.setText(R.string.sign_in);
-                    mSigninPromptTextView.setText(R.string.sign_in_prompt);
-                    mWelcomeTextView.setText(R.string.welcome_blurb);
-
-                } else {
-                    myLoginMethod();
-                }
-                break;
-            case R.id.imagebutton_sms:
-                launchDefaultSMS();
-                break;
-            case R.id.imagebutton_email:
-                launchDefaultEmail();
-                break;
-            case R.id.imagebutton_fb:
-                launchFacebook();
-                break;
-            case R.id.tv_resource1:
-                //webview didnt wanna work
-                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                intent.putExtra("url", "https://www.headspace.com/");
-                startActivity(intent);
-
-                //so this launches browser instead
-//                Uri uri = Uri.parse("https://www.headspace.com/");
-//                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-//                startActivity(intent);
-                break;
-            case R.id.tv_resource2:
-//                Intent intent2 = new Intent(MainActivity.this, WebViewActivity.class);
-//                intent2.putExtra("url", "http://www.befriendingourselves.com/Mindfulness.html");
-//                startActivity(intent2);
-                Uri uri2 = Uri.parse("http://www.befriendingourselves.com/Mindfulness.html");
-                Intent intent2 = new Intent(Intent.ACTION_VIEW, uri2);
-                startActivity(intent2);
-                break;
-            case R.id.tv_resource3:
-//                Intent intent3 = new Intent(MainActivity.this, WebViewActivity.class);
-//                intent3.putExtra("url", "http://self-compassion.org/");
-//                startActivity(intent3);
-                Uri uri3 = Uri.parse("http://self-compassion.org/");
-                Intent intent3 = new Intent(Intent.ACTION_VIEW, uri3);
-                startActivity(intent3);
-                break;
-            case R.id.tv_resource4:
-                Uri uri4 = Uri.parse("https://ottawamindfulnessclinic.com");
-                Intent intent4 = new Intent(Intent.ACTION_VIEW, uri4);
-                startActivity(intent4);
-                break;
-            case R.id.imagebutton_bottomsheet_down:
-                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }
-                break;
-        }
-
-    }
-
-    //making a method to do this so the oncreate stays clean and pretty aww
+    /**views stuffs*/
     private void initViews() {
 
         //fab and fablet business
@@ -376,9 +175,96 @@ public class MainActivity extends AppCompatActivity implements
 
 
     }
+    public void setupFrag(int id) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        if (id == R.id.textview_main) {
+            RecyclerViewFrag fragment = new RecyclerViewFrag();
+            transaction.add(R.id.framelayout_main_frag_container, fragment);
+        } else {
+            NewFrag fragment = new NewFrag();
+            transaction.add(R.id.framelayout_main_frag_container, fragment);
+        }
+        transaction.commit();
+    }
 
 
-    //NAV DRAWER MENU options
+    /**for logging in*/
+    public void myLoginMethod() {
+        //first check if the user is already signed in
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            // already signed in, so send them on their way
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "You're already signed in", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        } else {
+            //now make sure there is internet or else it won't work
+            ConnectivityManager cm =
+                    (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            final boolean isConnected = activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting();
+
+            if (!isConnected) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("No network connection detected");
+                builder.setMessage("You won't be able to sign in until connection is restored");
+                builder.setPositiveButton("Check network", new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (isConnected) {
+                            Snackbar snackbar = Snackbar.make(getCurrentFocus(), "And we're back! Connection restored", Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+                            dialogInterface.dismiss();
+                        } else {
+                            Snackbar snackbar = Snackbar.make(getCurrentFocus(), "Still no luck, try again later", Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                            dialogInterface.dismiss();
+                        }
+                    }
+                });
+                builder.setNegativeButton("k", new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                // yes internet, but not already signed in, so let's sign em in or up!
+                startActivityForResult(AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setProviders(
+//                            AuthUI.GOOGLE_PROVIDER,//GOOGLE DOESNT WORK THATS SAD
+                                AuthUI.EMAIL_PROVIDER)
+                        .setIsSmartLockEnabled(true)
+                        .setTheme(R.style.AppTheme)
+                        .build(), RC_SIGN_IN);
+            }
+        }
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // user is signed in! populate account with peptalks if we haven't already (thanks shared prefs)
+                //TODO revisit this
+                /** since i'm using firebaseui library, i can't figure out how to access the specific methods like onAccoutnCreated
+                 * which is ideally where this would go, so this is my roundabout solution
+                 * although if you uninstall and reinstall, it resets the sharedprefs and adds the content again */
+                insertContentOnNewAccountCreated();
+                startActivity(new Intent(this, MainActivity.class));
+                mLaunchFragMain.setText(R.string.need_a_pep_talk);
+            } else {
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Oops! Sign in failed", Snackbar.LENGTH_SHORT);
+                snackbar.show();
+            }
+        }
+    }
+
+
+    /**toolbar menu items*/
     @Override
     public void onBackPressed() {
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
@@ -387,21 +273,19 @@ public class MainActivity extends AppCompatActivity implements
             super.onBackPressed();
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.widget) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 CustomDialog.launchAddWidgetTextDialog(this);
-            }else{
+            } else {
                 Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to mess with your widget", Snackbar.LENGTH_SHORT);
                 snackbar.setAction("sign in", new View.OnClickListener() {
                     @Override
@@ -417,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+    /**nav drawer stuff*/
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -480,23 +365,19 @@ public class MainActivity extends AppCompatActivity implements
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     private void launchBottomSheetFromNav() {
         //first close nav drawer
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
         }
         //then open bottomsheet
-//        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-//            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//        } i think the collapsed thing is just makin it wonky
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
     }
 
 
-    //launch external social apps for "friend reachout"
+    /**launch external social apps for "friend reachout"*/
     private boolean appInstalledOrNot(String uri) {
         PackageManager pm = getPackageManager();
         boolean appInstalled;
@@ -508,14 +389,12 @@ public class MainActivity extends AppCompatActivity implements
         }
         return appInstalled;
     }
-
     public void launchDefaultEmail() {
         Intent emailLauncher = new Intent(Intent.ACTION_VIEW);
         emailLauncher.addCategory(Intent.CATEGORY_DEFAULT);
         emailLauncher.setType("message/rfc822");
         startActivity(emailLauncher);
     }
-
     public void launchFacebook() {
         boolean installed = appInstalledOrNot("com.facebook.katana");
         if (installed) {
@@ -526,7 +405,6 @@ public class MainActivity extends AppCompatActivity implements
             snackbar.show();
         }
     }
-
     public void launchDefaultSMS() {
         Intent smsLauncher = new Intent(Intent.ACTION_MAIN);
         smsLauncher.addCategory(Intent.CATEGORY_DEFAULT);
@@ -535,36 +413,27 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    public void setupFrag()
-    {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        MyFragment fragment = new MyFragment();
-        transaction.add(R.id.framelayout_main_frag_container, fragment);
-        transaction.commit();
-    }
-
-
+    /**content*/
     private void insertContentOnNewAccountCreated() {
         //shared prefs to make sure this only runs one time
-        boolean b = false;
-        mPrefs = getSharedPreferences("PREFS_NAME", 0);
+        boolean b;
+        SharedPreferences mPrefs = getSharedPreferences("PREFS_NAME", 0);
         b = mPrefs.getBoolean("FIRST_RUN", false);
         if (!b) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes));
-                writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes));
-                writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes));
-                writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes));
-                writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes));
-                writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes));
+                NewFrag.writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes));
+                NewFrag.writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes));
+                NewFrag.writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes));
+                NewFrag.writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes));
+                NewFrag.writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes));
+                NewFrag.writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes));
 
-                writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present));
-                writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions));
-                writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best));
-                writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment));
-                writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing));
-                writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt));
+                NewFrag.writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present));
+                NewFrag.writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions));
+                NewFrag.writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best));
+                NewFrag.writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment));
+                NewFrag.writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing));
+                NewFrag.writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt));
 
             }
 
@@ -576,14 +445,8 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "insertContentOnNewAccountCreated: sharedprefs first run is: " + mPrefs.getBoolean("FIRST_RUN", false));
     }
 
-    public void resetPrefsOnSignOut() {
 
-        mPrefs = getSharedPreferences("PREFS_NAME", 0);
-        SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putBoolean("FIRST_RUN", false);
-        editor.commit();
-    }
-
+    /** can't produce plays with internettie*/
     public void checkNetworkStatus() {
         ConnectivityManager cm =
                 (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -619,6 +482,137 @@ public class MainActivity extends AppCompatActivity implements
             final AlertDialog dialog = builder.create();
             dialog.show();
         }
+    }
+
+
+    /**the beautiful switch statement*/
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fablet_checklist:
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//                    launchNewChecklistDialog(this);
+
+                    setupFrag(R.id.fablet_checklist);
+
+                    mFrameLayout.getBackground().setAlpha(0);
+                    mFrameLayout.setOnTouchListener(null);
+
+                    mFabMenu.collapse();
+                } else {
+                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "Please sign in to add to checklist", Snackbar.LENGTH_SHORT);
+                    snackbar.setAction("sign in", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myLoginMethod();
+                        }
+                    }).show();
+                }
+                break;
+            case R.id.fablet_peptalk:
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//                    launchNewPeptalkDialog(this);
+                    setupFrag(R.id.fablet_peptalk);
+
+                    mFrameLayout.getBackground().setAlpha(0);
+                    mFrameLayout.setOnTouchListener(null);
+                    mFabMenu.collapse();
+                } else {
+                    Snackbar snackbar = Snackbar.make(view, "Please sign in to add a peptalk", Snackbar.LENGTH_SHORT);
+                    snackbar.setAction("sign in", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myLoginMethod();
+                        }
+                    }).show();
+                }
+                break;
+            case R.id.textview_main:
+                //launch pep talk view
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    setupFrag(R.id.textview_main);
+                } else {
+                    Snackbar snackbar = Snackbar.make(view, "Please sign in to view your peptalks", Snackbar.LENGTH_SHORT);
+                    snackbar.setAction("sign in", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myLoginMethod();
+                            Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to add to checklist", Snackbar.LENGTH_SHORT);
+                            snackbar.setAction("sign in", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myLoginMethod();
+                                }
+                            }).show();
+                        }
+                    }).show();
+                }
+                break;
+            case R.id.navheader_signin:
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    //already signed in, so sign em out
+                    AuthUI.getInstance().signOut(this);
+                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+
+                    //so we sign out, and then change the display for signing back in
+                    mLaunchFragMain.setText("");
+                    mSigninTextView.setText(R.string.sign_in);
+                    mSigninPromptTextView.setText(R.string.sign_in_prompt);
+                    mWelcomeTextView.setText(R.string.welcome_blurb);
+
+                } else {
+                    myLoginMethod();
+                }
+                break;
+            case R.id.imagebutton_sms:
+                launchDefaultSMS();
+                break;
+            case R.id.imagebutton_email:
+                launchDefaultEmail();
+                break;
+            case R.id.imagebutton_fb:
+                launchFacebook();
+                break;
+            case R.id.tv_resource1:
+                //webview didnt wanna work
+                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+                intent.putExtra("url", "https://www.headspace.com/");
+                startActivity(intent);
+
+                //so this launches browser instead
+//                Uri uri = Uri.parse("https://www.headspace.com/");
+//                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//                startActivity(intent);
+                break;
+            case R.id.tv_resource2:
+//                Intent intent2 = new Intent(MainActivity.this, WebViewActivity.class);
+//                intent2.putExtra("url", "http://www.befriendingourselves.com/Mindfulness.html");
+//                startActivity(intent2);
+                Uri uri2 = Uri.parse("http://www.befriendingourselves.com/Mindfulness.html");
+                Intent intent2 = new Intent(Intent.ACTION_VIEW, uri2);
+                startActivity(intent2);
+                break;
+            case R.id.tv_resource3:
+//                Intent intent3 = new Intent(MainActivity.this, WebViewActivity.class);
+//                intent3.putExtra("url", "http://self-compassion.org/");
+//                startActivity(intent3);
+                Uri uri3 = Uri.parse("http://self-compassion.org/");
+                Intent intent3 = new Intent(Intent.ACTION_VIEW, uri3);
+                startActivity(intent3);
+                break;
+            case R.id.tv_resource4:
+                Uri uri4 = Uri.parse("https://ottawamindfulnessclinic.com");
+                Intent intent4 = new Intent(Intent.ACTION_VIEW, uri4);
+                startActivity(intent4);
+                break;
+            case R.id.imagebutton_bottomsheet_down:
+                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+                break;
+        }
+
     }
 
 
