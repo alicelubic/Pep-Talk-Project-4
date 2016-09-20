@@ -7,6 +7,7 @@ import android.support.customtabs.CustomTabsCallback;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
@@ -107,6 +108,13 @@ public class RecyclerViewFrag extends Fragment {
 
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(mFragRecycler);
+
+        /**testing for sunil*/
+//        RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
+//        animator.setAddDuration(1000);
+//        mFragRecycler.setItemAnimator(animator);9 `
+
+
     }
 
 
