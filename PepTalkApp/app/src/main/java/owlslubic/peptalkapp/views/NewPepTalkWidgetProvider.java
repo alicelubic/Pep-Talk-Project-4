@@ -27,9 +27,7 @@ public class NewPepTalkWidgetProvider extends AppWidgetProvider {
 
             //intent for onclick
             Intent intent = new Intent(context, NewPepTalkWidgetProvider.class);
-//            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             intent.setAction(NEWPEPTALK);
-//            Intent intent = new Intent(context, AddPepTalkWidgetActivity.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0);
 
             mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_new_peptalk);
@@ -52,7 +50,6 @@ public class NewPepTalkWidgetProvider extends AppWidgetProvider {
             intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             context.startActivity(intent1);
-
         }
 
 

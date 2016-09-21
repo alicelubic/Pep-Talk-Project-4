@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import owlslubic.peptalkapp.R;
 
@@ -16,16 +19,19 @@ import owlslubic.peptalkapp.R;
  */
 
 public class AddPepTalkWidgetActivity extends AppCompatActivity {
-EditText mTitle, mBody;
-    Button mSubmit;
+    EditText mTitle, mBody;
+    ImageButton mSubmit;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_from_widget);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         mTitle = (EditText) findViewById(R.id.edittext_widget_new_peptalk_title);
         mBody = (EditText) findViewById(R.id.edittext_widget_new_peptalk_body);
-        mSubmit = (Button) findViewById(R.id.button_widget_submit_activity);
+        mSubmit = (ImageButton) findViewById(R.id.button_widget_submit_activity);
 
 
         mSubmit.setOnClickListener(new View.OnClickListener() {
@@ -39,9 +45,14 @@ EditText mTitle, mBody;
                 } else if (bodyInput.equalsIgnoreCase("") || bodyInput.equalsIgnoreCase(" ")) {
                     mBody.setError("oops! please enter valid text");
                 } else {
-                    CustomDialog.writeNewPeptalk(titleInput, bodyInput);
-                    Toast.makeText(AddPepTalkWidgetActivity.this, "pep talk added", Toast.LENGTH_SHORT).show();
-                    finish();
+                    if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                        CustomDialog.writeNewPeptalk(titleInput, bodyInput);
+                        Toast.makeText(AddPepTalkWidgetActivity.this, "pep talk added", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(AddPepTalkWidgetActivity.this, "Please sign in to add a pep talk", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         });
