@@ -1,6 +1,8 @@
 package owlslubic.peptalkapp.views;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +19,7 @@ import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.presenters.ChecklistFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.ChecklistViewHolder;
+import owlslubic.peptalkapp.views.fragments.NewFrag;
 
 public class ChecklistActivity extends AppCompatActivity {
 
@@ -43,7 +46,7 @@ public class ChecklistActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mFirebaseAdapter = new ChecklistFirebaseAdapter(ChecklistItemObject.class, R.layout.card_checklist,
-                ChecklistViewHolder.class, mChecklistRef,this);
+                ChecklistViewHolder.class, mChecklistRef, this);
         recyclerView.setAdapter(mFirebaseAdapter);
 
 
@@ -52,11 +55,24 @@ public class ChecklistActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                setupNewFrag();
                 CustomDialog.launchNewChecklistDialog(ChecklistActivity.this);
             }
         });
 
 
+    }
+
+    //TODO put all these methods together and not here, it shouldnt be replicated in each frag
+    public void setupNewFrag() {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        NewFrag fragment = new NewFrag();
+        transaction.add(R.id.framelayout_main_frag_container, fragment);
+
+        fragment.mTitle.setText("What do you want to add to your checklist?");
+        fragment.mBody.setText("Any notes on this?");
+        transaction.commit();
     }
 
 

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:hint="Enter title for this pep talk.."
+        android:hint="@string/enter_peptalk_title_hint"
         android:maxLength="30" />
 
     <EditText
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:hint="Hey buddy, you're great because..."
+        android:hint="@string/enter_peptalk_body_hint"
         android:inputType="textMultiLine"
         android:scrollbars="vertical" />
     <!--android:imeOptions="actionDone"-->

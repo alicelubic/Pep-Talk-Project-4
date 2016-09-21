@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
+import owlslubic.peptalkapp.views.fragments.EditFrag;
 
 /**
  * Created by owlslubic on 8/30/16.
@@ -32,6 +35,7 @@ public class CustomDialog extends AlertDialog {
     //consider having cool lookin buttons for these dialogs yo
 
     private static final String TAG = "CustomDialog";
+    private static final String PREFS = "prefs";
     private static DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference();
     private static DatabaseReference mChecklistRef;
     private static DatabaseReference mPeptalkRef;
@@ -43,14 +47,9 @@ public class CustomDialog extends AlertDialog {
     }
     //if all this goes well, I'll write some sort of switch statement for layouts so that there's only one method to do all dis launchin
 
-    //push appends data to a list, so it generates a unique key every time a new child is added,
-    //which can be called upon with getKey
-
-
     //THESE METHODS LAUNCH THE CREATE AND EDIT DIALOGS
 
 
-    //will static launch methods cause a problem?
     public static void launchNewPeptalkDialog(final Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -415,7 +414,7 @@ public class CustomDialog extends AlertDialog {
         }
     }
 
-
+//        moved to frag class
     public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             mPeptalkRef = mDbRef.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("peptalks");
@@ -491,7 +490,7 @@ public class CustomDialog extends AlertDialog {
             public void onClick(View view) {
                 String widgetText = editText.getText().toString().trim();
 
-                SharedPreferences prefs = context.getSharedPreferences("PEP_PREFS", 1);
+                SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("WIDGET_TEXT", widgetText);
                 editor.apply();
@@ -503,6 +502,9 @@ public class CustomDialog extends AlertDialog {
 
 
     }
+
+
+
 
 }
 

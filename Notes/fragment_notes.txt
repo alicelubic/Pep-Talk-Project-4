@@ -1,0 +1,41 @@
+
+NewFrag
+	-container in mainact
+	-container in pepact
+	-container in checkact
+		checklist_activity_frag_container
+	-figure out if it is checklist or peptalk
+
+EditFrag
+	-container in pepact
+	-container in checkact
+	-need the model to set the text
+
+ViewFrag
+	-container in pepact
+	-container in checkact
+		checklist_activity_frag_container
+	-needs to access model data to set texts
+	-will commit EditFrag by .replace in the onclick
+----------------
+
+FRAG METHODS: 
+(put them all together somewhere, maybe that's what abstract classes are for? they are making the other classes ugly and busy)
+
+*	setupFrag(int id) - main act
+		determines recyclerfrag or newfrag
+
+*	setupNewFrag - pep talk and checklist act 
+					(frag class determines which hint to set text)
+		called from fab
+		TODO figure out if i can set textviews from this method
+
+*	setupEditFrag
+		- called from recycleradapters
+		- needs to acces the model from the cardview that launched it
+		- if called from the RVfrag or ViewFragment, it needs to use .replace in the onlick rather than .add
+
+*	setupViewFrag 
+		- called from adapters directly
+
+

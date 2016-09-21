@@ -1,32 +1,27 @@
 package owlslubic.peptalkapp.views;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
-import owlslubic.peptalkapp.presenters.OnStartDragListener;
 import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 import owlslubic.peptalkapp.presenters.SimpleItemTouchHelperCallback;
+import owlslubic.peptalkapp.views.fragments.EditFrag;
+import owlslubic.peptalkapp.views.fragments.NewFrag;
+import owlslubic.peptalkapp.views.fragments.RecyclerViewFrag;
 
 public class PepTalkListActivity extends AppCompatActivity {// implements OnStartDragListener {
 
@@ -49,12 +44,13 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
 //        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
-        //fab launches dialog
+        //fab launches new pep fragment
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_peptalk_list);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CustomDialog.launchNewPeptalkDialog(PepTalkListActivity.this);
+            CustomDialog.launchNewPeptalkDialog(PepTalkListActivity.this);
+//                setupNewFrag();
             }
         });
 
@@ -140,19 +136,30 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
     }
 */
 
+    /** find out if you can set the view texts like this right in the method...
+     * and if so, copy this over to the ChecklistActivity*/
 
-    public void launchFragment(PepTalkObject model){
-        MyFragment frag = new MyFragment();
+    public void setupNewFrag(){
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        NewFrag fragment = new NewFrag();
+        transaction.add(R.id.framelayout_main_frag_container, fragment);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.framelayout_peptalk_frag_container, new MyFragment());
-
-        frag.mTextViewTitle.setText(model.getTitle());
-        frag.mTextViewBody.setText(model.getBody());
-
-        ft.commit();
+        fragment.mTitle.setText("Give your new pep talk a title");
+        fragment.mBody.setText("Everything is going to be okay because...");
+        transaction.commit();
     }
 
+    public void setupEditFrag(PepTalkObject model) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        EditFrag fragment = new EditFrag();
+        transaction.add(R.id.framelayout_main_frag_container, fragment);
+
+        fragment.mTitle.setText(model.getTitle());
+        fragment.mBody.setText(model.getTitle());
+        transaction.commit();
+    }
 
 
 
