@@ -24,7 +24,9 @@
             <!--app:popupTheme="@style/AppTheme.PopupOverlay"/>-->
 
     <!--</android.support.design.widget.AppBarLayout>-->
-
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_checklist"
@@ -41,6 +43,7 @@
         android:src="@drawable/ic_add_white_24dp" />
 
 
+</FrameLayout>
     <FrameLayout
         android:id="@+id/checklist_activity_frag_container"
         android:layout_width="match_parent"

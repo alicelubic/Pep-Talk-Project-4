@@ -1,5 +1,6 @@
 package owlslubic.peptalkapp.views.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -36,12 +37,14 @@ public class EditFrag extends Fragment implements View.OnClickListener {
     private static final String PEPTALK_BODY = "body";
     private static final String CHECKLIST_TEXT = "notes";
     private static final String CHECKLIST_NOTES = "notes";
+    private static final String PREFS = "prefs";
     private static final String TAG = "EditFrag";
     public EditText mTitle, mBody;
     public ImageButton mDone, mCancel;
-    public String mPepTitle, mPepBody, mPepKey;
+    public String mPepTitle, mPepBody, mPepKey, mCheckText, mCheckNotes, mCheckKey;
+    public Boolean mIsPepTalk, mIsChecklist;
 
-
+    public String mObjectType;
 
 
     @Nullable
@@ -54,12 +57,22 @@ public class EditFrag extends Fragment implements View.OnClickListener {
         mCancel = (ImageButton) view.findViewById(R.id.imagebutton_fragment_cancel);
 
 
-        SharedPreferences prefs = getContext().getSharedPreferences("MODEL_DATA", 1);
+        SharedPreferences prefs = getContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         mPepTitle = prefs.getString("peptalk_title", "default");
         mPepBody = prefs.getString("peptalk_body", "default");
         mPepKey = prefs.getString("peptalk_key", "default");
-        Log.d(TAG, "SharedPrefs says the key is: " + mPepKey);
+        Log.d(TAG, "SharedPrefs says the peptalk key is: " + mPepKey);
+        mIsPepTalk = prefs.getBoolean("peptalk", false);
+        Log.d(TAG, "onCreateView: SharedPrefs says the boolean isPeptalk is " + mIsPepTalk);
 
+
+        mCheckKey = prefs.getString("check_key", "default");
+        mCheckText = prefs.getString("check_text", "default");
+        mCheckNotes = prefs.getString("check_notes", "default");
+        mIsChecklist = prefs.getBoolean("checklist", false);
+
+
+        mObjectType= prefs.getString("object_type","def");
 
         return view;
     }
@@ -71,28 +84,21 @@ public class EditFrag extends Fragment implements View.OnClickListener {
 
         //TODO determine if this is updating peptalk or checklist
         //this will be called from the view fragment, or from the cardview in recyclerview fragment
+//        if (mIsPepTalk) {
+//            mTitle.setText(mPepTitle);
+//            mBody.setText(mPepBody);
+//        } else {
+//            mTitle.setText(mCheckText);
+//            mBody.setText(mCheckNotes);
+//        }
 
-
-        //TODO see if getting context this way is helpful or nah
-        //does getACtivity get the fragment itself
-        // (because we could say if the base context is the recyclerview frag do this, or if the view frag, do that),
-        // or the actual activity context
-//        if (getActivity().getBaseContext() instanceof PepTalkListActivity) {
-
-        if (view.getContext() instanceof PepTalkListActivity) {
+        if(mObjectType.equals("peptalk")){
             mTitle.setText(mPepTitle);
             mBody.setText(mPepBody);
-
-        } else if (view.getContext() instanceof ChecklistActivity) {
-//            mTitle.setText(check.getTitle());
-//            mBody.setText(check.getBody());
-
-        } else {
-            
-            Log.d(TAG, "onViewCreated: context is not instance of any Activity");
+        } else if(mObjectType.equals("checklist")){
+            mTitle.setText(mCheckText);
+            mBody.setText(mCheckNotes);
         }
-
-
         mDone.setOnClickListener(this);
 
 
@@ -104,26 +110,25 @@ public class EditFrag extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
     }
 
+
     public void updatePepTalk(String key, String title, String body) {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference().child("users")
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("peptalks");
-            peptalkRef.child(key).child("title").setValue(title);
-            peptalkRef.child(key).child("body").setValue(body);
+            DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
+            peptalkRef.child(key).child(PEPTALK_TITLE).setValue(title);
+            peptalkRef.child(key).child(PEPTALK_BODY).setValue(body);
             Log.d(TAG, "updatePepTalk: key is: " + key);
             Log.d(TAG, "updatePepTalk: new title is: " + title);
-
-            //when boolean is set in edit bit, it'll be pulling this value from the object
         }
     }
 
-    public void updateChecklist(ChecklistItemObject check, String text, String notes) {
+    public void updateChecklist(String key, String text, String notes) {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(CHECKLIST);
 
-            checklistRef.child(check.getKey()).child(CHECKLIST_TEXT).setValue(text);
-            checklistRef.child(check.getKey()).child(CHECKLIST_NOTES).setValue(notes);
+            checklistRef.child(key).child(CHECKLIST_TEXT).setValue(text);
+            checklistRef.child(key).child(CHECKLIST_NOTES).setValue(notes);
         }
     }
 
@@ -141,21 +146,36 @@ public class EditFrag extends Fragment implements View.OnClickListener {
 
             switch (view.getId()) {
                 case R.id.imagebutton_fragment_done:
-                    if (view.getContext() instanceof PepTalkListActivity) {
-                        //then write to database
-                        updatePepTalk(mPepKey, titleInput, bodyInput);
-                        startActivity(new Intent(getActivity(), PepTalkListActivity.class));
-                        Log.d(TAG, "onClick updatePepTalk key is "+mPepKey);
-//                        Toast.makeText(view.getContext(), "update peptalk not workin ri na", Toast.LENGTH_SHORT).show();
-                    } else if (view.getContext() instanceof ChecklistActivity) {
-//                        updateChecklist(titleInput, bodyInput);
-                        Toast.makeText(view.getContext(), "update checklist not workin ri na", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getActivity(), ChecklistActivity.class));
+                    Toast.makeText(getContext(), "currently commented out...", Toast.LENGTH_SHORT).show();
+
+                    Log.d(TAG, "EditFrag onClick: mObjectType is "+mObjectType);
+/*
+                    if (mObjectType.equals("peptalk")) {//so we know it's a peptalk!
+                        Toast.makeText(getContext(), "mIsPepTalk is true!", Toast.LENGTH_SHORT).show();
+                        if (view.getContext() instanceof PepTalkListActivity) {
+                            updatePepTalk(mPepKey, titleInput, bodyInput);
+                            startActivity(new Intent(getActivity(), PepTalkListActivity.class));
+                            Log.d(TAG, "onClick updatePepTalk key is " + mPepKey);
+                        } else {
+                            updatePepTalk(mPepKey, titleInput, bodyInput);
+                            startActivity(new Intent(getActivity(), MainActivity.class));
+                        }
+                    }
+                    else if (mObjectType.equals("checklist")) {
+                        updateChecklist(mCheckKey, titleInput, bodyInput);
+
+                        Toast.makeText(getContext(), "it's a checklist item!", Toast.LENGTH_SHORT).show();
+                        if (view.getContext() instanceof ChecklistActivity) {
+                            startActivity(new Intent(getActivity(), ChecklistActivity.class));
+                        } else {
+                            startActivity(new Intent(getActivity(), MainActivity.class));
+                        }
+
                     } else {
-                        updatePepTalk(mPepKey, titleInput, bodyInput);
+                        Toast.makeText(getContext(), "something went wrong...", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getActivity(), MainActivity.class));
                     }
-
+*/
                     break;
 
                 case R.id.imagebutton_fragment_cancel:

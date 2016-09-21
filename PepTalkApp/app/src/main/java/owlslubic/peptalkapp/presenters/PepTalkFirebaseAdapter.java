@@ -31,12 +31,13 @@ import static com.facebook.GraphRequest.TAG;
  */
 
 public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder> implements ItemTouchHelperAdapter {
+    private static final String PREFS = "prefs";
     private DatabaseReference mRef;
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
     int mContainerId;
     FragmentTransaction mTransaction;
-    Activity mActivity;
+
     private static final String TAG = "PepTalkFirebaseAdapter";
 
 
@@ -68,20 +69,23 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             holder.mEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                        CustomDialog.launchEditPeptalkDialog(mContext, model);
-                    //TODO pass model data and launch edit fragment!
+                        CustomDialog.launchEditPeptalkDialog(mContext, model);
+                    //TODO pass model data using CALLBACKS and launch edit fragment!
                     /** shared pref approach might work, but will it update for each new data model?
-                     * maybe do that thing where it replaces the value rather than just putting it?*/
+                     *REALLY I GOTTA BE USING CALLBACKS FOR THIS. FIGURE THAT OUT*/
 
 
-                    SharedPreferences prefs = mContext.getSharedPreferences("MODEL_DATA", 1);
+                    SharedPreferences prefs = mContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("peptalk_title", model.getTitle());
                     editor.putString("peptalk_body", model.getBody());
                     editor.putString("peptalk_key", model.getKey());
+                    editor.putBoolean("peptalk", true);
+
+                    editor.putString("object_type","peptalk");
                     editor.apply();
 
-                    setupEditFrag();
+//                    setupEditFrag();
 
 
                 }
@@ -93,10 +97,10 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             holder.mCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    CustomDialog.launchViewPepTalk(model, mContext);
+                    CustomDialog.launchViewPepTalk(model, mContext);
                     //TODO pass model data and launch view fragment!
                     /**temp usage here*/
-                    setupEditFrag();
+//                    setupEditFrag();
                     Log.d(TAG, "onClick on cardview setupEditFrag was called");
 
 
@@ -153,17 +157,16 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             mContainerId = R.id.peptalk_activity_frag_container;
             PepTalkListActivity activity = (PepTalkListActivity) mContext;
             mTransaction = activity.getSupportFragmentManager().beginTransaction();
-        }
-    else if(mContext.getClass() == MainActivity.class){
-            Log.d(TAG, "setupEditFrag class is: "+mContext.getClass().toString());
-           mContainerId = R.id.framelayout_main_frag_container;
-            MainActivity activity = (MainActivity)mContext;
+        } else if (mContext.getClass() == MainActivity.class) {
+            Log.d(TAG, "setupEditFrag class is: " + mContext.getClass().toString());
+            mContainerId = R.id.framelayout_main_frag_container;
+            MainActivity activity = (MainActivity) mContext;
             mTransaction = activity.getSupportFragmentManager().beginTransaction();
         }
 
-            EditFrag fragment = new EditFrag();
-            mTransaction.add(mContainerId, fragment);
-            mTransaction.commit();
+        EditFrag fragment = new EditFrag();
+        mTransaction.add(mContainerId, fragment);
+        mTransaction.commit();
 
     }
 

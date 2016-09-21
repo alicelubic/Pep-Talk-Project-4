@@ -49,8 +49,8 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                setupNewFrag();
+            CustomDialog.launchNewPeptalkDialog(PepTalkListActivity.this);
+//                setupNewFrag();
             }
         });
 

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:initialLayout="@layout/widget_layout"
+    android:initialLayout="@layout/widget_emergency"
     android:minHeight="40dp"
-    android:minWidth="40dp"
+    android:minWidth="80dp"
     android:updatePeriodMillis="900000"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
-    android:previewImage="@drawable/ic_chat_bubble_outline_white_24dp"
+    android:previewImage="@drawable/ic_speech_bubble_with_exclamation_mark_1"
     />
 
     <!--android:configure="owlslubic.peptalkapp.views.MainActivity"-->

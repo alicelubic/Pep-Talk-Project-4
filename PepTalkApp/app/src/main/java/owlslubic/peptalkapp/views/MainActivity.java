@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9;
+    private static final String PREFS = "prefs";
     private BottomSheetBehavior mBottomSheetBehavior;
     private TextView mBottomSheetHeading, mBottomSheetTopText, mWelcomeTextView,
             mSigninPromptTextView, mSigninTextView, mResource1, mResource2, mResource3, mResource4, mLaunchFragMain;
@@ -417,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements
     private void insertContentOnNewAccountCreated() {
         //shared prefs to make sure this only runs one time
         boolean b;
-        SharedPreferences mPrefs = getSharedPreferences("PREFS_NAME", 0);
+        SharedPreferences mPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         b = mPrefs.getBoolean("FIRST_RUN", false);
         if (!b) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -434,10 +435,9 @@ public class MainActivity extends AppCompatActivity implements
                 NewFrag.writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment));
                 NewFrag.writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing));
                 NewFrag.writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt));
-
             }
 
-            mPrefs = getSharedPreferences("PREFS_NAME", 0);
+            mPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = mPrefs.edit();
             editor.putBoolean("FIRST_RUN", true);
             editor.commit();
@@ -491,9 +491,8 @@ public class MainActivity extends AppCompatActivity implements
         switch (view.getId()) {
             case R.id.fablet_checklist:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//                    launchNewChecklistDialog(this);
-
-                    setupFrag(R.id.fablet_checklist);
+                    launchNewChecklistDialog(this);
+//                    setupFrag(R.id.fablet_checklist);
 
                     mFrameLayout.getBackground().setAlpha(0);
                     mFrameLayout.setOnTouchListener(null);
@@ -511,8 +510,8 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.fablet_peptalk:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//                    launchNewPeptalkDialog(this);
-                    setupFrag(R.id.fablet_peptalk);
+                    launchNewPeptalkDialog(this);
+//                    setupFrag(R.id.fablet_peptalk);
 
                     mFrameLayout.getBackground().setAlpha(0);
                     mFrameLayout.setOnTouchListener(null);

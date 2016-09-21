@@ -55,7 +55,8 @@ public class ChecklistActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setupNewFrag();
+//                setupNewFrag();
+                CustomDialog.launchNewChecklistDialog(ChecklistActivity.this);
             }
         });
 
