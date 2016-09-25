@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:gravity="center"
+    android:background="@color/myPrimaryLightBlue">
+
+    <ImageButton
+        android:id="@+id/imagebutton_frag_view_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:src="@drawable/ic_mode_edit_white_24dp"
+        android:backgroundTint="@color/myPrimaryLightBlue"/>
+
+    <TextView
+        android:id="@+id/textview_frag_view_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:padding="16dp"/>
+    <TextView
+        android:id="@+id/textview_frag_view_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:padding="16dp"
+        android:layout_gravity="center_vertical"
+        />
 
 </LinearLayout>

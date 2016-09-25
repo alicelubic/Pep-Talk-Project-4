@@ -4,15 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -26,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
-import owlslubic.peptalkapp.views.fragments.EditFrag;
 
 /**
  * Created by owlslubic on 8/30/16.
@@ -49,7 +44,7 @@ public class CustomDialog extends AlertDialog {
 
     //THESE METHODS LAUNCH THE CREATE AND EDIT DIALOGS
 
-
+/*
     public static void launchNewPeptalkDialog(final Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -229,14 +224,13 @@ public class CustomDialog extends AlertDialog {
         dialog.show();
 
         final EditText editText = (EditText) dialog.findViewById(R.id.edittext_edit_checklist);
-        editText.setText(check.getText());
+        editText.setText(check.getTitle());
         editText.setCursorVisible(true);
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
 
         final EditText editText2 = (EditText) dialog.findViewById(R.id.edittext_edit_checklist_notes);
         editText2.setMovementMethod(new ScrollingMovementMethod());
-        editText2.setText(check.getNotes());
         editText2.setCursorVisible(true);
         editText2.setFocusableInTouchMode(true);
         editText2.requestFocus();
@@ -259,7 +253,7 @@ public class CustomDialog extends AlertDialog {
             }
         });
     }
-
+*/
 
     public static void launchDeletePepTalkDialog(final PepTalkObject peptalk, final Context context) {
 
@@ -336,13 +330,13 @@ public class CustomDialog extends AlertDialog {
                     }
                 });
                 //replace with snackbar
-                Toast.makeText(context, "\"" + check.getText() + "\" deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "\"" + check.getTitle() + "\" deleted", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
 
     }
-
+/*
     public static void launchViewPepTalk(final PepTalkObject peptalk, final Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.full_screen_dialog);
@@ -362,7 +356,7 @@ public class CustomDialog extends AlertDialog {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchEditPeptalkDialog(context, peptalk);
+//                launchEditPeptalkDialog(context, peptalk);
             }
         });
 
@@ -383,7 +377,7 @@ public class CustomDialog extends AlertDialog {
         notes.setMovementMethod(new ScrollingMovementMethod());
         ImageButton edit = (ImageButton) dialog.findViewById(R.id.imagebutton_edit_peptalk);
 
-        title.setText(check.getText());
+        title.setText(check.getTitle());
         notes.setText(check.getNotes());
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -460,7 +454,7 @@ public class CustomDialog extends AlertDialog {
         mPeptalkRef.child(pepTalkObject.getKey()).child("isWidgetDefault").setValue(b);
         return b;
     }
-
+*/
     public static void launchAddWidgetTextDialog(final Context context){
         //decided to just add text straight to this because grabbing the text from firebase has proved more complicated than expected
 

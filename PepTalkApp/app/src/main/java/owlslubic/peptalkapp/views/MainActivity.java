@@ -27,7 +27,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -35,8 +34,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
 
 import owlslubic.peptalkapp.R;
-import owlslubic.peptalkapp.models.PepTalkObject;
-import owlslubic.peptalkapp.views.fragments.EditFrag;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 import owlslubic.peptalkapp.views.fragments.RecyclerViewFrag;
 
@@ -625,6 +622,7 @@ public class MainActivity extends AppCompatActivity implements
         args.putString(NewFrag.OBJECT_TYPE, objectType);
         fragment.setArguments(args);
         transaction.add(R.id.framelayout_main_frag_container, fragment);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 

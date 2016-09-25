@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +79,15 @@ public class NewFrag extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mTitle.setMovementMethod(new ScrollingMovementMethod());
+        mTitle.setCursorVisible(true);
+        mTitle.setFocusableInTouchMode(true);
+        mTitle.requestFocus();
+        mBody.setMovementMethod(new ScrollingMovementMethod());
+        mBody.setCursorVisible(true);
+        mBody.setFocusableInTouchMode(true);
+        mBody.requestFocus();
 
         if (mNewOrEdit.equals(NEW)) {
             if (mObjectType.equals(CHECKLIST)) {

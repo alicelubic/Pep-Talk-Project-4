@@ -1,8 +1,6 @@
 package owlslubic.peptalkapp.presenters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,22 +9,16 @@ import android.util.Log;
 import android.view.View;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import owlslubic.peptalkapp.R;
-import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.views.CustomDialog;
 import owlslubic.peptalkapp.views.MainActivity;
 import owlslubic.peptalkapp.views.PepTalkListActivity;
-import owlslubic.peptalkapp.views.fragments.EditFrag;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
-import owlslubic.peptalkapp.views.fragments.RecyclerViewFrag;
-
-import static com.facebook.GraphRequest.TAG;
+import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
 /**
  * Created by owlslubic on 9/1/16.
@@ -75,27 +67,16 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             holder.mEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                        CustomDialog.launchEditPeptalkDialog(mContext, model);
                     setupEditPeptalkFrag(model);
-
-
                 }
             });
-
 
         } else {//not in main activity, it's in peptalkactivity
             holder.mTitle.setText(model.getTitle());
             holder.mCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    CustomDialog.launchViewPepTalk(model, mContext);
-                    //TODO pass model data and launch view fragment!
-                    /**temp usage here*/
-                    setupEditPeptalkFrag(model);
-
-                    Log.d(TAG, "onClick on cardview setupEditFrag was called");
-
-
+                    setupViewPeptalkFrag(model);
                 }
             });
 
@@ -142,7 +123,27 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
 
     }
 
+    /** PLEASE FIND A NICE WAY TO DO THIS NEATLY WITHOUT SO MUCH REPETITION */
 
+    public void setupViewPeptalkFrag(PepTalkObject model) {
+        mTransaction = mFragmentManager.beginTransaction();
+        ViewFrag fragment = new ViewFrag();
+        Bundle args = new Bundle();
+        args.putString(NewFrag.OBJECT_TYPE, NewFrag.PEPTALKS);
+        args.putString(NewFrag.NEW_OR_EDIT, ViewFrag.VIEW);
+        args.putString(NewFrag.KEY, model.getKey());
+        args.putString(NewFrag.TOP_TEXT, model.getTitle());
+        args.putString(NewFrag.BOTTOM_TEXT, model.getBody());
+        fragment.setArguments(args);
+
+        if(mContext instanceof MainActivity){//would that be recyclerview frag?
+            mContainerId = R.id.framelayout_main_frag_container;
+        }else if(mContext instanceof PepTalkListActivity){
+            mContainerId = R.id.peptalk_activity_frag_container;
+        }
+        mTransaction.add(mContainerId, fragment);
+        mTransaction.commit();
+    }
     public void setupEditPeptalkFrag(PepTalkObject model) {
         mTransaction = mFragmentManager.beginTransaction();
         NewFrag fragment = new NewFrag();
@@ -160,10 +161,9 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             mContainerId = R.id.peptalk_activity_frag_container;
         }
         mTransaction.add(mContainerId, fragment);
-
-
         mTransaction.commit();
     }
+
 
 }
 

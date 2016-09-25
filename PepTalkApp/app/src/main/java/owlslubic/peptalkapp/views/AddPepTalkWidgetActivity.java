@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 import owlslubic.peptalkapp.R;
+import owlslubic.peptalkapp.views.fragments.NewFrag;
 
 /**
  * Created by owlslubic on 9/20/16.
@@ -46,7 +47,7 @@ public class AddPepTalkWidgetActivity extends AppCompatActivity {
                     mBody.setError("oops! please enter valid text");
                 } else {
                     if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                        CustomDialog.writeNewPeptalk(titleInput, bodyInput);
+                        NewFrag.writeNewPeptalk(titleInput, bodyInput);
                         Toast.makeText(AddPepTalkWidgetActivity.this, "pep talk added", Toast.LENGTH_SHORT).show();
                         finish();
                     } else {

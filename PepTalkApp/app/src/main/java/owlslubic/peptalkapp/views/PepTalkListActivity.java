@@ -19,9 +19,7 @@ import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 import owlslubic.peptalkapp.presenters.SimpleItemTouchHelperCallback;
-import owlslubic.peptalkapp.views.fragments.EditFrag;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
-import owlslubic.peptalkapp.views.fragments.RecyclerViewFrag;
 
 public class PepTalkListActivity extends AppCompatActivity {// implements OnStartDragListener {
 
