@@ -46,7 +46,7 @@ public class ChecklistActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mFirebaseAdapter = new ChecklistFirebaseAdapter(ChecklistItemObject.class, R.layout.card_checklist,
-                ChecklistViewHolder.class, mChecklistRef, this);
+                ChecklistViewHolder.class, mChecklistRef, this, getSupportFragmentManager());
         recyclerView.setAdapter(mFirebaseAdapter);
 
 
@@ -55,25 +55,26 @@ public class ChecklistActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                setupNewFrag();
-                CustomDialog.launchNewChecklistDialog(ChecklistActivity.this);
+                setupNewFrag();
+//                CustomDialog.launchNewChecklistDialog(ChecklistActivity.this);
             }
         });
 
 
     }
 
-    //TODO put all these methods together and not here, it shouldnt be replicated in each frag
     public void setupNewFrag() {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         NewFrag fragment = new NewFrag();
-        transaction.add(R.id.framelayout_main_frag_container, fragment);
-
-        fragment.mTitle.setText("What do you want to add to your checklist?");
-        fragment.mBody.setText("Any notes on this?");
+        Bundle args = new Bundle();
+        args.putString(NewFrag.NEW_OR_EDIT, NewFrag.NEW);
+        args.putString(NewFrag.OBJECT_TYPE, NewFrag.CHECKLIST);
+        fragment.setArguments(args);
+        transaction.add(R.id.checklist_activity_frag_container, fragment);
         transaction.commit();
     }
+
 
 
 }

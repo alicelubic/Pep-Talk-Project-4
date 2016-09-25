@@ -2,6 +2,8 @@ package owlslubic.peptalkapp.presenters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -19,6 +21,7 @@ import owlslubic.peptalkapp.views.CustomDialog;
 import owlslubic.peptalkapp.views.MainActivity;
 import owlslubic.peptalkapp.views.PepTalkListActivity;
 import owlslubic.peptalkapp.views.fragments.EditFrag;
+import owlslubic.peptalkapp.views.fragments.NewFrag;
 
 /**
  * Created by owlslubic on 9/2/16.
@@ -28,36 +31,29 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
     Context mContext;
     int mContainerId;
     FragmentTransaction mTransaction;
+    FragmentManager mFragmentManager;
 
-    public ChecklistFirebaseAdapter(Class<ChecklistItemObject> modelClass, int modelLayout, Class<ChecklistViewHolder> viewHolderClass, DatabaseReference ref, Context mContext) {
+    public ChecklistFirebaseAdapter(Class<ChecklistItemObject> modelClass, int modelLayout,
+                                    Class<ChecklistViewHolder> viewHolderClass, DatabaseReference ref,
+                                    Context context, FragmentManager fragmentManager) {
         super(modelClass, modelLayout, viewHolderClass, ref);
-        this.mContext = mContext;
+        mContext = context;
+        mFragmentManager = fragmentManager;
     }
 
     @Override
     protected void populateViewHolder(ChecklistViewHolder holder, final ChecklistItemObject model, int position) {
 
-        SharedPreferences prefs = mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("check_text", model.getText());
-        editor.putString("check_notes", model.getNotes());
-        editor.putString("check_key", model.getKey());
-        editor.putBoolean("checklist",true);
-
-        editor.putString("object_type", "checklist");
-        editor.commit();
-
-        Log.d(TAG, "checklist adapter populateViewHolder: "+ prefs.getString("check_text","default"));
 
         holder.mItem.setText(model.getText());
 
         holder.mCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CustomDialog.launchViewChecklist(model, mContext);
+//                CustomDialog.launchViewChecklist(model, mContext);
 
                 /**this will launch view, not edit, but this is temp*/
-//                setupEditFrag();
+                setupEditChecklistFrag(model);
             }
         });
 
@@ -105,6 +101,26 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
         EditFrag fragment = new EditFrag();
         mTransaction.add(mContainerId, fragment);
         mTransaction.commit();
+
+    }
+
+    public void setupEditChecklistFrag(ChecklistItemObject model) {
+
+        mTransaction = mFragmentManager.beginTransaction();
+        NewFrag fragment = new NewFrag();
+        Bundle args = new Bundle();
+        args.putString(NewFrag.OBJECT_TYPE, NewFrag.CHECKLIST);
+        args.putString(NewFrag.NEW_OR_EDIT, NewFrag.EDIT);
+        args.putString(NewFrag.KEY, model.getKey());
+        args.putString(NewFrag.TOP_TEXT, model.getText());
+        args.putString(NewFrag.BOTTOM_TEXT, model.getNotes());
+        fragment.setArguments(args);
+
+
+        mTransaction.add(R.id.checklist_activity_frag_container, fragment);
+        mTransaction.commit();
+
+
 
     }
 

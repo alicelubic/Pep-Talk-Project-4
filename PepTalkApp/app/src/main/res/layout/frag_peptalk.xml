@@ -5,10 +5,6 @@
     android:background="@color/mySecondaryBlue">
 
     <!--the recyclerview is here, the textviews are in the card-->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <ImageButton
         android:id="@+id/imagebutton_frag_back"
@@ -17,7 +13,13 @@
         android:layout_height="wrap_content"
         android:background="@color/mySecondaryBlue"
         android:layout_gravity="top"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="12dp"
+        android:padding="12dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginLeft="16dp"
         />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>

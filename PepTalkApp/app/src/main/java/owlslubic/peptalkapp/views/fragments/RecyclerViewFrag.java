@@ -53,19 +53,6 @@ public class RecyclerViewFrag extends Fragment {
     public FirebaseRecyclerAdapter mFirebaseAdapter;
     RecyclerView mFragRecycler;
 
-    //i'm gonna use this to display the peptalk from the list activity too'?
-
-
-//    public static MyFragment newInstance(PepTalkObject peptalk){//}, String title, String body) {
-//        MyFragment frag = new MyFragment();
-//        Bundle args = new Bundle();
-//        args.putString("title", peptalk.getTitle());
-//        args.putString("body", peptalk.getBody());
-//        frag.setArguments(args);
-//        return frag;
-//    }
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +90,7 @@ public class RecyclerViewFrag extends Fragment {
 
         mFragRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class, R.layout.frag_card,
-                PepTalkViewHolder.class, mPeptalkRef, view.getContext());
+                PepTalkViewHolder.class, mPeptalkRef, view.getContext(), getFragmentManager());
         mFragRecycler.setAdapter(mFirebaseAdapter);
 
         SnapHelper snapHelper = new LinearSnapHelper();
@@ -117,8 +104,6 @@ public class RecyclerViewFrag extends Fragment {
 
     }
 
-
-    //does this go in the main activity or?
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -128,29 +113,3 @@ public class RecyclerViewFrag extends Fragment {
 
 
 }
-
-//
-//public class MyViewPagerAdapter extends PagerAdapter{
-//
-//
-//    //get db data and add to an array list of strings?
-//    //define where all the data is in the beginning, in the constructor
-//
-//    //viewpager should create arraylist of fragments - add the data and then add it to the list
-//
-//
-//
-//    @Override
-//    public int getCount() {
-//        //get size of fragment array list
-//
-//        return 0;
-//    }
-//
-//    @Override
-//    public boolean isViewFromObject(View view, Object object) {
-//        return false;
-//    }
-//
-//
-//}

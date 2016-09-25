@@ -491,8 +491,8 @@ public class MainActivity extends AppCompatActivity implements
         switch (view.getId()) {
             case R.id.fablet_checklist:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    launchNewChecklistDialog(this);
-//                    setupFrag(R.id.fablet_checklist);
+//                    launchNewChecklistDialog(this);
+                    setupNewFrag(NewFrag.CHECKLIST);
 
                     mFrameLayout.getBackground().setAlpha(0);
                     mFrameLayout.setOnTouchListener(null);
@@ -510,8 +510,9 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.fablet_peptalk:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    launchNewPeptalkDialog(this);
-//                    setupFrag(R.id.fablet_peptalk);
+//                    launchNewPeptalkDialog(this);
+                    setupNewFrag(NewFrag.PEPTALKS);
+
 
                     mFrameLayout.getBackground().setAlpha(0);
                     mFrameLayout.setOnTouchListener(null);
@@ -612,6 +613,19 @@ public class MainActivity extends AppCompatActivity implements
                 break;
         }
 
+    }
+
+    /**this is currently living here because it needed to be static in the frag to be called int he activity, but then i couldnt get frag manager*/
+    public void setupNewFrag(String objectType) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        NewFrag fragment = new NewFrag();
+        Bundle args = new Bundle();
+        args.putString(NewFrag.NEW_OR_EDIT, NewFrag.NEW);
+        args.putString(NewFrag.OBJECT_TYPE, objectType);
+        fragment.setArguments(args);
+        transaction.add(R.id.framelayout_main_frag_container, fragment);
+        transaction.commit();
     }
 
 

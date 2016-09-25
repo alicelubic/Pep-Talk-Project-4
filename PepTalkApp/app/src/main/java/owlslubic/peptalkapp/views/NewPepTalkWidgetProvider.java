@@ -19,19 +19,26 @@ import owlslubic.peptalkapp.R;
 public class NewPepTalkWidgetProvider extends AppWidgetProvider {
     private static final String TAG = "NewWidgetProvider";
     private static final String NEWPEPTALK = "newPepTalk";
-    private RemoteViews mRemoteViews;
+    RemoteViews mRemoteViews;
+
+
+    /**THIS WORKS ONE TIME, AND IT SEEMS LIKE THE INTENT HASN'T BEEN UPDATED BECAUSE IT DOESN'T WORK THEN...*/
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
 
+            mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_new_peptalk);
+
+
             //intent for onclick
             Intent intent = new Intent(context, NewPepTalkWidgetProvider.class);
             intent.setAction(NEWPEPTALK);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0);
-
-            mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_new_peptalk);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context,1,intent, PendingIntent.FLAG_UPDATE_CURRENT);
             mRemoteViews.setOnClickPendingIntent(R.id.widget_imageview, pendingIntent);
+            appWidgetManager.updateAppWidget(appWidgetId, mRemoteViews);
 
             //then update
             appWidgetManager.updateAppWidget(appWidgetId, mRemoteViews);
@@ -52,8 +59,10 @@ public class NewPepTalkWidgetProvider extends AppWidgetProvider {
             context.startActivity(intent1);
         }
 
+        Toast.makeText(context, "works!", Toast.LENGTH_SHORT).show();
 
-        //update to reflect change
+
+//        update to reflect change
         ComponentName componentName = new ComponentName(context, NewPepTalkWidgetProvider.class);
         AppWidgetManager.getInstance(context).updateAppWidget(componentName, mRemoteViews);
     }

@@ -49,8 +49,8 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            CustomDialog.launchNewPeptalkDialog(PepTalkListActivity.this);
-//                setupNewFrag();
+//            CustomDialog.launchNewPeptalkDialog(PepTalkListActivity.this);
+                setupNewFrag();
             }
         });
 
@@ -72,7 +72,7 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
 
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class,
                 R.layout.card_peptalk, PepTalkViewHolder.class, mPeptalkRef,
-                this);//, this); took out the onstartdrag listener
+                this, getSupportFragmentManager());//, this); took out the onstartdrag listener
         recyclerView.setAdapter(mFirebaseAdapter);
 
 
@@ -136,31 +136,18 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
     }
 */
 
-    /** find out if you can set the view texts like this right in the method...
-     * and if so, copy this over to the ChecklistActivity*/
 
-    public void setupNewFrag(){
+    public void setupNewFrag() {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         NewFrag fragment = new NewFrag();
-        transaction.add(R.id.framelayout_main_frag_container, fragment);
-
-        fragment.mTitle.setText("Give your new pep talk a title");
-        fragment.mBody.setText("Everything is going to be okay because...");
+        Bundle args = new Bundle();
+        args.putString(NewFrag.NEW_OR_EDIT, NewFrag.NEW);
+        args.putString(NewFrag.OBJECT_TYPE, NewFrag.PEPTALKS);
+        fragment.setArguments(args);
+        transaction.add(R.id.peptalk_activity_frag_container, fragment);
         transaction.commit();
     }
-
-    public void setupEditFrag(PepTalkObject model) {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        EditFrag fragment = new EditFrag();
-        transaction.add(R.id.framelayout_main_frag_container, fragment);
-
-        fragment.mTitle.setText(model.getTitle());
-        fragment.mBody.setText(model.getTitle());
-        transaction.commit();
-    }
-
 
 
 

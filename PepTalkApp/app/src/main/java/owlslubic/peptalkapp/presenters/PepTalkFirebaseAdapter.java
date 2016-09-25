@@ -3,6 +3,7 @@ package owlslubic.peptalkapp.presenters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.method.ScrollingMovementMethod;
@@ -16,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import owlslubic.peptalkapp.R;
+import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.views.CustomDialog;
 import owlslubic.peptalkapp.views.MainActivity;
@@ -37,15 +39,19 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
     private Context mContext;
     int mContainerId;
     FragmentTransaction mTransaction;
+    FragmentManager mFragmentManager;
 
     private static final String TAG = "PepTalkFirebaseAdapter";
 
 
-    public PepTalkFirebaseAdapter(Class<PepTalkObject> modelClass, int modelLayout, Class<PepTalkViewHolder> viewHolderClass, Query ref, Context context) {//OnStartDragListener onStartDragListener, Context context){
+    public PepTalkFirebaseAdapter(Class<PepTalkObject> modelClass, int modelLayout,
+                                  Class<PepTalkViewHolder> viewHolderClass, Query ref,
+                                  Context context, FragmentManager fragmentManager) {//OnStartDragListener onStartDragListener, Context context){
         super(modelClass, modelLayout, viewHolderClass, ref);
         mRef = ref.getRef();
 //        mOnStartDragListener = onStartDragListener;
         mContext = context;
+        mFragmentManager = fragmentManager;
     }
 
     @Override
@@ -69,23 +75,8 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             holder.mEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                        CustomDialog.launchEditPeptalkDialog(mContext, model);
-                    //TODO pass model data using CALLBACKS and launch edit fragment!
-                    /** shared pref approach might work, but will it update for each new data model?
-                     *REALLY I GOTTA BE USING CALLBACKS FOR THIS. FIGURE THAT OUT*/
-
-
-                    SharedPreferences prefs = mContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("peptalk_title", model.getTitle());
-                    editor.putString("peptalk_body", model.getBody());
-                    editor.putString("peptalk_key", model.getKey());
-                    editor.putBoolean("peptalk", true);
-
-                    editor.putString("object_type","peptalk");
-                    editor.apply();
-
-//                    setupEditFrag();
+//                        CustomDialog.launchEditPeptalkDialog(mContext, model);
+                    setupEditPeptalkFrag(model);
 
 
                 }
@@ -97,10 +88,11 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             holder.mCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CustomDialog.launchViewPepTalk(model, mContext);
+//                    CustomDialog.launchViewPepTalk(model, mContext);
                     //TODO pass model data and launch view fragment!
                     /**temp usage here*/
-//                    setupEditFrag();
+                    setupEditPeptalkFrag(model);
+
                     Log.d(TAG, "onClick on cardview setupEditFrag was called");
 
 
@@ -151,23 +143,26 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
     }
 
 
-    public void setupEditFrag() {
+    public void setupEditPeptalkFrag(PepTalkObject model) {
+        mTransaction = mFragmentManager.beginTransaction();
+        NewFrag fragment = new NewFrag();
+        Bundle args = new Bundle();
+        args.putString(NewFrag.OBJECT_TYPE, NewFrag.PEPTALKS);
+        args.putString(NewFrag.NEW_OR_EDIT, NewFrag.EDIT);
+        args.putString(NewFrag.KEY, model.getKey());
+        args.putString(NewFrag.TOP_TEXT, model.getTitle());
+        args.putString(NewFrag.BOTTOM_TEXT, model.getBody());
+        fragment.setArguments(args);
 
-        if (mContext.getClass() == PepTalkListActivity.class) {
-            mContainerId = R.id.peptalk_activity_frag_container;
-            PepTalkListActivity activity = (PepTalkListActivity) mContext;
-            mTransaction = activity.getSupportFragmentManager().beginTransaction();
-        } else if (mContext.getClass() == MainActivity.class) {
-            Log.d(TAG, "setupEditFrag class is: " + mContext.getClass().toString());
+        if(mContext instanceof MainActivity){//would that be recyclerview frag?
             mContainerId = R.id.framelayout_main_frag_container;
-            MainActivity activity = (MainActivity) mContext;
-            mTransaction = activity.getSupportFragmentManager().beginTransaction();
+        }else if(mContext instanceof PepTalkListActivity){
+            mContainerId = R.id.peptalk_activity_frag_container;
         }
-
-        EditFrag fragment = new EditFrag();
         mTransaction.add(mContainerId, fragment);
-        mTransaction.commit();
 
+
+        mTransaction.commit();
     }
 
 }

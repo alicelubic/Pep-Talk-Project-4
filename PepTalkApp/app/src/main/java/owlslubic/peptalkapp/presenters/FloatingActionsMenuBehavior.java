@@ -1,4 +1,4 @@
-package owlslubic.peptalkapp;
+package owlslubic.peptalkapp.presenters;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
