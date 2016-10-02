@@ -18,12 +18,17 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Date;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
+import owlslubic.peptalkapp.presenters.DBHelper;
+import owlslubic.peptalkapp.presenters.FragmentMethods;
 import owlslubic.peptalkapp.views.ChecklistActivity;
 import owlslubic.peptalkapp.views.MainActivity;
 import owlslubic.peptalkapp.views.PepTalkListActivity;
@@ -49,6 +54,7 @@ public class NewFrag extends Fragment implements View.OnClickListener {
     public static final String KEY = "key";
     public static final String NEW = "new";
     public static final String EDIT = "edit";
+    private static final String NEW_FRAG_TAG = "new_frag_tag";
     public EditText mTitle, mBody;
     public ImageButton mDone, mCancel;
     String mObjectType, mNewOrEdit, mKey, mTitleText, mBodyText;
@@ -80,6 +86,8 @@ public class NewFrag extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+
         mTitle.setMovementMethod(new ScrollingMovementMethod());
         mTitle.setCursorVisible(true);
         mTitle.setFocusableInTouchMode(true);
@@ -88,7 +96,6 @@ public class NewFrag extends Fragment implements View.OnClickListener {
         mBody.setCursorVisible(true);
         mBody.setFocusableInTouchMode(true);
         mBody.requestFocus();
-
         if (mNewOrEdit.equals(NEW)) {
             if (mObjectType.equals(CHECKLIST)) {
                 mTitle.setHint("What do you want to add to your checklist?");
@@ -103,11 +110,8 @@ public class NewFrag extends Fragment implements View.OnClickListener {
             mTitle.setText(mTitleText);
             mBody.setText(mBodyText);
         }
-
-
         mDone.setOnClickListener(this);
-
-
+        mCancel.setOnClickListener(this);
     }
 
     @Override
@@ -116,54 +120,6 @@ public class NewFrag extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
     }
 
-
-    public static void writeNewPeptalk(String title, String body) {//, boolean isWidgetDefault) {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
-            DatabaseReference pepKey = peptalkRef.push();
-            String key = pepKey.getKey();
-            final PepTalkObject peptalk = new PepTalkObject(key, title, body, false);
-            pepKey.setValue(peptalk);
-        } else {
-            //TODO let the user know it didn't work
-        }
-    }
-
-    public static void writeNewChecklist(String text, String notes) {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(CHECKLIST);
-            DatabaseReference itemKey = checklistRef.push();//this creates the unique key, but no data
-            String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
-            final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
-            itemKey.setValue(item);
-            Log.d(TAG, "writeNewChecklist: new key is: " + key);
-        } else {
-            //TODO let the user know it didn't work
-        }
-    }
-
-    public void updatePepTalk(String key, String title, String body) {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
-            peptalkRef.child(key).child(PEPTALK_TITLE).setValue(title);
-            peptalkRef.child(key).child(PEPTALK_BODY).setValue(body);
-            Log.d(TAG, "updatePepTalk: key is: " + key);
-            Log.d(TAG, "updatePepTalk: new title is: " + title);
-        }
-    }
-
-    public void updateChecklist(String key, String text, String notes) {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(CHECKLIST);
-
-            checklistRef.child(key).child(CHECKLIST_TEXT).setValue(text);
-            checklistRef.child(key).child(CHECKLIST_NOTES).setValue(notes);
-        }
-    }
 
     @Override
     public void onClick(View view) {
@@ -177,27 +133,29 @@ public class NewFrag extends Fragment implements View.OnClickListener {
                 //first check for valid input
                 if (titleInput.equalsIgnoreCase("") || titleInput.equalsIgnoreCase(" ")) {
                     mTitle.setError("oops! please enter a valid title");
-                } else if (mObjectType.equals(PEPTALKS)&& (bodyInput.equalsIgnoreCase("") || bodyInput.equalsIgnoreCase(" "))) {
+                } else if (mObjectType.equals(PEPTALKS) && (bodyInput.equalsIgnoreCase("") || bodyInput.equalsIgnoreCase(" "))) {
                     mBody.setError("oops! please enter valid text");
                 } else {
+
                     //then write to database
                     if (mObjectType.equals(CHECKLIST)) {
                         if (mNewOrEdit.equals(NEW)) {
-                            writeNewChecklist(titleInput, bodyInput);
+                            DBHelper.writeNewChecklist(titleInput, bodyInput, getContext());
                             Toast.makeText(getContext(), "checklist item added", Toast.LENGTH_SHORT).show();
                         } else if (mNewOrEdit.equals(EDIT)) {
-                            updateChecklist(mKey, titleInput, bodyInput);
+                            DBHelper.updateChecklist(mKey, titleInput, bodyInput);
                             Toast.makeText(getContext(), "checklist updated", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getContext(), "oops! something went wrong with new/edit checklist", Toast.LENGTH_SHORT).show();
                         }
 
+
                     } else if (mObjectType.equals(PEPTALKS)) {
                         if (mNewOrEdit.equals(NEW)) {
-                            writeNewPeptalk(titleInput, bodyInput);
+                            DBHelper.writeNewPeptalk(titleInput, bodyInput, getContext());
                             Toast.makeText(getContext(), "peptalk added", Toast.LENGTH_SHORT).show();
                         } else if (mNewOrEdit.equals(EDIT)) {
-                            updatePepTalk(mKey, titleInput, bodyInput);
+                            DBHelper.updatePepTalk(mKey, titleInput, bodyInput);
                             Toast.makeText(getContext(), "peptalk updated", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getContext(), "oops! something went wrong with new/edit peptalk", Toast.LENGTH_SHORT).show();
@@ -206,25 +164,16 @@ public class NewFrag extends Fragment implements View.OnClickListener {
                         Toast.makeText(getContext(), "oops! something went wrong", Toast.LENGTH_SHORT).show();
                     }
 
-                    determineActivityStartIntent(view);
+                    FragmentMethods.detachFragment(getActivity(), NEW_FRAG_TAG);
                 }
                 break;
             case R.id.imagebutton_fragment_cancel:
-                determineActivityStartIntent(view);
+                FragmentMethods.detachFragment(getActivity(), NEW_FRAG_TAG);
+
                 break;
         }
 
 
-    }
-
-    public void determineActivityStartIntent(View view) {
-        if (view.getContext() instanceof PepTalkListActivity) {
-            startActivity(new Intent(getActivity(), PepTalkListActivity.class));
-        } else if (view.getContext() instanceof ChecklistActivity) {
-            startActivity(new Intent(getActivity(), ChecklistActivity.class));
-        } else {
-            startActivity(new Intent(getActivity(), MainActivity.class));
-        }
     }
 
 

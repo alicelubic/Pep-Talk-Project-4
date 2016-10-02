@@ -51,7 +51,7 @@
             android:layout_gravity="bottom">
 
             <ImageButton
-                android:id="@+id/imagebutton_fragment_cancel"
+                android:id="@+id/imagebutton_widget_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"

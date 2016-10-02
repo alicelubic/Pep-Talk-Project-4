@@ -13,31 +13,41 @@ import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
 
 import owlslubic.peptalkapp.R;
+import owlslubic.peptalkapp.presenters.DBHelper;
+import owlslubic.peptalkapp.presenters.FragmentMethods;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 import owlslubic.peptalkapp.views.fragments.RecyclerViewFrag;
 
-import static owlslubic.peptalkapp.views.CustomDialog.*;
+import static owlslubic.peptalkapp.presenters.FragmentMethods.NEW_FRAG_TAG;
+import static owlslubic.peptalkapp.presenters.FragmentMethods.RECYCLERVIEW_FRAG_TAG;
+import static owlslubic.peptalkapp.presenters.FragmentMethods.VIEW_FRAG_TAG;
+
+
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -57,16 +67,21 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         //to handle offline usage - disk persistence
-        //TODO where can this live that it won't make stuff crash?
+//        //TODO where can this live that it won't make stuff crash?
 //        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
+//        ref.keepSynced(true);
 
 
         initViews();
         checkNetworkStatus();
+
     }
 
 
-    /**views stuffs*/
+    /**
+     * views stuffs
+     */
     private void initViews() {
 
         //fab and fablet business
@@ -173,21 +188,24 @@ public class MainActivity extends AppCompatActivity implements
 
 
     }
-    public void setupFrag(int id) {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        if (id == R.id.textview_main) {
-            RecyclerViewFrag fragment = new RecyclerViewFrag();
-            transaction.add(R.id.framelayout_main_frag_container, fragment);
-        } else {
-            NewFrag fragment = new NewFrag();
-            transaction.add(R.id.framelayout_main_frag_container, fragment);
-        }
-        transaction.commit();
-    }
+
+//    public void setupFrag(int id) {
+//        FragmentManager manager = getSupportFragmentManager();
+//        FragmentTransaction transaction = manager.beginTransaction();
+//        if (id == R.id.textview_main) {
+//            RecyclerViewFrag fragment = new RecyclerViewFrag();
+//            transaction.add(R.id.framelayout_main_frag_container, fragment, FragmentMethods.RECYCLERVIEW_FRAG_TAG);
+//        } else {
+//            NewFrag fragment = new NewFrag();
+//            transaction.add(R.id.framelayout_main_frag_container, fragment, FragmentMethods.NEW_FRAG_TAG);
+//        }
+//        transaction.commit();
+//    }
 
 
-    /**for logging in*/
+    /**
+     * for logging in
+     */
     public void myLoginMethod() {
         //first check if the user is already signed in
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -207,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("No network connection detected");
                 builder.setMessage("You won't be able to sign in until connection is restored");
-                builder.setPositiveButton("Check network", new OnClickListener() {
+                builder.setPositiveButton("Check network", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (isConnected) {
@@ -221,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                     }
                 });
-                builder.setNegativeButton("k", new OnClickListener() {
+                builder.setNegativeButton("k", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -242,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
@@ -262,27 +281,45 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    /**toolbar menu items*/
+    /**
+     * toolbar menu items
+     */
     @Override
     public void onBackPressed() {
+        Fragment newFrag = getSupportFragmentManager().findFragmentByTag(FragmentMethods.NEW_FRAG_TAG);
+        Fragment recyclerFrag = getSupportFragmentManager().findFragmentByTag(FragmentMethods.RECYCLERVIEW_FRAG_TAG);
+        Fragment viewFrag = getSupportFragmentManager().findFragmentByTag(FragmentMethods.VIEW_FRAG_TAG);
+
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
+        }
+
+        else if (newFrag != null && newFrag.isVisible()) {
+            FragmentMethods.addFragToBackStack(this, NEW_FRAG_TAG);
+        }
+        else if (recyclerFrag != null && recyclerFrag.isVisible()) {
+            FragmentMethods.detachFragment(this, RECYCLERVIEW_FRAG_TAG);
+        }
+        else if (viewFrag != null && viewFrag.isVisible()) {
+            FragmentMethods.addFragToBackStack(this, VIEW_FRAG_TAG);
         } else {
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.widget) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                CustomDialog.launchAddWidgetTextDialog(this);
+                launchAddWidgetTextDialog();
             } else {
                 Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to mess with your widget", Snackbar.LENGTH_SHORT);
                 snackbar.setAction("sign in", new View.OnClickListener() {
@@ -299,7 +336,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    /**nav drawer stuff*/
+    /**
+     * nav drawer stuff
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -363,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     private void launchBottomSheetFromNav() {
         //first close nav drawer
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
@@ -375,7 +415,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    /**launch external social apps for "friend reachout"*/
+    /**
+     * launch external social apps for "friend reachout"
+     */
     private boolean appInstalledOrNot(String uri) {
         PackageManager pm = getPackageManager();
         boolean appInstalled;
@@ -387,12 +429,14 @@ public class MainActivity extends AppCompatActivity implements
         }
         return appInstalled;
     }
+
     public void launchDefaultEmail() {
         Intent emailLauncher = new Intent(Intent.ACTION_VIEW);
         emailLauncher.addCategory(Intent.CATEGORY_DEFAULT);
         emailLauncher.setType("message/rfc822");
         startActivity(emailLauncher);
     }
+
     public void launchFacebook() {
         boolean installed = appInstalledOrNot("com.facebook.katana");
         if (installed) {
@@ -403,6 +447,7 @@ public class MainActivity extends AppCompatActivity implements
             snackbar.show();
         }
     }
+
     public void launchDefaultSMS() {
         Intent smsLauncher = new Intent(Intent.ACTION_MAIN);
         smsLauncher.addCategory(Intent.CATEGORY_DEFAULT);
@@ -411,7 +456,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    /**content*/
+    /**
+     * content
+     */
     private void insertContentOnNewAccountCreated() {
         //shared prefs to make sure this only runs one time
         boolean b;
@@ -419,19 +466,19 @@ public class MainActivity extends AppCompatActivity implements
         b = mPrefs.getBoolean("FIRST_RUN", false);
         if (!b) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                NewFrag.writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes));
-                NewFrag.writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes));
-                NewFrag.writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes));
-                NewFrag.writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes));
-                NewFrag.writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes));
-                NewFrag.writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes));
+                DBHelper.writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes), this); //TODO CHECK IF USING this AS CONTEXT MAKES IT NOT WORK???
+                DBHelper.writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes), this);
+                DBHelper.writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes), this);
+                DBHelper.writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes), this);
+                DBHelper.writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes), this);
+                DBHelper.writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes), this);
 
-                NewFrag.writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present));
-                NewFrag.writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions));
-                NewFrag.writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best));
-                NewFrag.writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment));
-                NewFrag.writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing));
-                NewFrag.writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt));
+                DBHelper.writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present), this);
+                DBHelper.writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions), this);
+                DBHelper.writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best), this);
+                DBHelper.writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment), this);
+                DBHelper.writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing), this);
+                DBHelper.writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt), this);
             }
 
             mPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
@@ -443,7 +490,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    /** can't produce plays with internettie*/
+    /**
+     * can't produce plays with internettie
+     */
     public void checkNetworkStatus() {
         ConnectivityManager cm =
                 (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -456,7 +505,7 @@ public class MainActivity extends AppCompatActivity implements
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("No network connection detected");
             builder.setMessage("You may not be able to access your pep talks from our database until connection is restored");
-            builder.setPositiveButton("Check network", new OnClickListener() {
+            builder.setPositiveButton("Check network", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if (isConnected) {
@@ -470,7 +519,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 }
             });
-            builder.setNegativeButton("k", new OnClickListener() {
+            builder.setNegativeButton("k", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -482,14 +531,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    /**the beautiful switch statement*/
+    /**
+     * the beautiful switch statement
+     */
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fablet_checklist:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//                    launchNewChecklistDialog(this);
-                    setupNewFrag(NewFrag.CHECKLIST);
+                    FragmentMethods.setupNewFrag(NewFrag.CHECKLIST, this);
 
                     mFrameLayout.getBackground().setAlpha(0);
                     mFrameLayout.setOnTouchListener(null);
@@ -507,10 +557,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.fablet_peptalk:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//                    launchNewPeptalkDialog(this);
-                    setupNewFrag(NewFrag.PEPTALKS);
-
-
+                    FragmentMethods.setupNewFrag(NewFrag.PEPTALKS, MainActivity.this);
                     mFrameLayout.getBackground().setAlpha(0);
                     mFrameLayout.setOnTouchListener(null);
                     mFabMenu.collapse();
@@ -527,7 +574,7 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.textview_main:
                 //launch pep talk view
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    setupFrag(R.id.textview_main);
+                    FragmentMethods.setupMainActivityFrag(R.id.textview_main, this);
                 } else {
                     Snackbar snackbar = Snackbar.make(view, "Please sign in to view your peptalks", Snackbar.LENGTH_SHORT);
                     snackbar.setAction("sign in", new View.OnClickListener() {
@@ -612,20 +659,47 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    /**this is currently living here because it needed to be static in the frag to be called int he activity, but then i couldnt get frag manager*/
-    public void setupNewFrag(String objectType) {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        NewFrag fragment = new NewFrag();
-        Bundle args = new Bundle();
-        args.putString(NewFrag.NEW_OR_EDIT, NewFrag.NEW);
-        args.putString(NewFrag.OBJECT_TYPE, objectType);
-        fragment.setArguments(args);
-        transaction.add(R.id.framelayout_main_frag_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    public void launchAddWidgetTextDialog(){
+        //decided to just add text straight to this because
+        // grabbing the text from firebase has proved more complicated than expected
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View layout = inflater.inflate(R.layout.dialog_add_widget_text, null);
+        builder.setView(layout);
+        builder.setNegativeButton("nvm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setPositiveButton("cool", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        final EditText editText = (EditText) dialog.findViewById(R.id.edittext_dialog_widget);
+
+
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String widgetText = editText.getText().toString().trim();
+
+                SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("WIDGET_TEXT", widgetText);
+                editor.apply();
+                Toast.makeText(MainActivity.this, "Text set to widget", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+
+
     }
 
-
 }
-

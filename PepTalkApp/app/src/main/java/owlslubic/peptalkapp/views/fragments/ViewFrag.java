@@ -14,7 +14,9 @@ import android.widget.TextView;
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
+import owlslubic.peptalkapp.presenters.FragmentMethods;
 
+import static owlslubic.peptalkapp.presenters.FragmentMethods.setupEditFrag;
 import static owlslubic.peptalkapp.views.fragments.NewFrag.BOTTOM_TEXT;
 import static owlslubic.peptalkapp.views.fragments.NewFrag.CHECKLIST;
 import static owlslubic.peptalkapp.views.fragments.NewFrag.KEY;
@@ -31,9 +33,8 @@ public class ViewFrag extends Fragment {
 
 
     TextView mTopTextView, mBottomTextView;
-    String mTopText, mBottomText, mTitleText, mBodyText, mObjectType, mKey;
+    String mTitleText, mBodyText, mObjectType, mKey;
     ImageButton mEdit;
-    int mContainerId;
 
     @Nullable
     @Override
@@ -54,39 +55,15 @@ public class ViewFrag extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         mTopTextView.setText(mTitleText);
         mBottomTextView.setText(mBodyText);
         mEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setupEditFrag(mObjectType, mKey, mTitleText, mBodyText);
+                FragmentMethods.setupEditFrag(getActivity(), mObjectType, mKey, mTitleText, mBodyText);
             }
         });
     }
 
-
-    public void setupEditFrag(String objectType, String key, String title, String body) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        NewFrag fragment = new NewFrag();
-        Bundle args = new Bundle();
-        args.putString(NewFrag.OBJECT_TYPE, objectType);
-        args.putString(NewFrag.NEW_OR_EDIT, NewFrag.EDIT);
-        args.putString(KEY, key);
-        args.putString(NewFrag.TOP_TEXT, title);
-        args.putString(NewFrag.BOTTOM_TEXT, body);
-        fragment.setArguments(args);
-
-        if (objectType.equals(PEPTALKS)) {
-            mContainerId = R.id.peptalk_activity_frag_container;
-        } else if (objectType.equals(CHECKLIST)) {
-            mContainerId = R.id.checklist_activity_frag_container;
-        } else {
-            Log.d(TAG, "setupViewPeptalkFrag: CONTAINER ID INVALID");
-        }
-        transaction.replace(mContainerId, fragment);
-        transaction.addToBackStack(null);//what should this be if not null? idk?
-        transaction.commit();
-    }
 
 }

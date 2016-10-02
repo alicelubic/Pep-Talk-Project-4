@@ -59,7 +59,6 @@ public class NewPepTalkWidgetProvider extends AppWidgetProvider {
             context.startActivity(intent1);
         }
 
-        Toast.makeText(context, "works!", Toast.LENGTH_SHORT).show();
 
 
 //        update to reflect change

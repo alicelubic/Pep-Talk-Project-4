@@ -19,11 +19,11 @@ public class ChecklistItemObject {
 //        this.isChecked = isChecked;
     }
 
-    public String getTitle() {
+    public String getText() {
         return text;
     }
 
-    public void setTitle(String text) {
+    public void setText(String text) {
         this.text = text;
     }
 
@@ -36,11 +36,11 @@ public class ChecklistItemObject {
     }
 
 
-    public String getBody() {
+    public String getNotes() {
         return notes;
     }
 
-    public void setBody(String notes) {
+    public void setNotes(String notes) {
         this.notes = notes;
     }
 

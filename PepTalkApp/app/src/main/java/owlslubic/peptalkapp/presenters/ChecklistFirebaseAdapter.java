@@ -2,6 +2,7 @@ package owlslubic.peptalkapp.presenters;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -12,7 +13,6 @@ import com.google.firebase.database.DatabaseReference;
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
-import owlslubic.peptalkapp.views.CustomDialog;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
@@ -20,7 +20,7 @@ import owlslubic.peptalkapp.views.fragments.ViewFrag;
  * Created by owlslubic on 9/2/16.
  */
 public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistItemObject,ChecklistViewHolder> implements ItemTouchHelperAdapter {
-    private static final String TAG = "ChecklistFirebase";
+    private static final String TAG = "ChecklistFirebaseAdapter";
     Context mContext;
     int mContainerId;
     FragmentTransaction mTransaction;
@@ -38,27 +38,25 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
     protected void populateViewHolder(ChecklistViewHolder holder, final ChecklistItemObject model, int position) {
 
 
-        holder.mItem.setText(model.getTitle());
+        holder.mItem.setText(model.getText());
+        //TODO expand to show notes
 
         holder.mCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setupViewChecklistFrag(model);
+                FragmentMethods.setupViewFrag((FragmentActivity)mContext,NewFrag.CHECKLIST,model.getKey(), model.getText(), model.getNotes());
+
             }
         });
 
         holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                CustomDialog.launchDeleteChecklistDialog(model,mContext);
+                DBHelper.launchDeleteChecklistDialog(model, mContext);
                 return true;
             }
         });
     }
-
-
-
-
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
@@ -67,27 +65,6 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
 
     @Override
     public void onItemDismiss(int position, PepTalkObject peptalk) {
-
-    }
-
-
-
-
-
-    public void setupViewChecklistFrag(ChecklistItemObject model) {
-
-        mTransaction = mFragmentManager.beginTransaction();
-        NewFrag fragment = new NewFrag();
-        Bundle args = new Bundle();
-        args.putString(NewFrag.OBJECT_TYPE, NewFrag.CHECKLIST);
-        args.putString(NewFrag.KEY, model.getKey());
-        args.putString(NewFrag.NEW_OR_EDIT, ViewFrag.VIEW);
-        args.putString(NewFrag.TOP_TEXT, model.getTitle());
-        args.putString(NewFrag.BOTTOM_TEXT, model.getBody());
-        fragment.setArguments(args);
-
-        mTransaction.add(R.id.checklist_activity_frag_container, fragment);
-        mTransaction.commit();
 
     }
 

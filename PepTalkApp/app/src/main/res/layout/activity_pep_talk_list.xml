@@ -33,7 +33,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white_24dp"/>
+        android:src="@drawable/ic_add_white_24dp"
+        android:visibility="invisible"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_peptalklist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:progressDrawable="@android:drawable/progress_indeterminate_horizontal"
+        />
+
 </FrameLayout>
 
     <FrameLayout

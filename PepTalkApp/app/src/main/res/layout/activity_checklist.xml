@@ -40,7 +40,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white_24dp" />
+        android:src="@drawable/ic_add_white_24dp"
+        android:visibility="invisible"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_checklistactivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+        android:layout_gravity="center"/>
 
 
 </FrameLayout>

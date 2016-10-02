@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 import owlslubic.peptalkapp.models.PepTalkObject;
-import owlslubic.peptalkapp.views.CustomDialog;
 
 /**
  * Created by owlslubic on 9/1/16.

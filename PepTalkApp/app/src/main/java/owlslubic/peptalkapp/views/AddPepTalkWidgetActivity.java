@@ -13,15 +13,16 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 import owlslubic.peptalkapp.R;
+import owlslubic.peptalkapp.presenters.DBHelper;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 
 /**
  * Created by owlslubic on 9/20/16.
  */
 
-public class AddPepTalkWidgetActivity extends AppCompatActivity {
+public class AddPepTalkWidgetActivity extends AppCompatActivity implements View.OnClickListener{
     EditText mTitle, mBody;
-    ImageButton mSubmit;
+    ImageButton mSubmit, mCancel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,11 +34,18 @@ public class AddPepTalkWidgetActivity extends AppCompatActivity {
         mTitle = (EditText) findViewById(R.id.edittext_widget_new_peptalk_title);
         mBody = (EditText) findViewById(R.id.edittext_widget_new_peptalk_body);
         mSubmit = (ImageButton) findViewById(R.id.button_widget_submit_activity);
+        mCancel = (ImageButton) findViewById(R.id.imagebutton_widget_cancel);
 
 
-        mSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mSubmit.setOnClickListener(this);
+        mCancel.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.button_widget_submit_activity:
                 String titleInput = mTitle.getText().toString().trim();
                 String bodyInput = mBody.getText().toString().trim();
 
@@ -47,7 +55,7 @@ public class AddPepTalkWidgetActivity extends AppCompatActivity {
                     mBody.setError("oops! please enter valid text");
                 } else {
                     if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                        NewFrag.writeNewPeptalk(titleInput, bodyInput);
+                        DBHelper.writeNewPeptalk(titleInput, bodyInput, AddPepTalkWidgetActivity.this);
                         Toast.makeText(AddPepTalkWidgetActivity.this, "pep talk added", Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
@@ -55,8 +63,10 @@ public class AddPepTalkWidgetActivity extends AppCompatActivity {
                     }
 
                 }
-            }
-        });
-
+                break;
+            case R.id.imagebutton_widget_cancel:
+                finish();
+                break;
+        }
     }
 }

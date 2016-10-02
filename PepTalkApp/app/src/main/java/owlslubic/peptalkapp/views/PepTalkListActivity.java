@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -16,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
+import owlslubic.peptalkapp.presenters.FragmentMethods;
 import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 import owlslubic.peptalkapp.presenters.SimpleItemTouchHelperCallback;
@@ -30,49 +33,52 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
     private PepTalkFirebaseAdapter mFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
     private DatabaseReference mPeptalkRef;
+    private ProgressBar mProgressBar;
+    private FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pep_talk_list);
 
-//        insertContentOnNewAccountCreated();
-
         getSupportActionBar().setTitle("Your Pep Talks");
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
 
         //fab launches new pep fragment
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_peptalk_list);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFab = (FloatingActionButton) findViewById(R.id.fab_peptalk_list);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//            CustomDialog.launchNewPeptalkDialog(PepTalkListActivity.this);
-                setupNewFrag();
+                FragmentMethods.setupNewFrag(NewFrag.PEPTALKS, PepTalkListActivity.this);
             }
         });
-
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_peptalklist);
 
         //recyclerview
-
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
         }
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-//        RecyclerView.LayoutManager manager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
-//        recyclerView.setLayoutManager(manager);
-
-
-
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setReverseLayout(true);
+        llm.setStackFromEnd(true);
+        recyclerView.setLayoutManager(llm);
+        //create adapter, add progress bar, set adapter
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class,
                 R.layout.card_peptalk, PepTalkViewHolder.class, mPeptalkRef,
                 this, getSupportFragmentManager());//, this); took out the onstartdrag listener
-        recyclerView.setAdapter(mFirebaseAdapter);
 
+        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                //once loaded, hide the progress bar
+                mProgressBar.setVisibility(View.GONE);
+                mFab.setVisibility(View.VISIBLE);
+            }
+        });
+        recyclerView.setAdapter(mFirebaseAdapter);
 
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);//, this, mFirebaseAdapter.get);
@@ -82,12 +88,12 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
 
     }
 
-/*    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        mItemTouchHelper.startDrag(viewHolder);
+    /*    @Override
+        public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+            mItemTouchHelper.startDrag(viewHolder);
 
-    }
-*/
+        }
+    */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -133,25 +139,6 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
         };
     }
 */
-
-
-    public void setupNewFrag() {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        NewFrag fragment = new NewFrag();
-        Bundle args = new Bundle();
-        args.putString(NewFrag.NEW_OR_EDIT, NewFrag.NEW);
-        args.putString(NewFrag.OBJECT_TYPE, NewFrag.PEPTALKS);
-        fragment.setArguments(args);
-        transaction.add(R.id.peptalk_activity_frag_container, fragment);
-        transaction.commit();
-    }
-
-
-
-
-
-
 
 
 }
