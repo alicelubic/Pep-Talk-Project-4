@@ -77,6 +77,7 @@
     <string name="icon_credit">Credit for the lovely icon goes to Jane Ruby.</string>
     <string name="enter_peptalk_title_hint">Enter title for this pep talk...</string>
     <string name="enter_peptalk_body_hint">Hey buddy, you\'re great because...</string>
+    <string name="signup_or_login">signup\nor login</string>
 
 
 </resources>

@@ -24,6 +24,11 @@
             android:id="@+id/nav_about"
             android:title="@string/about"
             android:icon="@drawable/cell_phone"/>
+        <item
+            android:id="@+id/nav_logout"
+            android:title="Logout"
+            android:icon="@drawable/chevron_down"
+            android:visible="false"/>
 
     </group>
 

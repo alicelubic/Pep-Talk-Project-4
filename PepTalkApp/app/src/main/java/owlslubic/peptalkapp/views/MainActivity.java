@@ -14,8 +14,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -41,7 +39,6 @@ import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.presenters.DBHelper;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
-import owlslubic.peptalkapp.views.fragments.RecyclerViewFrag;
 
 import static owlslubic.peptalkapp.presenters.FragmentMethods.NEW_FRAG_TAG;
 import static owlslubic.peptalkapp.presenters.FragmentMethods.RECYCLERVIEW_FRAG_TAG;
@@ -75,6 +72,13 @@ public class MainActivity extends AppCompatActivity implements
 
         initViews();
         checkNetworkStatus();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            setIsLogoutVisible(true);
+        } else {
+            setIsLogoutVisible(false);
+        }
+
 
     }
 
@@ -121,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             mLaunchFragMain.setText(R.string.need_a_pep_talk);
         } else {
-            mLaunchFragMain.setText("");
+            mLaunchFragMain.setText(R.string.signup_or_login);
         }
 
 
@@ -141,26 +145,27 @@ public class MainActivity extends AppCompatActivity implements
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
         //nav login header
         View headerView = navigationView.getHeaderView(0);
         mWelcomeTextView = (TextView) headerView.findViewById(R.id.textview_navheader_welcome);
         mSigninPromptTextView = (TextView) headerView.findViewById(R.id.textview_navheader_signin);
         mSigninTextView = (TextView) headerView.findViewById(R.id.navheader_signin);
         mSigninTextView.setOnClickListener(this);
-
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             //already signed in, so set text to sign out
-            mSigninTextView.setText(R.string.sign_out);
-            mSigninPromptTextView.setText("");
+//            mSigninTextView.setText(R.string.sign_out);
+//            mSigninPromptTextView.setText("");
             mWelcomeTextView.setText(getString(R.string.welcome_back_user) +
                     FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-
         } else {
             //needs to sign in, set text to sign in
-            mSigninTextView.setText(R.string.sign_in);
-            mSigninPromptTextView.setText(R.string.sign_in_prompt);
+//            mSigninTextView.setText(R.string.sign_in);
+//            mSigninPromptTextView.setText(R.string.sign_in_prompt);
             mWelcomeTextView.setText(R.string.welcome_blurb);
         }
+
         //nav bottom imagebuttons
         ImageButton sms = (ImageButton) findViewById(R.id.imagebutton_sms);
         sms.setOnClickListener(this);
@@ -215,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements
             snackbar.show();
         } else {
             //now make sure there is internet or else it won't work
+
             ConnectivityManager cm =
                     (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -249,6 +255,7 @@ public class MainActivity extends AppCompatActivity implements
                 dialog.show();
             } else {
                 // yes internet, but not already signed in, so let's sign em in or up!
+
                 startActivityForResult(AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setProviders(
@@ -292,15 +299,11 @@ public class MainActivity extends AppCompatActivity implements
 
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
-        }
-
-        else if (newFrag != null && newFrag.isVisible()) {
+        } else if (newFrag != null && newFrag.isVisible()) {
             FragmentMethods.addFragToBackStack(this, NEW_FRAG_TAG);
-        }
-        else if (recyclerFrag != null && recyclerFrag.isVisible()) {
+        } else if (recyclerFrag != null && recyclerFrag.isVisible()) {
             FragmentMethods.detachFragment(this, RECYCLERVIEW_FRAG_TAG);
-        }
-        else if (viewFrag != null && viewFrag.isVisible()) {
+        } else if (viewFrag != null && viewFrag.isVisible()) {
             FragmentMethods.addFragToBackStack(this, VIEW_FRAG_TAG);
         } else {
             super.onBackPressed();
@@ -339,6 +342,7 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * nav drawer stuff
      */
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -398,6 +402,8 @@ public class MainActivity extends AppCompatActivity implements
             mResource2.setVisibility(View.INVISIBLE);
             mResource3.setVisibility(View.INVISIBLE);
             mResource4.setVisibility(View.INVISIBLE);
+        } else if (id == R.id.nav_logout) {
+            myLogoutMethod();
         }
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
@@ -576,37 +582,16 @@ public class MainActivity extends AppCompatActivity implements
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     FragmentMethods.setupMainActivityFrag(R.id.textview_main, this);
                 } else {
-                    Snackbar snackbar = Snackbar.make(view, "Please sign in to view your peptalks", Snackbar.LENGTH_SHORT);
-                    snackbar.setAction("sign in", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            myLoginMethod();
-                            Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to add to checklist", Snackbar.LENGTH_SHORT);
-                            snackbar.setAction("sign in", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    myLoginMethod();
-                                }
-                            }).show();
-                        }
-                    }).show();
+                    myLoginMethod();
                 }
                 break;
             case R.id.navheader_signin:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    //already signed in, so sign em out
-                    AuthUI.getInstance().signOut(this);
-                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_LONG);
+
+                    Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "hey friend", Snackbar.LENGTH_LONG);
                     snackbar.show();
 
-                    //so we sign out, and then change the display for signing back in
-                    mLaunchFragMain.setText("");
-                    mSigninTextView.setText(R.string.sign_in);
-                    mSigninPromptTextView.setText(R.string.sign_in_prompt);
-                    mWelcomeTextView.setText(R.string.welcome_blurb);
-
-                } else {
-                    myLoginMethod();
+                    //TODO this will be where the user accesses profile stuffs
                 }
                 break;
             case R.id.imagebutton_sms:
@@ -659,7 +644,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public void launchAddWidgetTextDialog(){
+    public void launchAddWidgetTextDialog() {
         //decided to just add text straight to this because
         // grabbing the text from firebase has proved more complicated than expected
 
@@ -699,7 +684,42 @@ public class MainActivity extends AppCompatActivity implements
         });
 
 
+    }
+
+    public void setIsLogoutVisible(Boolean b) {
+        NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
+        Menu menu = nav.getMenu();
+        for (int index = 0; index < menu.size(); index++) {
+            MenuItem item = menu.getItem(index);
+            if (item.getItemId() == R.id.nav_logout) {
+                item.setVisible(b);
+            }
+        }
+    }
+
+
+    public void myLogoutMethod(){
+        //by stating in oncreate that it should be visible if logged in and not if not,
+        //that'll take care of that. i need to do the actual signing out, and changing the textviews back
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            AuthUI.getInstance().signOut(this);
+            Toast.makeText(MainActivity.this, "see ya later!", Toast.LENGTH_SHORT).show();
+//                Snackbar snackbar = Snackbar.make(item.getActionView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_LONG);
+//                snackbar.show();
+            setIsLogoutVisible(false);
+
+            mWelcomeTextView.setText(R.string.welcome_blurb);
+            mLaunchFragMain.setText(R.string.signup_or_login);
+        }
+        else{
+            Toast.makeText(MainActivity.this, "you shouldnt be seeing this, because logout shouldn't be visible if you're not logged in!", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
 }
+
+
+
