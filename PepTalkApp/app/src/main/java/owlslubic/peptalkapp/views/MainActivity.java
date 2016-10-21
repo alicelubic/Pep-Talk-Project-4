@@ -604,33 +604,40 @@ public class MainActivity extends AppCompatActivity implements
                 launchFacebook();
                 break;
             case R.id.tv_resource1:
-                //webview didnt wanna work
-                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                intent.putExtra("url", "https://www.headspace.com/");
-                startActivity(intent);
-
-                //so this launches browser instead
-//                Uri uri = Uri.parse("https://www.headspace.com/");
-//                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+//                intent.putExtra("url", "https://www.headspace.com/");
+//                intent.putExtra("title", "Headspace");
 //                startActivity(intent);
+
+                //so this launches browser because https doesn't safely load in webview
+                Uri uri = Uri.parse("https://www.headspace.com/");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
                 break;
             case R.id.tv_resource2:
-//                Intent intent2 = new Intent(MainActivity.this, WebViewActivity.class);
-//                intent2.putExtra("url", "http://www.befriendingourselves.com/Mindfulness.html");
-//                startActivity(intent2);
-                Uri uri2 = Uri.parse("http://www.befriendingourselves.com/Mindfulness.html");
-                Intent intent2 = new Intent(Intent.ACTION_VIEW, uri2);
+                Intent intent2 = new Intent(MainActivity.this, WebViewActivity.class);
+                intent2.putExtra("url", "http://www.befriendingourselves.com/Mindfulness.html");
+                intent2.putExtra("title", "Befriending Ourselves");
                 startActivity(intent2);
+//                Uri uri2 = Uri.parse("http://www.befriendingourselves.com/Mindfulness.html");
+//                Intent intent2 = new Intent(Intent.ACTION_VIEW, uri2);
+//                startActivity(intent2);
                 break;
             case R.id.tv_resource3:
-//                Intent intent3 = new Intent(MainActivity.this, WebViewActivity.class);
-//                intent3.putExtra("url", "http://self-compassion.org/");
-//                startActivity(intent3);
-                Uri uri3 = Uri.parse("http://self-compassion.org/");
-                Intent intent3 = new Intent(Intent.ACTION_VIEW, uri3);
+                Intent intent3 = new Intent(MainActivity.this, WebViewActivity.class);
+                intent3.putExtra("url", "http://self-compassion.org/");
+                intent3.putExtra("title", "Self-Compassion");
                 startActivity(intent3);
+//                Uri uri3 = Uri.parse("http://self-compassion.org/");
+//                Intent intent3 = new Intent(Intent.ACTION_VIEW, uri3);
+//                startActivity(intent3);
                 break;
             case R.id.tv_resource4:
+//                Intent intent4 = new Intent(MainActivity.this, WebViewActivity.class);
+//                intent4.putExtra("url", "https://ottawamindfulnessclinic.com");
+//                intent4.putExtra("title", "Ottawa Mindfulness Clinic");
+//                startActivity(intent4);
+                //launching in browser because https doesnt load safely in WebView
                 Uri uri4 = Uri.parse("https://ottawamindfulnessclinic.com");
                 Intent intent4 = new Intent(Intent.ACTION_VIEW, uri4);
                 startActivity(intent4);

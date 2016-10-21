@@ -74,7 +74,7 @@ public class FragmentMethods {
 
     }
 
-    public static void addFragToBackStack(FragmentActivity activity, String tag){
+    public static void addFragToBackStack(FragmentActivity activity, String tag) {
         Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
         if (fragment.getTag() != null) {
             FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();

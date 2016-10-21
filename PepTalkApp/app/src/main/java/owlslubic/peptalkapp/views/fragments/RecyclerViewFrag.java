@@ -88,8 +88,8 @@ public class RecyclerViewFrag extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
 
 
-        mTextViewTitle = (TextView) view.findViewById(R.id.textview_pepview_title);
-        mTextViewBody = (TextView) view.findViewById(R.id.textview_pepview_body);
+        mTextViewTitle = (TextView) view.findViewById(R.id.textview_frag_title);
+        mTextViewBody = (TextView) view.findViewById(R.id.textview_frag_body);
 
         if (mTextViewBody != null) {
             mTextViewBody.setMovementMethod(new ScrollingMovementMethod());
