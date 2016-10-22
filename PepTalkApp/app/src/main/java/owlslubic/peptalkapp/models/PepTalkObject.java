@@ -4,10 +4,10 @@ package owlslubic.peptalkapp.models;
  * Created by owlslubic on 8/30/16.
  */
 public class PepTalkObject {
-    String key;
-    String title;
-    String body;
-    boolean isWidgetDefault;
+    private String key;
+    private String title;
+    private String body;
+    private boolean isWidgetDefault;
 
     public PepTalkObject() {}
 

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -141,10 +142,10 @@ public class NewFrag extends Fragment implements View.OnClickListener {
                     if (mObjectType.equals(CHECKLIST)) {
                         if (mNewOrEdit.equals(NEW)) {
                             DBHelper.writeNewChecklist(titleInput, bodyInput, getContext());
-                            Toast.makeText(getContext(), "checklist item added", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(), "checklist item added", Toast.LENGTH_SHORT).show();
                         } else if (mNewOrEdit.equals(EDIT)) {
-                            DBHelper.updateChecklist(mKey, titleInput, bodyInput);
-                            Toast.makeText(getContext(), "checklist updated", Toast.LENGTH_SHORT).show();
+                            DBHelper.updateChecklist(mKey, titleInput, bodyInput, getContext());
+//                            Toast.makeText(getContext(), "checklist updated", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getContext(), "oops! something went wrong with new/edit checklist", Toast.LENGTH_SHORT).show();
                         }
@@ -153,10 +154,10 @@ public class NewFrag extends Fragment implements View.OnClickListener {
                     } else if (mObjectType.equals(PEPTALKS)) {
                         if (mNewOrEdit.equals(NEW)) {
                             DBHelper.writeNewPeptalk(titleInput, bodyInput, getContext());
-                            Toast.makeText(getContext(), "peptalk added", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(), "peptalk added", Toast.LENGTH_SHORT).show();
                         } else if (mNewOrEdit.equals(EDIT)) {
-                            DBHelper.updatePepTalk(mKey, titleInput, bodyInput);
-                            Toast.makeText(getContext(), "peptalk updated", Toast.LENGTH_SHORT).show();
+                            DBHelper.updatePepTalk(mKey, titleInput, bodyInput, getContext());
+//                            Toast.makeText(getContext(), "peptalk updated", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getContext(), "oops! something went wrong with new/edit peptalk", Toast.LENGTH_SHORT).show();
                         }
@@ -169,7 +170,8 @@ public class NewFrag extends Fragment implements View.OnClickListener {
                 break;
             case R.id.imagebutton_fragment_cancel:
                 FragmentMethods.detachFragment(getActivity(), NEW_FRAG_TAG);
-
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 break;
         }
 

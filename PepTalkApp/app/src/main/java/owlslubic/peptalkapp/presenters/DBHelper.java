@@ -31,13 +31,12 @@ public class DBHelper {
     public static final String PEPTALK_BODY = "body";
     public static final String CHECKLIST_TEXT = "text";
     public static final String CHECKLIST_NOTES = "notes";
-    public Context mContext;
+    public static final String CHECKLIST_CHECKED = "checked";
 
-    public DBHelper(Context context) {
-//        mContext = context;
+    public DBHelper() {
     }
 
-    public static void writeNewPeptalk(String title, String body, final Context context) {
+    public static void writeNewPeptalk(final String title, String body, final Context context) {
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
@@ -45,17 +44,35 @@ public class DBHelper {
             DatabaseReference pepKey = peptalkRef.push();
             String key = pepKey.getKey();
             final PepTalkObject peptalk = new PepTalkObject(key, title, body, false);
-            pepKey.setValue(peptalk);
+            pepKey.setValue(peptalk, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if(databaseError!= null){
+                        Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, title+" added to peptalks!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         } else {
             Toast.makeText(context, "oops! something went wrong...", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static void updatePepTalk(String key, String title, String body) {
+    public static void updatePepTalk(String key, final String title, String body, final Context context) {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
-            peptalkRef.child(key).child(PEPTALK_TITLE).setValue(title);
+            peptalkRef.child(key).child(PEPTALK_TITLE).setValue(title, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if(databaseError!= null){
+                        Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, title+" updated!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             peptalkRef.child(key).child(PEPTALK_BODY).setValue(body);
         }
     }
@@ -80,30 +97,68 @@ public class DBHelper {
     }
 
 
-    public static void writeNewChecklist(String text, String notes, final Context context) {
+    public static void writeNewChecklist(final String text, String notes, final Context context) {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(CHECKLIST);
             DatabaseReference itemKey = checklistRef.push();//this creates the unique key, but no data
             String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
-            final ChecklistItemObject item = new ChecklistItemObject(key, text, notes);
-            itemKey.setValue(item);
+            final ChecklistItemObject item = new ChecklistItemObject(key, text, notes, false);
+            itemKey.setValue(item, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if(databaseError!= null){
+                        Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, text+ " added to checklist!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             Log.d(TAG, "writeNewChecklist: new key is: " + key);
         } else {
-            //TODO let the user know it didn't work
             Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static void updateChecklist(String key, String text, String notes) {
+    public static void updateIsChecked(String key, boolean isChecked){
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(CHECKLIST);
 
-            checklistRef.child(key).child(CHECKLIST_TEXT).setValue(text);
+            checklistRef.child(key).child(CHECKLIST_CHECKED).setValue(isChecked, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if(databaseError==null){
+                        Log.i(TAG, "onComplete: UPDATE ISCHECKED successful");
+                    }
+                }
+            });
+
+        }else {
+            Log.d(TAG, "updateChecklist failed, getCurrentUser() == null");
+        }
+    }
+
+    public static void updateChecklist(String key, String text, String notes, final Context context) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(CHECKLIST);
+
+            checklistRef.child(key).child(CHECKLIST_TEXT).setValue(text, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if(databaseError!= null){
+                        Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "checklist item updated!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             checklistRef.child(key).child(CHECKLIST_NOTES).setValue(notes);
+
         } else {
             Log.d(TAG, "updateChecklist failed, getCurrentUser() == null");
+            Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
         }
     }
 

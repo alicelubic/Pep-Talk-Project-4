@@ -19,40 +19,28 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <style name="full_screen_dialog" parent="@android:style/Theme.Material.Light.Dialog.Alert">
-        <item name="android:layout_width">match_parent</item>
-
-        <!--<item name="android:windowNoTitle">true</item>-->
-        <!--<item name="android:windowFullscreen">true</item>-->
-        <!--<item name="android:windowIsFloating">true</item>-->
-        <!--<item name="android:windowContentOverlay">@null</item>-->
-        <!--<item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>-->
-        <!--<item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>-->
-        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
-    </style>
-
     <style name="NavigationDrawerStyle">
         <item name="android:textSize">14sp</item><!-- text size in menu-->
         <item name="android:listPreferredItemHeightSmall">40dp</item><!-- item size in menu-->
     </style>
 
 
-    <style name="CodeFont" parent="@android:style/TextAppearance.Medium">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
+    <style name="app_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">#fafafa</item>
         <item name="android:textSize">16sp</item>
         <item name="android:typeface">normal</item>
     </style>
 
-    <style name="CodeFont.Gray">
+    <style name="app_font.Gray">
         <item name="android:textColor">@color/secondary_text</item>
     </style>
 
-    <style name="checkbox" parent="@android:style/Widget.Material.Light.CompoundButton.CheckBox">
-        <item name="android:color">#fafafa</item>
-
+    <style name="edit_text_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColorHint">#fafafa</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:typeface">normal</item>
     </style>
+
 
     <!--from the 3rd party fab library-->
 

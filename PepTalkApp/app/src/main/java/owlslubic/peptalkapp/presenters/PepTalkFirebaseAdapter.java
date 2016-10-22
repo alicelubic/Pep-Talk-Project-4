@@ -3,10 +3,13 @@ package owlslubic.peptalkapp.presenters;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.SwipeDismissBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 
@@ -91,6 +94,8 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
                 }
             });
 
+            swipeDismiss(holder.mCard);
+
 
             /**swipey shit*/
 //        holder.mCard.setOnTouchListener(new View.OnTouchListener() {
@@ -107,6 +112,13 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
 
         }
 
+    }
+
+    private void swipeDismiss(CardView card){
+        SwipeDismissBehavior<CardView> swipeDismissBehavior = new SwipeDismissBehavior<>();
+        swipeDismissBehavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_ANY);
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) card.getLayoutParams();
+        layoutParams.setBehavior(swipeDismissBehavior);
     }
 
 

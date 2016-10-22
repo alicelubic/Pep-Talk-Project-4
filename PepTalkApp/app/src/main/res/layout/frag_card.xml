@@ -39,7 +39,7 @@
 
             <TextView
                 android:id="@+id/textview_frag_title"
-                style="@style/CodeFont"
+                style="@style/app_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/button_frag_edit_peptalk"
@@ -50,7 +50,7 @@
 
             <TextView
                 android:id="@+id/textview_frag_body"
-                style="@style/CodeFont"
+                style="@style/app_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textview_frag_title"

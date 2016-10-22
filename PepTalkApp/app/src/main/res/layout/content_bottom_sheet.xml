@@ -23,7 +23,7 @@
 
     <TextView
         android:id="@+id/textview_bottomSheetHeading"
-        style="@style/CodeFont"
+        style="@style/app_font"
         android:layout_gravity="top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
 
     <TextView
         android:id="@+id/textview_bottomsheet_top"
-        style="@style/CodeFont"
+        style="@style/app_font"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
 
     <TextView
         android:id="@+id/tv_resource1"
-        style="@style/CodeFont"
+        style="@style/app_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
@@ -58,7 +58,7 @@
 
     <TextView
         android:id="@+id/tv_resource2"
-        style="@style/CodeFont"
+        style="@style/app_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
@@ -72,12 +72,12 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textColor="@color/mySecondaryBlue"
-        style="@style/CodeFont"
+        style="@style/app_font"
         android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/tv_resource4"
-        style="@style/CodeFont"
+        style="@style/app_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"

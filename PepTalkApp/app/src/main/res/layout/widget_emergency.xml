@@ -15,7 +15,7 @@
         android:layout_margin="6dp"
         android:text="@string/emergency_pep_talk"
         android:textSize="14sp"
-        style="@style/CodeFont"/>
+        style="@style/app_font"/>
 
     <!--<TextView-->
         <!--android:id="@+id/textview_widget_reset"-->

@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/textview_main"
-        style="@style/CodeFont"
+        style="@style/app_font"
         android:text=""
         android:gravity="center"
         android:layout_marginBottom="56dp"

@@ -7,16 +7,15 @@ public class ChecklistItemObject {
     String text;
     String key;
     String notes;
-//    boolean isChecked;
+    boolean isChecked;
 
     public ChecklistItemObject() {}
 
-    public ChecklistItemObject(String key, String text, String notes){//}, boolean isChecked) {
+    public ChecklistItemObject(String key, String text, String notes, boolean isChecked) {
         this.key = key;
         this.text = text;
         this.notes = notes;
-
-//        this.isChecked = isChecked;
+        this.isChecked = isChecked;
     }
 
     public String getText() {
@@ -44,14 +43,12 @@ public class ChecklistItemObject {
         this.notes = notes;
     }
 
+    public boolean isChecked() {
+        return isChecked;
+    }
 
-
-//    public boolean isChecked() {
-//        return isChecked;
-//    }
-//
-//    public void setIsChecked(boolean isChecked) {
-//        this.isChecked = isChecked;
-//    }
+    public void setIsChecked(boolean isChecked) {
+        this.isChecked = isChecked;
+    }
 }
 
