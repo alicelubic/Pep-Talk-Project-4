@@ -104,7 +104,7 @@ public class RecyclerViewFrag extends Fragment implements View.OnClickListener {
 
         mFragRecycler.setLayoutManager(llm);
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class, R.layout.frag_card,
-                PepTalkViewHolder.class, mPeptalkRef, view.getContext(), getFragmentManager());
+                PepTalkViewHolder.class, mPeptalkRef, view.getContext(), getFragmentManager(), null);
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override

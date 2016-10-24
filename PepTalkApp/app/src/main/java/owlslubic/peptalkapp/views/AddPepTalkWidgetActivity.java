@@ -55,7 +55,7 @@ public class AddPepTalkWidgetActivity extends AppCompatActivity implements View.
                     mBody.setError("oops! please enter valid text");
                 } else {
                     if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                        DBHelper.writeNewPeptalk(titleInput, bodyInput, AddPepTalkWidgetActivity.this);
+                        DBHelper.writeNewPeptalk(titleInput, bodyInput, AddPepTalkWidgetActivity.this, false);
                         Toast.makeText(AddPepTalkWidgetActivity.this, "pep talk added", Toast.LENGTH_SHORT).show();
                         finish();
                     } else {

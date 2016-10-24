@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardview_peptalk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardElevation="3dp"
-        card_view:cardUseCompatPadding="true"
-        card_view:cardCornerRadius="3dp"
-        card_view:cardBackgroundColor="@color/myPrimaryLightBlue">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        card_view:cardBackgroundColor="@color/myPrimaryLightBlue"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardUseCompatPadding="true">
+        <!--dont need it because apparently cardUseCompatPadding -->
+        <!--is powerful and none of the other things matter once you use that-->
+        <!--card_view:cardElevation="1dp"-->
+        <!--card_view:paddingStart="30dp"-->
+        <!--card_view:paddingEnd="30dp"-->
 
         <TextView
             android:id="@+id/textview_peptalk_title"
+            style="@style/app_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
             android:layout_margin="6dp"
-            android:text="Pep Talk Title"
-            style="@style/app_font"/>
+            android:gravity="center"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="Pep Talk Title" />
 
 
     </android.support.v7.widget.CardView>
-
 
 
 </android.support.design.widget.CoordinatorLayout>

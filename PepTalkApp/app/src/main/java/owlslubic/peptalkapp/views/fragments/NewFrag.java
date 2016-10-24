@@ -141,7 +141,7 @@ public class NewFrag extends Fragment implements View.OnClickListener {
                     //then write to database
                     if (mObjectType.equals(CHECKLIST)) {
                         if (mNewOrEdit.equals(NEW)) {
-                            DBHelper.writeNewChecklist(titleInput, bodyInput, getContext());
+                            DBHelper.writeNewChecklist(titleInput, bodyInput, getContext(), false);
 //                            Toast.makeText(getContext(), "checklist item added", Toast.LENGTH_SHORT).show();
                         } else if (mNewOrEdit.equals(EDIT)) {
                             DBHelper.updateChecklist(mKey, titleInput, bodyInput, getContext());
@@ -153,7 +153,7 @@ public class NewFrag extends Fragment implements View.OnClickListener {
 
                     } else if (mObjectType.equals(PEPTALKS)) {
                         if (mNewOrEdit.equals(NEW)) {
-                            DBHelper.writeNewPeptalk(titleInput, bodyInput, getContext());
+                            DBHelper.writeNewPeptalk(titleInput, bodyInput, getContext(), false);
 //                            Toast.makeText(getContext(), "peptalk added", Toast.LENGTH_SHORT).show();
                         } else if (mNewOrEdit.equals(EDIT)) {
                             DBHelper.updatePepTalk(mKey, titleInput, bodyInput, getContext());

@@ -1,5 +1,6 @@
 package owlslubic.peptalkapp.views.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,13 @@ public class ViewFrag extends Fragment {
     TextView mTopTextView, mBottomTextView;
     String mTitleText, mBodyText, mObjectType, mKey;
     ImageButton mEdit;
+    FABCoordinator mCallback;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallback = (FABCoordinator) context;
+    }
 
     @Nullable
     @Override
@@ -64,6 +72,19 @@ public class ViewFrag extends Fragment {
             }
         });
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCallback.putFabBack();
+    }
+
+    public interface FABCoordinator{
+        void hideFabWhenFragOpens();
+        void putFabBack();
+    }
+
+
 
 
 }

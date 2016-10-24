@@ -36,7 +36,7 @@ public class DBHelper {
     public DBHelper() {
     }
 
-    public static void writeNewPeptalk(final String title, String body, final Context context) {
+    public static void writeNewPeptalk(final String title, String body, final Context context, final boolean isPreloadedContent) {
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
@@ -50,7 +50,9 @@ public class DBHelper {
                     if(databaseError!= null){
                         Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(context, title+" added to peptalks!", Toast.LENGTH_SHORT).show();
+                        if(!isPreloadedContent){
+                            Toast.makeText(context, title+" added to peptalks!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
@@ -97,7 +99,7 @@ public class DBHelper {
     }
 
 
-    public static void writeNewChecklist(final String text, String notes, final Context context) {
+    public static void writeNewChecklist(final String text, String notes, final Context context, final boolean isPreloadedContent) {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(CHECKLIST);
@@ -110,13 +112,17 @@ public class DBHelper {
                     if(databaseError!= null){
                         Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(context, text+ " added to checklist!", Toast.LENGTH_SHORT).show();
+                        if(!isPreloadedContent){
+                            Toast.makeText(context, text+ " added to checklist!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
             Log.d(TAG, "writeNewChecklist: new key is: " + key);
         } else {
-            Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
+            if(!isPreloadedContent){
+                Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

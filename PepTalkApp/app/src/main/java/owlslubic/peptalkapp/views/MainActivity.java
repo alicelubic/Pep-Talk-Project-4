@@ -472,19 +472,19 @@ public class MainActivity extends AppCompatActivity implements
         b = mPrefs.getBoolean("FIRST_RUN", false);
         if (!b) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                DBHelper.writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes), this); //TODO CHECK IF USING this AS CONTEXT MAKES IT NOT WORK???
-                DBHelper.writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes), this);
-                DBHelper.writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes), this);
-                DBHelper.writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes), this);
-                DBHelper.writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes), this);
-                DBHelper.writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes), this);
+                DBHelper.writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes), this, true); //TODO CHECK IF USING this AS CONTEXT MAKES IT NOT WORK???
+                DBHelper.writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes), this, true);
+                DBHelper.writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes), this, true);
+                DBHelper.writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes), this, true);
+                DBHelper.writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes), this, true);
+                DBHelper.writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes), this, true);
 
-                DBHelper.writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present), this);
-                DBHelper.writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions), this);
-                DBHelper.writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best), this);
-                DBHelper.writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment), this);
-                DBHelper.writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing), this);
-                DBHelper.writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt), this);
+                DBHelper.writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present), this, true);
+                DBHelper.writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions), this, true);
+                DBHelper.writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best), this, true);
+                DBHelper.writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment), this, true);
+                DBHelper.writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing), this, true);
+                DBHelper.writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt), this, true);
             }
 
             mPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);

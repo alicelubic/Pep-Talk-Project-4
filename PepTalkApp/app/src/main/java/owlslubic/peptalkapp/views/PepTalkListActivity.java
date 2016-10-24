@@ -1,5 +1,6 @@
 package owlslubic.peptalkapp.views;
 
+import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.SwipeDismissBehavior;
@@ -11,6 +12,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -26,8 +28,9 @@ import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 import owlslubic.peptalkapp.presenters.SimpleItemTouchHelperCallback;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
+import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
-public class PepTalkListActivity extends AppCompatActivity {// implements OnStartDragListener {
+public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.FABCoordinator {// implements OnStartDragListener {
 
     private static final String TAG = "PepTalkListActivity";
     private static final String USERS = "users";
@@ -38,6 +41,7 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
     private DatabaseReference mPeptalkRef;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFab;
+    ViewFrag.FABCoordinator mCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
         setContentView(R.layout.activity_pep_talk_list);
 
         getSupportActionBar().setTitle("Your Pep Talks");
+        mCallback = this;
 
         //fab launches new pep fragment
         mFab = (FloatingActionButton) findViewById(R.id.fab_peptalk_list);
@@ -70,7 +75,7 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
         //create adapter, add progress bar, set adapter
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class,
                 R.layout.card_peptalk, PepTalkViewHolder.class, mPeptalkRef,
-                this, getSupportFragmentManager());//, this); took out the onstartdrag listener
+                this, getSupportFragmentManager(), mCallback);//, this); took out the onstartdrag listener
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -97,12 +102,23 @@ public class PepTalkListActivity extends AppCompatActivity {// implements OnStar
 
         }
     */
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mFirebaseAdapter.cleanup();
     }
 
+
+    @Override
+    public void hideFabWhenFragOpens() {
+        mFab.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void putFabBack(){
+        mFab.setVisibility(View.VISIBLE);
+    }
 
 
 /*
