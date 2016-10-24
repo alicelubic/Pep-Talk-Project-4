@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +11,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import owlslubic.peptalkapp.R;
-import owlslubic.peptalkapp.models.ChecklistItemObject;
-import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
 
-import static owlslubic.peptalkapp.presenters.FragmentMethods.setupEditFrag;
 import static owlslubic.peptalkapp.views.fragments.NewFrag.BOTTOM_TEXT;
-import static owlslubic.peptalkapp.views.fragments.NewFrag.CHECKLIST;
 import static owlslubic.peptalkapp.views.fragments.NewFrag.KEY;
 import static owlslubic.peptalkapp.views.fragments.NewFrag.OBJECT_TYPE;
-import static owlslubic.peptalkapp.views.fragments.NewFrag.PEPTALKS;
 import static owlslubic.peptalkapp.views.fragments.NewFrag.TOP_TEXT;
 
 /**
@@ -37,11 +30,13 @@ public class ViewFrag extends Fragment {
     String mTitleText, mBodyText, mObjectType, mKey;
     ImageButton mEdit;
     FABCoordinator mCallback;
+    NewFrag.FABCoordinatorNewFrag mCallbackNewFrag;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mCallback = (FABCoordinator) context;
+        mCallbackNewFrag = (NewFrag.FABCoordinatorNewFrag) context;
     }
 
     @Nullable
@@ -69,6 +64,7 @@ public class ViewFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentMethods.setupEditFrag(getActivity(), mObjectType, mKey, mTitleText, mBodyText);
+                mCallbackNewFrag.hideFabFromNewFrag();
             }
         });
     }
@@ -82,6 +78,7 @@ public class ViewFrag extends Fragment {
     public interface FABCoordinator{
         void hideFabWhenFragOpens();
         void putFabBack();
+
     }
 
 

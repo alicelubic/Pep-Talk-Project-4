@@ -1,13 +1,9 @@
 package owlslubic.peptalkapp.views.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,21 +14,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Date;
-
 import owlslubic.peptalkapp.R;
-import owlslubic.peptalkapp.models.ChecklistItemObject;
-import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.DBHelper;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
-import owlslubic.peptalkapp.views.ChecklistActivity;
-import owlslubic.peptalkapp.views.MainActivity;
-import owlslubic.peptalkapp.views.PepTalkListActivity;
 
 
 /**
@@ -59,10 +43,19 @@ public class NewFrag extends Fragment implements View.OnClickListener {
     public EditText mTitle, mBody;
     public ImageButton mDone, mCancel;
     String mObjectType, mNewOrEdit, mKey, mTitleText, mBodyText;
-
-
+    FABCoordinatorNewFrag mCallbackNew;
+    Context mContext;
+//    ViewFrag.FABCoordinator mCallback;
     //attach snackbar to activity view
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+//        mCallback = (ViewFrag.FABCoordinator) context;
+        mCallbackNew = (FABCoordinatorNewFrag) context;
+        mContext = context;
+    }
 
     @Nullable
     @Override
@@ -79,6 +72,8 @@ public class NewFrag extends Fragment implements View.OnClickListener {
         mTitleText = getArguments().getString(TOP_TEXT);
         mBodyText = getArguments().getString(BOTTOM_TEXT);
 
+        mCallbackNew.hideFabFromNewFrag();
+
 
         return view;
     }
@@ -86,7 +81,6 @@ public class NewFrag extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
 
         mTitle.setMovementMethod(new ScrollingMovementMethod());
@@ -170,12 +164,23 @@ public class NewFrag extends Fragment implements View.OnClickListener {
                 break;
             case R.id.imagebutton_fragment_cancel:
                 FragmentMethods.detachFragment(getActivity(), NEW_FRAG_TAG);
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 break;
         }
 
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCallbackNew.putFabBackFromNewFrag();
+    }
+
+    public interface FABCoordinatorNewFrag {
+        void hideFabFromNewFrag();
+        void putFabBackFromNewFrag();
     }
 
 

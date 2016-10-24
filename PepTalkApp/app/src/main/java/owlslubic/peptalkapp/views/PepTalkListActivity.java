@@ -1,21 +1,13 @@
 package owlslubic.peptalkapp.views;
 
-import android.content.Context;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.SwipeDismissBehavior;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +22,7 @@ import owlslubic.peptalkapp.presenters.SimpleItemTouchHelperCallback;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
-public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.FABCoordinator {// implements OnStartDragListener {
+public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.FABCoordinator, NewFrag.FABCoordinatorNewFrag {// implements OnStartDragListener {
 
     private static final String TAG = "PepTalkListActivity";
     private static final String USERS = "users";
@@ -53,6 +45,7 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
 
         //fab launches new pep fragment
         mFab = (FloatingActionButton) findViewById(R.id.fab_peptalk_list);
+        mFab.setVisibility(View.INVISIBLE);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,6 +110,17 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
 
     @Override
     public void putFabBack(){
+        mFab.setVisibility(View.VISIBLE);
+    }
+
+
+
+    @Override
+    public void hideFabFromNewFrag() {
+        mFab.setVisibility(View.INVISIBLE);
+    }
+    @Override
+    public void putFabBackFromNewFrag() {
         mFab.setVisibility(View.VISIBLE);
     }
 

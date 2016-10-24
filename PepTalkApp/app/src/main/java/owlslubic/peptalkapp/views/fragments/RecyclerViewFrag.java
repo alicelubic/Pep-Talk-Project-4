@@ -116,6 +116,7 @@ public class RecyclerViewFrag extends Fragment implements View.OnClickListener {
             }
         });
         mFragRecycler.setAdapter(mFirebaseAdapter);
+        //so that when you scroll, it doesn't get out of control:
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(mFragRecycler);
 

@@ -68,6 +68,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
                 public void onClick(View view) {
                     FragmentMethods.setupEditFrag((FragmentActivity) mContext, NewFrag.PEPTALKS,
                             model.getKey(), model.getTitle(), model.getBody());
+                    mCallback.hideFabWhenFragOpens();
 
                 }
             });
@@ -78,7 +79,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
                 @Override
                 public void onClick(View view) {
                     FragmentMethods.setupViewFrag((FragmentActivity)mContext,NewFrag.PEPTALKS,model.getKey(), model.getTitle(), model.getBody());
-                    mCallback.hideFabWhenFragOpens(mContext);
+                    mCallback.hideFabWhenFragOpens();
                 }
             });
 
