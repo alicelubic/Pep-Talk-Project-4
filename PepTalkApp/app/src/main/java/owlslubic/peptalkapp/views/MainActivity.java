@@ -30,19 +30,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.firebase.ui.auth.AuthUI;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
-
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.presenters.FirebaseHelper;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
+import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
-import static owlslubic.peptalkapp.presenters.FragmentMethods.NEW_FRAG_TAG;
-import static owlslubic.peptalkapp.presenters.FragmentMethods.RECYCLERVIEW_FRAG_TAG;
-import static owlslubic.peptalkapp.presenters.FragmentMethods.VIEW_FRAG_TAG;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -292,18 +288,18 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onBackPressed() {
-        Fragment newFrag = getSupportFragmentManager().findFragmentByTag(FragmentMethods.NEW_FRAG_TAG);
-        Fragment recyclerFrag = getSupportFragmentManager().findFragmentByTag(FragmentMethods.RECYCLERVIEW_FRAG_TAG);
-        Fragment viewFrag = getSupportFragmentManager().findFragmentByTag(FragmentMethods.VIEW_FRAG_TAG);
+        Fragment newFrag = getSupportFragmentManager().findFragmentByTag(NEW_FRAG_TAG);
+        Fragment recyclerFrag = getSupportFragmentManager().findFragmentByTag(RECYCLERVIEW_FRAG_TAG);
+        Fragment viewFrag = getSupportFragmentManager().findFragmentByTag(VIEW_FRAG_TAG);
 
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
         } else if (newFrag != null && newFrag.isVisible()) {
-            FragmentMethods.addFragToBackStack(this, NEW_FRAG_TAG);
+            addFragToBackStack(this, NEW_FRAG_TAG);
         } else if (recyclerFrag != null && recyclerFrag.isVisible()) {
-            FragmentMethods.detachFragment(this, RECYCLERVIEW_FRAG_TAG);
+            detachFragment(this, RECYCLERVIEW_FRAG_TAG);
         } else if (viewFrag != null && viewFrag.isVisible()) {
-            FragmentMethods.addFragToBackStack(this, VIEW_FRAG_TAG);
+            addFragToBackStack(this, VIEW_FRAG_TAG);
         } else {
             super.onBackPressed();
         }
@@ -544,7 +540,7 @@ public class MainActivity extends AppCompatActivity implements
         switch (view.getId()) {
             case R.id.fablet_checklist:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    FragmentMethods.setupNewFrag(NewFrag.CHECKLIST, this);
+                    setupNewFrag(FragmentMethods.CHECKLIST_OBJ, this);
 
                     mFrameLayout.getBackground().setAlpha(0);
                     mFrameLayout.setOnTouchListener(null);
@@ -562,7 +558,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.fablet_peptalk:
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    FragmentMethods.setupNewFrag(NewFrag.PEPTALKS, MainActivity.this);
+                    setupNewFrag(FragmentMethods.PEPTALK_OBJ, MainActivity.this);
                     mFrameLayout.getBackground().setAlpha(0);
                     mFrameLayout.setOnTouchListener(null);
                     mFabMenu.collapse();
@@ -579,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.textview_main:
                 //launch pep talk view
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    FragmentMethods.setupMainActivityFrag(R.id.textview_main, this);
+                    setupMainActivityFrag(R.id.textview_main, this);
                 } else {
                     myLoginMethod();
                 }
@@ -708,7 +704,7 @@ public class MainActivity extends AppCompatActivity implements
         //by stating in oncreate that it should be visible if logged in and not if not,
         //that'll take care of that. i need to do the actual signing out, and changing the textviews back
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (isUserSignedIn()) {
             AuthUI.getInstance().signOut(this);
             Toast.makeText(MainActivity.this, "see ya later!", Toast.LENGTH_SHORT).show();
 //                Snackbar snackbar = Snackbar.make(item.getActionView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_LONG);
@@ -723,6 +719,13 @@ public class MainActivity extends AppCompatActivity implements
         }
 
 
+    }
+
+    public static boolean isUserSignedIn(){
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            return true;
+        }
+        return false;
     }
 
     @Override

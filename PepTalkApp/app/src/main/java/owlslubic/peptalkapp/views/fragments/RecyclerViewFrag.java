@@ -33,37 +33,29 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
+import owlslubic.peptalkapp.presenters.FirebaseHelper;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
 import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 import owlslubic.peptalkapp.views.MainActivity;
 
+import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
+
 /**
  * Created by owlslubic on 9/5/16.
  */
 public class RecyclerViewFrag extends Fragment implements View.OnClickListener {
-    private static final String USERS = "users";
-    private static final String PEPTALKS = "peptalks";
     private static final String TAG = "RecyclerViewFrag";
-
-    //this is my staging area, i'll move it to main if thats where it should go..?
-    //either the main act default display should be a frag also, or the main is an activity and these just show up atop it?
-
     private String mTitle, mBody;
     private PepTalkObject mPepTalk;
     public TextView mTextViewTitle;
     public TextView mTextViewBody;
     public ImageButton mEdit, mBack;
     private ProgressBar mProgressBar;
-
     public DatabaseReference mPeptalkRef;
     public FirebaseRecyclerAdapter mFirebaseAdapter;
     RecyclerView mFragRecycler;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Nullable
     @Override
@@ -139,10 +131,6 @@ public class RecyclerViewFrag extends Fragment implements View.OnClickListener {
         switch(v.getId()){
             case R.id.imagebutton_frag_back:
                 FragmentMethods.detachFragment(getActivity(), FragmentMethods.RECYCLERVIEW_FRAG_TAG);
-
-//                getActivity().getSupportFragmentManager().popBackStack();
-//                startActivity(new Intent(getActivity(), MainActivity.class));
-
         }
 
     }

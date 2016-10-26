@@ -11,21 +11,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import owlslubic.peptalkapp.R;
-import owlslubic.peptalkapp.presenters.FragmentMethods;
 
-import static owlslubic.peptalkapp.views.fragments.NewFrag.BOTTOM_TEXT;
-import static owlslubic.peptalkapp.views.fragments.NewFrag.KEY;
-import static owlslubic.peptalkapp.views.fragments.NewFrag.OBJECT_TYPE;
-import static owlslubic.peptalkapp.views.fragments.NewFrag.TOP_TEXT;
+import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
+
 
 /**
  * Created by owlslubic on 9/19/16.
  */
 public class ViewFrag extends Fragment {
     private static final String TAG = "ViewFrag";
-    public static final String VIEW = "view";
-
-
     TextView mTopTextView, mBottomTextView;
     String mTitleText, mBodyText, mObjectType, mKey;
     ImageButton mEdit;
@@ -63,7 +57,7 @@ public class ViewFrag extends Fragment {
         mEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentMethods.setupEditFrag(getActivity(), mObjectType, mKey, mTitleText, mBodyText);
+                setupEditFrag(getActivity(), mObjectType, mKey, mTitleText, mBodyText);
                 mCallbackNewFrag.hideFabFromNewFrag();
             }
         });

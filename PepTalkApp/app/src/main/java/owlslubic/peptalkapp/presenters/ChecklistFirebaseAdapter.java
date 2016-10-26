@@ -11,7 +11,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 
 import owlslubic.peptalkapp.models.ChecklistItemObject;
-import owlslubic.peptalkapp.views.fragments.NewFrag;
 
 /**
  * Created by owlslubic on 9/2/16.
@@ -39,7 +38,7 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
         holder.mCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentMethods.setupViewFrag((FragmentActivity)mContext,NewFrag.CHECKLIST,model.getKey(), model.getText(), model.getNotes());
+                FragmentMethods.setupViewFrag((FragmentActivity)mContext,FragmentMethods.CHECKLIST_OBJ,model.getKey(), model.getText(), model.getNotes());
 
             }
         });

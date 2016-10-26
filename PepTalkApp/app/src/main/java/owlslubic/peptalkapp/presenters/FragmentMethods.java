@@ -21,9 +21,6 @@ import owlslubic.peptalkapp.views.fragments.NewFrag;
 import owlslubic.peptalkapp.views.fragments.RecyclerViewFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
-import static owlslubic.peptalkapp.views.fragments.NewFrag.CHECKLIST;
-import static owlslubic.peptalkapp.views.fragments.NewFrag.KEY;
-import static owlslubic.peptalkapp.views.fragments.NewFrag.PEPTALKS;
 
 /**
  * Created by owlslubic on 10/2/16.
@@ -34,6 +31,18 @@ public class FragmentMethods {
     public static final String RECYCLERVIEW_FRAG_TAG = "recyclerview_frag_tag";
     public static final String NEW_FRAG_TAG = "new_frag_tag";
     public static final String VIEW_FRAG_TAG = "view_frag_tag";
+    public static final String TOP_TEXT = "top_text";
+    public static final String BOTTOM_TEXT = "bottom_text";
+    public static final String OBJECT_TYPE = "object_type";
+    public static final String NEW_OR_EDIT = "new_or_edit";
+    public static final String KEY = "key";
+    public static final String NEW = "new";
+    public static final String EDIT = "edit";
+    public static final String VIEW = "view";
+    public static final String PEPTALK_OBJ = "peptalk";
+    public static final String CHECKLIST_OBJ = "checklist";
+//    public static final String USERS = "users";
+
 
 
     public static void setupNewFrag(String objectType, FragmentActivity activity) {
@@ -41,8 +50,8 @@ public class FragmentMethods {
         FragmentTransaction transaction = manager.beginTransaction();
         NewFrag fragment = new NewFrag();
         Bundle args = new Bundle();
-        args.putString(NewFrag.NEW_OR_EDIT, NewFrag.NEW);
-        args.putString(NewFrag.OBJECT_TYPE, objectType);
+        args.putString(NEW_OR_EDIT, NEW);
+        args.putString(OBJECT_TYPE, objectType);
         fragment.setArguments(args);
 
         if (activity instanceof MainActivity) {
@@ -93,16 +102,16 @@ public class FragmentMethods {
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
         NewFrag fragment = new NewFrag();
         Bundle args = new Bundle();
-        args.putString(NewFrag.OBJECT_TYPE, objectType);
-        args.putString(NewFrag.NEW_OR_EDIT, NewFrag.EDIT);
+        args.putString(OBJECT_TYPE, objectType);
+        args.putString(NEW_OR_EDIT, EDIT);
         args.putString(KEY, key);
-        args.putString(NewFrag.TOP_TEXT, title);
-        args.putString(NewFrag.BOTTOM_TEXT, body);
+        args.putString(TOP_TEXT, title);
+        args.putString(BOTTOM_TEXT, body);
         fragment.setArguments(args);
 
         int containerId = 0;
 
-        if (objectType.equals(PEPTALKS)) {
+        if (objectType.equals(PEPTALK_OBJ)) {
             if (activity instanceof MainActivity) {
                 containerId = R.id.framelayout_main_frag_container;
             } else if (activity instanceof PepTalkListActivity) {
@@ -110,7 +119,7 @@ public class FragmentMethods {
             } else {
                 Log.d(TAG, "setupEditFrag: OBJECT TYPE PEPTALK -- FRAG CONTAINERS NULL");
             }
-        } else if (objectType.equals(CHECKLIST)) {
+        } else if (objectType.equals(CHECKLIST_OBJ)) {
             containerId = R.id.checklist_activity_frag_container;
         } else {
             Log.d(TAG, "setupEditFrag: NO OBJECT TYPE?");
@@ -126,11 +135,11 @@ public class FragmentMethods {
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
         ViewFrag fragment = new ViewFrag();
         Bundle args = new Bundle();
-        args.putString(NewFrag.OBJECT_TYPE, objectType);
-        args.putString(NewFrag.NEW_OR_EDIT, ViewFrag.VIEW);
-        args.putString(NewFrag.KEY, key);
-        args.putString(NewFrag.TOP_TEXT, title);
-        args.putString(NewFrag.BOTTOM_TEXT, body);
+        args.putString(OBJECT_TYPE, objectType);
+        args.putString(NEW_OR_EDIT, VIEW);
+        args.putString(KEY, key);
+        args.putString(TOP_TEXT, title);
+        args.putString(BOTTOM_TEXT, body);
         fragment.setArguments(args);
 
         int containerId = 0;
@@ -151,10 +160,10 @@ public class FragmentMethods {
         FragmentTransaction transaction = manager.beginTransaction();
         if (id == R.id.textview_main) {
             RecyclerViewFrag fragment = new RecyclerViewFrag();
-            transaction.add(R.id.framelayout_main_frag_container, fragment, FragmentMethods.RECYCLERVIEW_FRAG_TAG);
+            transaction.add(R.id.framelayout_main_frag_container, fragment, RECYCLERVIEW_FRAG_TAG);
         } else {
             NewFrag fragment = new NewFrag();
-            transaction.add(R.id.framelayout_main_frag_container, fragment, FragmentMethods.NEW_FRAG_TAG);
+            transaction.add(R.id.framelayout_main_frag_container, fragment, NEW_FRAG_TAG);
         }
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();

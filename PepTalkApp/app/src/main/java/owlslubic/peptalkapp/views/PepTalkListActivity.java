@@ -15,19 +15,18 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
-import owlslubic.peptalkapp.presenters.FragmentMethods;
+import owlslubic.peptalkapp.presenters.FirebaseHelper;
 import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 import owlslubic.peptalkapp.presenters.interfaces_behaviors.SimpleItemTouchHelperCallback;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
+import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
+
 public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.FABCoordinatorViewFrag, NewFrag.FABCoordinatorNewFrag {// implements OnStartDragListener {
 
     private static final String TAG = "PepTalkListActivity";
-    private static final String USERS = "users";
-    private static final String PEPTALKS = "peptalks";
-    private DatabaseReference mDbRef;
     private PepTalkFirebaseAdapter mFirebaseAdapter;
     private ItemTouchHelper mItemTouchHelper;
     private DatabaseReference mPeptalkRef;
@@ -49,15 +48,15 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentMethods.setupNewFrag(NewFrag.PEPTALKS, PepTalkListActivity.this);
+                setupNewFrag(PEPTALK_OBJ, PepTalkListActivity.this);
             }
         });
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_peptalklist);
 
         //recyclerview
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
+            mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS)
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(FirebaseHelper.PEPTALKS);
         }
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
         recyclerView.setHasFixedSize(true);

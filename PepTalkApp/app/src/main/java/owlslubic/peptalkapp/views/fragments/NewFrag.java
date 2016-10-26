@@ -3,9 +3,10 @@ package owlslubic.peptalkapp.views.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,10 +16,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.presenters.FirebaseHelper;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
+
+import static owlslubic.peptalkapp.presenters.FirebaseHelper.CHECKLIST;
+import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
 
 /**
@@ -26,28 +29,12 @@ import owlslubic.peptalkapp.presenters.FragmentMethods;
  */
 
 public class NewFrag extends Fragment implements View.OnClickListener {
-    private static final String USERS = "users";
     private static final String TAG = "NewFrag";
-    public static final String PEPTALKS = "peptalks";
-    public static final String CHECKLIST = "checklist";
-    public static final String PEPTALK_TITLE = "title";
-    public static final String PEPTALK_BODY = "body";
-    public static final String CHECKLIST_TEXT = "text";
-    public static final String CHECKLIST_NOTES = "notes";
-    public static final String TOP_TEXT = "top_text";
-    public static final String BOTTOM_TEXT = "bottom_text";
-    public static final String OBJECT_TYPE = "object_type";
-    public static final String NEW_OR_EDIT = "new_or_edit";
-    public static final String KEY = "key";
-    public static final String NEW = "new";
-    public static final String EDIT = "edit";
-    private static final String NEW_FRAG_TAG = "new_frag_tag";
     public EditText mTitle, mBody;
     public ImageButton mDone, mCancel;
     String mObjectType, mNewOrEdit, mKey, mTitleText, mBodyText, mTitleInput, mBodyInput;
     FABCoordinatorNewFrag mCallbackNew;
     Context mContext;
-//    ViewFrag.FABCoordinatorViewFrag mCallback;
     //attach snackbar to activity view
 
     private TextInputLayout inputLayoutTitle, inputLayoutBody;
@@ -55,7 +42,6 @@ public class NewFrag extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        mCallback = (ViewFrag.FABCoordinatorViewFrag) context;
         mCallbackNew = (FABCoordinatorNewFrag) context;
         mContext = context;
     }
@@ -70,11 +56,11 @@ public class NewFrag extends Fragment implements View.OnClickListener {
         mDone = (ImageButton) view.findViewById(R.id.imagebutton_fragment_done);
         mCancel = (ImageButton) view.findViewById(R.id.imagebutton_fragment_cancel);
 
-        mObjectType = getArguments().getString(OBJECT_TYPE);
-        mNewOrEdit = getArguments().getString(NEW_OR_EDIT);
-        mKey = getArguments().getString(KEY);
-        mTitleText = getArguments().getString(TOP_TEXT);
-        mBodyText = getArguments().getString(BOTTOM_TEXT);
+        mObjectType = getArguments().getString(FragmentMethods.OBJECT_TYPE);
+        mNewOrEdit = getArguments().getString(FragmentMethods.NEW_OR_EDIT);
+        mKey = getArguments().getString(FragmentMethods.KEY);
+        mTitleText = getArguments().getString(FragmentMethods.TOP_TEXT);
+        mBodyText = getArguments().getString(FragmentMethods.BOTTOM_TEXT);
 
         mCallbackNew.hideFabFromNewFrag();
 
@@ -82,15 +68,12 @@ public class NewFrag extends Fragment implements View.OnClickListener {
         inputLayoutTitle = (TextInputLayout) view.findViewById(R.id.inputlayout_title);
         inputLayoutBody = (TextInputLayout) view.findViewById(R.id.inputlayout_body);
 
-
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
         mTitle.setMovementMethod(new ScrollingMovementMethod());
         mTitle.setCursorVisible(true);
         mTitle.setFocusableInTouchMode(true);
@@ -98,12 +81,11 @@ public class NewFrag extends Fragment implements View.OnClickListener {
         mBody.setMovementMethod(new ScrollingMovementMethod());
         mBody.setCursorVisible(true);
         mBody.setFocusableInTouchMode(true);
-//        mBody.requestFocus();
         if (mNewOrEdit.equals(NEW)) {
-            if (mObjectType.equals(CHECKLIST)) {
+            if (mObjectType.equals(FragmentMethods.CHECKLIST_OBJ)) {
                 mTitle.setHint("What do you want to add to your checklist?");
                 mBody.setHint("Any notes on this?");
-            } else if (mObjectType.equals(PEPTALKS)) {
+            } else if (mObjectType.equals(FragmentMethods.PEPTALK_OBJ)) {
                 mTitle.setHint("Give your new pep talk a title");
                 mBody.setHint("Everything is going to be okay because...");
             } else {
@@ -115,45 +97,43 @@ public class NewFrag extends Fragment implements View.OnClickListener {
         }
         mDone.setOnClickListener(this);
         mCancel.setOnClickListener(this);
-    }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        setRetainInstance(true);
-        super.onActivityCreated(savedInstanceState);
+        mTitle.addTextChangedListener(new ATextWatcher(mTitle));
+        mBody.addTextChangedListener(new ATextWatcher(mBody));
+
+
 
     }
 
 
     public boolean isPepTalk() {
-        if (mObjectType.equals(PEPTALKS)) {
+        if (mObjectType.equals(FragmentMethods.PEPTALK_OBJ)) {
             return true;
         } else return false;
     }
 
     public boolean isChecklistItem() {
-        if (mObjectType.equals(CHECKLIST)) {
+        if (mObjectType.equals(FragmentMethods.CHECKLIST_OBJ)) {
             return true;
         } else return false;
     }
 
     public boolean isPepBodyValid(String body) {
 
-        if (mObjectType.equals(PEPTALKS) && (body.length()==0)) {
+        if (mObjectType.equals(FragmentMethods.PEPTALK_OBJ) && (body.length() == 0)) {
             //in this case, don't go any further because we at least need some body text to move on
-//            mBody.setError("oops! please enter valid text");
             return false;
         }
-            return true;
+        return true;
     }
 
     public boolean isCheckValid(String title) {
 
-        if (mObjectType.equals(CHECKLIST) && (title.length()==0)) {
+        if (mObjectType.equals(FragmentMethods.CHECKLIST_OBJ) && (title.length() == 0)) {
             //in this case, don't go any further because we at least need some the checklist item, notes dont matter
             return false;
         }
-            return true;
+        return true;
     }
 
     public void setmTitleInput(String title, String body) {
@@ -176,8 +156,8 @@ public class NewFrag extends Fragment implements View.OnClickListener {
 
     }
 
-    public void writeToDatabase() {//passing it this way might not matter since member variables...
-        if (mObjectType.equals(CHECKLIST)) {
+    public void writeToDatabase() {
+        if (mObjectType.equals(FragmentMethods.CHECKLIST_OBJ)) {
             if (mNewOrEdit.equals(NEW)) {
                 FirebaseHelper.writeNewChecklist(mTitleInput, mBodyInput, getContext(), false);
             } else if (mNewOrEdit.equals(EDIT)) {
@@ -185,9 +165,7 @@ public class NewFrag extends Fragment implements View.OnClickListener {
             } else {
                 Toast.makeText(getContext(), "oops! something went wrong with your checklist", Toast.LENGTH_SHORT).show();
             }
-
-
-        } else if (mObjectType.equals(PEPTALKS)) {
+        } else if (mObjectType.equals(FragmentMethods.PEPTALK_OBJ)) {
             if (mNewOrEdit.equals(NEW)) {
                 FirebaseHelper.writeNewPeptalk(mTitleInput, mBodyInput, getContext(), false);
             } else if (mNewOrEdit.equals(EDIT)) {
@@ -198,75 +176,30 @@ public class NewFrag extends Fragment implements View.OnClickListener {
         } else {
             Toast.makeText(getContext(), "oops! something went wrong", Toast.LENGTH_SHORT).show();
         }
-
     }
+
 
     @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
             case R.id.imagebutton_fragment_done:
-
                 String titleInput = mTitle.getText().toString().trim();
                 String bodyInput = mBody.getText().toString().trim();
-
                 if (isPepTalk() && !isPepBodyValid(bodyInput)) {
-                    mBody.setError("oops! please enter valid text");
+//                    mBody.setError("oops! please enter valid text");
+                    inputLayoutBody.setError("oops! please enter something");
+                    inputLayoutBody.requestFocus();
+
                 } else if (isChecklistItem() && !isCheckValid(titleInput)) {
-                    mTitle.setError("oops! please enter valid text");
+//                    mTitle.setError("oops! please enter valid text");
+                    inputLayoutTitle.setError("oops! don't leave this blank");
+                    inputLayoutTitle.requestFocus();
                 } else {
                     setmTitleInput(titleInput, bodyInput);
                     writeToDatabase();
                     FragmentMethods.detachFragment(getActivity(), NEW_FRAG_TAG);
-
                 }
-
-
-                //TODO this logic looks horrible please find a better way to do it
-                //first check for valid input
-//                if (mObjectType.equals(PEPTALKS) && (mBodyInput.equalsIgnoreCase("") || mBodyInput.equalsIgnoreCase(" "))) {
-//                    //in this case, don't go any further because we at least need some body text to move on
-//                    mBody.setError("oops! please enter valid text");
-//                } else {
-//                    if (mObjectType.equals(PEPTALKS) && (mTitleInput.equalsIgnoreCase("") || mTitleInput.equalsIgnoreCase(" "))) {
-//                        //in this case, i'm going to set the first bit of body text to be the title
-//                        if (mBodyInput.length() > 40) {
-//                            mTitleInput = mBodyInput.substring(0, Math.min(mBodyInput.length(), 40)) + "...";
-//                        }
-//                        mTitleInput = mBodyInput.substring(0, Math.min(mBodyInput.length(), 40));
-//                    }
-//                    if (mObjectType.equals(PEPTALKS) && (mTitleInput.length() > 40)) {
-//                        //in this case, i'm truncating the title
-//                        mTitleInput = mTitleInput.substring(0, Math.min(mTitleInput.length(), 40)) + "...";
-//                    }
-//
-//
-//                    //then write to database
-//                    if (mObjectType.equals(CHECKLIST)) {
-//                        if (mNewOrEdit.equals(NEW)) {
-//                            FirebaseHelper.writeNewChecklist(mTitleInput, mBodyInput, getContext(), false);
-//                        } else if (mNewOrEdit.equals(EDIT)) {
-//                            FirebaseHelper.updateChecklist(mKey, mTitleInput, mBodyInput, getContext());
-//                        } else {
-//                            Toast.makeText(getContext(), "oops! something went wrong with your checklist", Toast.LENGTH_SHORT).show();
-//                        }
-//
-//
-//                    } else if (mObjectType.equals(PEPTALKS)) {
-//                        if (mNewOrEdit.equals(NEW)) {
-//                            FirebaseHelper.writeNewPeptalk(mTitleInput, mBodyInput, getContext(), false);
-//                        } else if (mNewOrEdit.equals(EDIT)) {
-//                            FirebaseHelper.updatePepTalk(mKey, mTitleInput, mBodyInput, getContext());
-//                        } else {
-//                            Toast.makeText(getContext(), "oops! something went wrong with your pep talk", Toast.LENGTH_SHORT).show();
-//                        }
-//                    } else {
-//                        Toast.makeText(getContext(), "oops! something went wrong", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    FragmentMethods.detachFragment(getActivity(), NEW_FRAG_TAG);
-//                }
-
                 break;
             case R.id.imagebutton_fragment_cancel:
                 FragmentMethods.detachFragment(getActivity(), NEW_FRAG_TAG);
@@ -278,11 +211,18 @@ public class NewFrag extends Fragment implements View.OnClickListener {
 
     }
 
+    @Override//TODO should setRetainInstance be before or after the super.onAct...
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        setRetainInstance(true);
+        super.onActivityCreated(savedInstanceState);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
         mCallbackNew.putFabBackFromNewFrag();
     }
+
 
     public interface FABCoordinatorNewFrag {
         void hideFabFromNewFrag();
@@ -290,8 +230,28 @@ public class NewFrag extends Fragment implements View.OnClickListener {
         void putFabBackFromNewFrag();
     }
 
+    private class ATextWatcher implements TextWatcher {
 
-/**
- * MAKE THE TEXTWATCHER CLASS, MAKE SEPARATE METHODS TO VALIDATE THE TEXT INPUT, MAKE THIS NEATER OH FOR THE LOVE OF GOD
- */
+        View mView;
+
+        private ATextWatcher(View view){
+            mView = view;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    }
+
 }

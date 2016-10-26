@@ -17,6 +17,7 @@ import owlslubic.peptalkapp.presenters.interfaces_behaviors.OnStartDragListener;
 import owlslubic.peptalkapp.views.MainActivity;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
+import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
 /**
  * Created by owlslubic on 9/1/16.
@@ -67,7 +68,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             holder.mEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FragmentMethods.setupEditFrag((FragmentActivity) mContext, NewFrag.PEPTALKS,
+                    setupEditFrag((FragmentActivity) mContext, PEPTALK_OBJ,
                             model.getKey(), model.getTitle(), model.getBody());
                     mCallback.hideFabFromViewFrag();
 
@@ -79,7 +80,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             holder.mCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FragmentMethods.setupViewFrag((FragmentActivity)mContext,NewFrag.PEPTALKS,model.getKey(), model.getTitle(), model.getBody());
+                    setupViewFrag((FragmentActivity)mContext, PEPTALK_OBJ,model.getKey(), model.getTitle(), model.getBody());
                     mCallback.hideFabFromViewFrag();
                 }
             });

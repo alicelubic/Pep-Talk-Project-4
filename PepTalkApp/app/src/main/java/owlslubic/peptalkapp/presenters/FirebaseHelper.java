@@ -21,10 +21,8 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
  */
 
 public class FirebaseHelper {
-    //TODO these variables should all be here, and then be referenced
-    //TODO from other locales as FirebaseHelper.USERS etc
-    private static final String USERS = "users";
-    private static final String TAG = "NewFrag";
+    private static final String TAG = "FirebaseHelper";
+    public static final String USERS = "users";
     public static final String PEPTALKS = "peptalks";
     public static final String CHECKLIST = "checklist";
     public static final String PEPTALK_TITLE = "title";
