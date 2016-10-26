@@ -37,6 +37,8 @@ import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.presenters.FirebaseHelper;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
+
+import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
 import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
 
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
         initViews();
         checkNetworkStatus();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (isUserSignedIn()) {
             setIsLogoutVisible(true);
         } else {
             setIsLogoutVisible(false);
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements
         //for launching our lil peptalks
         mLaunchFragMain = (TextView) findViewById(R.id.textview_main);
         mLaunchFragMain.setOnClickListener(this);
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (isUserSignedIn()) {
             mLaunchFragMain.setText(R.string.need_a_pep_talk);
         } else {
             mLaunchFragMain.setText(R.string.signup_or_login);
@@ -148,16 +150,11 @@ public class MainActivity extends AppCompatActivity implements
         mWelcomeTextView = (TextView) headerView.findViewById(R.id.textview_navheader_welcome);
         mSigninTextView = (TextView) headerView.findViewById(R.id.navheader_signin);
         mSigninTextView.setOnClickListener(this);
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            //already signed in, so set text to sign out
-//            mSigninTextView.setText(R.string.sign_out);
-//            mSigninPromptTextView.setText("");
-            mWelcomeTextView.setText(getString(R.string.welcome_back_user) +
-                    FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        if (isUserSignedIn()) {
+            String welcomeBackPal = String.format(getResources().getString(R.string.welcome_back_user), FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+//            mWelcomeTextView.setText(getString(R.string.welcome_back_user) + displayName);
+            mWelcomeTextView.setText(welcomeBackPal);
         } else {
-            //needs to sign in, set text to sign in
-//            mSigninTextView.setText(R.string.sign_in);
-//            mSigninPromptTextView.setText(R.string.sign_in_prompt);
             mWelcomeTextView.setText(R.string.welcome_blurb);
         }
 
@@ -316,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.widget) {
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            if (isUserSignedIn()) {
                 launchAddWidgetTextDialog();
             } else {
                 Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to mess with your widget", Snackbar.LENGTH_SHORT);
@@ -344,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = item.getItemId();
         if (id == R.id.nav_peptalks) {
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            if (isUserSignedIn()) {
                 Intent intent = new Intent(MainActivity.this, PepTalkListActivity.class);
                 startActivity(intent);
             } else {
@@ -357,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements
                 }).show();
             }
         } else if (id == R.id.nav_checklist) {
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            if (isUserSignedIn()) {
                 Intent intent = new Intent(MainActivity.this, ChecklistActivity.class);
                 startActivity(intent);
             } else {
@@ -466,20 +463,20 @@ public class MainActivity extends AppCompatActivity implements
         SharedPreferences mPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         b = mPrefs.getBoolean("FIRST_RUN", false);
         if (!b) {
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes), this, true); //TODO CHECK IF USING this AS CONTEXT MAKES IT NOT WORK???
-                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes), this, true);
-                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes), this, true);
-                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes), this, true);
-                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes), this, true);
-                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes), this, true);
+            if (isUserSignedIn()) {
+                writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes), this, true); //TODO CHECK IF USING this AS CONTEXT MAKES IT NOT WORK???
+                writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes), this, true);
+                writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes), this, true);
+                writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes), this, true);
+                writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes), this, true);
+                writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes), this, true);
 
-                FirebaseHelper.writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present), this, true);
-                FirebaseHelper.writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions), this, true);
-                FirebaseHelper.writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best), this, true);
-                FirebaseHelper.writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment), this, true);
-                FirebaseHelper.writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing), this, true);
-                FirebaseHelper.writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt), this, true);
+                writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present), this, true);
+                writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions), this, true);
+                writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best), this, true);
+                writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment), this, true);
+                writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing), this, true);
+                writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt), this, true);
             }
 
             mPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
@@ -539,7 +536,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fablet_checklist:
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                if (isUserSignedIn()) {
                     setupNewFrag(FragmentMethods.CHECKLIST_OBJ, this);
 
                     mFrameLayout.getBackground().setAlpha(0);
@@ -557,7 +554,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 break;
             case R.id.fablet_peptalk:
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                if (isUserSignedIn()) {
                     setupNewFrag(FragmentMethods.PEPTALK_OBJ, MainActivity.this);
                     mFrameLayout.getBackground().setAlpha(0);
                     mFrameLayout.setOnTouchListener(null);
@@ -574,14 +571,14 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.textview_main:
                 //launch pep talk view
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                if (isUserSignedIn()) {
                     setupMainActivityFrag(R.id.textview_main, this);
                 } else {
                     myLoginMethod();
                 }
                 break;
             case R.id.navheader_signin:
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                if (isUserSignedIn()) {
 
                     Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "hey friend", Snackbar.LENGTH_LONG);
                     snackbar.show();
@@ -701,16 +698,14 @@ public class MainActivity extends AppCompatActivity implements
 
 
     public void myLogoutMethod(){
-        //by stating in oncreate that it should be visible if logged in and not if not,
-        //that'll take care of that. i need to do the actual signing out, and changing the textviews back
+        String displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
         if (isUserSignedIn()) {
             AuthUI.getInstance().signOut(this);
-            Toast.makeText(MainActivity.this, "see ya later!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "see ya later, "+displayName+"!", Toast.LENGTH_SHORT).show();
 //                Snackbar snackbar = Snackbar.make(item.getActionView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_LONG);
 //                snackbar.show();
             setIsLogoutVisible(false);
-
             mWelcomeTextView.setText(R.string.welcome_blurb);
             mLaunchFragMain.setText(R.string.signup_or_login);
         }
@@ -721,12 +716,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public static boolean isUserSignedIn(){
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            return true;
-        }
-        return false;
-    }
+
 
     @Override
     public void hideFabFromNewFrag() {
