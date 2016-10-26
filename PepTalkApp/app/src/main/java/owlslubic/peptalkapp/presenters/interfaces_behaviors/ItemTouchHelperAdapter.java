@@ -1,4 +1,4 @@
-package owlslubic.peptalkapp.presenters;
+package owlslubic.peptalkapp.presenters.interfaces_behaviors;
 
 import owlslubic.peptalkapp.models.PepTalkObject;
 

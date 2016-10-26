@@ -1,10 +1,11 @@
-package owlslubic.peptalkapp.presenters;
+package owlslubic.peptalkapp.presenters.interfaces_behaviors;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 import owlslubic.peptalkapp.models.PepTalkObject;
+import owlslubic.peptalkapp.presenters.interfaces_behaviors.ItemTouchHelperAdapter;
 
 /**
  * Created by owlslubic on 9/1/16.

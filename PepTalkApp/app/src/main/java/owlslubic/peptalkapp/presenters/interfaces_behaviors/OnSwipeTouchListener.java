@@ -1,4 +1,4 @@
-package owlslubic.peptalkapp.presenters;
+package owlslubic.peptalkapp.presenters.interfaces_behaviors;
 
 /**
  * Created by owlslubic on 9/7/16.

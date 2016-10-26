@@ -12,8 +12,9 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import owlslubic.peptalkapp.models.PepTalkObject;
+import owlslubic.peptalkapp.presenters.interfaces_behaviors.ItemTouchHelperAdapter;
+import owlslubic.peptalkapp.presenters.interfaces_behaviors.OnStartDragListener;
 import owlslubic.peptalkapp.views.MainActivity;
-import owlslubic.peptalkapp.views.PepTalkListActivity;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
@@ -27,14 +28,14 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
     FragmentManager mFragmentManager;
-    ViewFrag.FABCoordinator mCallback;
+    ViewFrag.FABCoordinatorViewFrag mCallback;
 
     private static final String TAG = "PepTalkFirebaseAdapter";
 
 
     public PepTalkFirebaseAdapter(Class<PepTalkObject> modelClass, int modelLayout,
                                   Class<PepTalkViewHolder> viewHolderClass, Query ref,
-                                  Context context, FragmentManager fragmentManager, ViewFrag.FABCoordinator callback) {//OnStartDragListener onStartDragListener, Context context){
+                                  Context context, FragmentManager fragmentManager, ViewFrag.FABCoordinatorViewFrag callback) {//OnStartDragListener onStartDragListener, Context context){
         super(modelClass, modelLayout, viewHolderClass, ref);
         mRef = ref.getRef();
 //        mOnStartDragListener = onStartDragListener;
@@ -68,7 +69,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
                 public void onClick(View view) {
                     FragmentMethods.setupEditFrag((FragmentActivity) mContext, NewFrag.PEPTALKS,
                             model.getKey(), model.getTitle(), model.getBody());
-                    mCallback.hideFabWhenFragOpens();
+                    mCallback.hideFabFromViewFrag();
 
                 }
             });
@@ -79,7 +80,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
                 @Override
                 public void onClick(View view) {
                     FragmentMethods.setupViewFrag((FragmentActivity)mContext,NewFrag.PEPTALKS,model.getKey(), model.getTitle(), model.getBody());
-                    mCallback.hideFabWhenFragOpens();
+                    mCallback.hideFabFromViewFrag();
                 }
             });
 
@@ -87,7 +88,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
             holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    DBHelper.launchDeletePepTalkDialog(model, mContext);
+                    FirebaseHelper.launchDeletePepTalkDialog(model, mContext);
                     return true;
                 }
             });

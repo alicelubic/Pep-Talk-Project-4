@@ -18,11 +18,11 @@ import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
 import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
-import owlslubic.peptalkapp.presenters.SimpleItemTouchHelperCallback;
+import owlslubic.peptalkapp.presenters.interfaces_behaviors.SimpleItemTouchHelperCallback;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
-public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.FABCoordinator, NewFrag.FABCoordinatorNewFrag {// implements OnStartDragListener {
+public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.FABCoordinatorViewFrag, NewFrag.FABCoordinatorNewFrag {// implements OnStartDragListener {
 
     private static final String TAG = "PepTalkListActivity";
     private static final String USERS = "users";
@@ -33,14 +33,14 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
     private DatabaseReference mPeptalkRef;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFab;
-    ViewFrag.FABCoordinator mCallback;
+    ViewFrag.FABCoordinatorViewFrag mCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pep_talk_list);
 
-        getSupportActionBar().setTitle("Your Pep Talks");
+        getSupportActionBar().setTitle("");
         mCallback = this;
 
         //fab launches new pep fragment
@@ -103,17 +103,16 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
     }
 
 
+    /** this is too redundant, but I'll make it lean later */
     @Override
-    public void hideFabWhenFragOpens() {
+    public void hideFabFromViewFrag() {
         mFab.setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public void putFabBack(){
+    public void putFabBackFromViewFrag(){
         mFab.setVisibility(View.VISIBLE);
     }
-
-
 
     @Override
     public void hideFabFromNewFrag() {

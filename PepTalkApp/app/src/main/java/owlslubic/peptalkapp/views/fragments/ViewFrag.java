@@ -29,13 +29,13 @@ public class ViewFrag extends Fragment {
     TextView mTopTextView, mBottomTextView;
     String mTitleText, mBodyText, mObjectType, mKey;
     ImageButton mEdit;
-    FABCoordinator mCallback;
+    FABCoordinatorViewFrag mCallback;
     NewFrag.FABCoordinatorNewFrag mCallbackNewFrag;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mCallback = (FABCoordinator) context;
+        mCallback = (FABCoordinatorViewFrag) context;
         mCallbackNewFrag = (NewFrag.FABCoordinatorNewFrag) context;
     }
 
@@ -72,13 +72,12 @@ public class ViewFrag extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mCallback.putFabBack();
+        mCallback.putFabBackFromViewFrag();
     }
 
-    public interface FABCoordinator{
-        void hideFabWhenFragOpens();
-        void putFabBack();
-
+    public interface FABCoordinatorViewFrag {
+        void hideFabFromViewFrag();
+        void putFabBackFromViewFrag();
     }
 
 

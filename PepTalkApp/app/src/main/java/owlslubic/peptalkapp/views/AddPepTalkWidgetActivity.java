@@ -1,11 +1,8 @@
 package owlslubic.peptalkapp.views;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -13,8 +10,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 import owlslubic.peptalkapp.R;
-import owlslubic.peptalkapp.presenters.DBHelper;
-import owlslubic.peptalkapp.views.fragments.NewFrag;
+import owlslubic.peptalkapp.presenters.FirebaseHelper;
 
 /**
  * Created by owlslubic on 9/20/16.
@@ -55,7 +51,7 @@ public class AddPepTalkWidgetActivity extends AppCompatActivity implements View.
                     mBody.setError("oops! please enter valid text");
                 } else {
                     if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                        DBHelper.writeNewPeptalk(titleInput, bodyInput, AddPepTalkWidgetActivity.this, false);
+                        FirebaseHelper.writeNewPeptalk(titleInput, bodyInput, AddPepTalkWidgetActivity.this, false);
                         Toast.makeText(AddPepTalkWidgetActivity.this, "pep talk added", Toast.LENGTH_SHORT).show();
                         finish();
                     } else {

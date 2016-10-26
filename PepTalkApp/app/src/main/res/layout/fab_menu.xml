@@ -11,7 +11,7 @@
     android:background="@color/white_overlay"
     android:theme="@style/PepTalkTheme">
 
-    <!--app:layout_behavior="owlslubic.peptalkapp.presenters.FloatingActionsMenuBehavior"-->
+    <!--app:layout_behavior="owlslubic.peptalkapp.presenters.interfaces_behaviors.FloatingActionsMenuBehavior"-->
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fab_menu"
         android:layout_width="56dp"

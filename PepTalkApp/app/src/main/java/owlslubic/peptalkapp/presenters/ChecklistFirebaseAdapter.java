@@ -3,7 +3,6 @@ package owlslubic.peptalkapp.presenters;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -12,7 +11,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 
 import owlslubic.peptalkapp.models.ChecklistItemObject;
-import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 
 /**
@@ -49,7 +47,7 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
         holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                DBHelper.launchDeleteChecklistDialog(model, mContext);
+                FirebaseHelper.launchDeleteChecklistDialog(model, mContext);
                 return true;
             }
         });
@@ -61,7 +59,7 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 model.setIsChecked(isChecked);
-                DBHelper.updateIsChecked(model.getKey(), isChecked);
+                FirebaseHelper.updateIsChecked(model.getKey(), isChecked);
                 Log.i(TAG, "onCheckedChanged: isChecked "+ isChecked);
             }
         });

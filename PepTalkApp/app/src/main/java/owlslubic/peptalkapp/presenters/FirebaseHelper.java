@@ -20,9 +20,9 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
  * Created by owlslubic on 10/2/16.
  */
 
-public class DBHelper {
+public class FirebaseHelper {
     //TODO these variables should all be here, and then be referenced
-    //TODO from other locales as DBHelper.USERS etc
+    //TODO from other locales as FirebaseHelper.USERS etc
     private static final String USERS = "users";
     private static final String TAG = "NewFrag";
     public static final String PEPTALKS = "peptalks";
@@ -33,7 +33,7 @@ public class DBHelper {
     public static final String CHECKLIST_NOTES = "notes";
     public static final String CHECKLIST_CHECKED = "checked";
 
-    public DBHelper() {
+    public FirebaseHelper() {
     }
 
     public static void writeNewPeptalk(final String title, String body, final Context context, final boolean isPreloadedContent) {
@@ -47,11 +47,11 @@ public class DBHelper {
             pepKey.setValue(peptalk, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if(databaseError!= null){
+                    if (databaseError != null) {
                         Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
-                    }else{
-                        if(!isPreloadedContent){
-                            Toast.makeText(context, title+" added to peptalks!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (!isPreloadedContent) {
+                            Toast.makeText(context, title + " added to peptalks!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -68,10 +68,10 @@ public class DBHelper {
             peptalkRef.child(key).child(PEPTALK_TITLE).setValue(title, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if(databaseError!= null){
+                    if (databaseError != null) {
                         Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(context, title+" updated!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, title + " updated!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -109,24 +109,24 @@ public class DBHelper {
             itemKey.setValue(item, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if(databaseError!= null){
+                    if (databaseError != null) {
                         Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
-                    }else{
-                        if(!isPreloadedContent){
-                            Toast.makeText(context, text+ " added to checklist!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (!isPreloadedContent) {
+                            Toast.makeText(context, text + " added to checklist!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
             });
             Log.d(TAG, "writeNewChecklist: new key is: " + key);
         } else {
-            if(!isPreloadedContent){
+            if (!isPreloadedContent) {
                 Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    public static void updateIsChecked(String key, boolean isChecked){
+    public static void updateIsChecked(String key, boolean isChecked) {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(CHECKLIST);
@@ -134,13 +134,13 @@ public class DBHelper {
             checklistRef.child(key).child(CHECKLIST_CHECKED).setValue(isChecked, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if(databaseError==null){
+                    if (databaseError == null) {
                         Log.i(TAG, "onComplete: UPDATE ISCHECKED successful");
                     }
                 }
             });
 
-        }else {
+        } else {
             Log.d(TAG, "updateChecklist failed, getCurrentUser() == null");
         }
     }
@@ -153,9 +153,9 @@ public class DBHelper {
             checklistRef.child(key).child(CHECKLIST_TEXT).setValue(text, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if(databaseError!= null){
+                    if (databaseError != null) {
                         Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         Toast.makeText(context, "checklist item updated!", Toast.LENGTH_SHORT).show();
                     }
                 }

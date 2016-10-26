@@ -36,7 +36,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
 
 import owlslubic.peptalkapp.R;
-import owlslubic.peptalkapp.presenters.DBHelper;
+import owlslubic.peptalkapp.presenters.FirebaseHelper;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 
@@ -46,7 +46,7 @@ import static owlslubic.peptalkapp.presenters.FragmentMethods.VIEW_FRAG_TAG;
 
 
 public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, NewFrag.FABCoordinatorNewFrag {
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9;
     private static final String PREFS = "prefs";
@@ -150,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements
         //nav login header
         View headerView = navigationView.getHeaderView(0);
         mWelcomeTextView = (TextView) headerView.findViewById(R.id.textview_navheader_welcome);
-        mSigninPromptTextView = (TextView) headerView.findViewById(R.id.textview_navheader_signin);
         mSigninTextView = (TextView) headerView.findViewById(R.id.navheader_signin);
         mSigninTextView.setOnClickListener(this);
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -472,19 +471,19 @@ public class MainActivity extends AppCompatActivity implements
         b = mPrefs.getBoolean("FIRST_RUN", false);
         if (!b) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                DBHelper.writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes), this, true); //TODO CHECK IF USING this AS CONTEXT MAKES IT NOT WORK???
-                DBHelper.writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes), this, true);
-                DBHelper.writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes), this, true);
-                DBHelper.writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes), this, true);
-                DBHelper.writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes), this, true);
-                DBHelper.writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes), this, true);
+                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes), this, true); //TODO CHECK IF USING this AS CONTEXT MAKES IT NOT WORK???
+                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes), this, true);
+                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes), this, true);
+                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes), this, true);
+                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes), this, true);
+                FirebaseHelper.writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes), this, true);
 
-                DBHelper.writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present), this, true);
-                DBHelper.writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions), this, true);
-                DBHelper.writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best), this, true);
-                DBHelper.writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment), this, true);
-                DBHelper.writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing), this, true);
-                DBHelper.writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt), this, true);
+                FirebaseHelper.writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present), this, true);
+                FirebaseHelper.writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions), this, true);
+                FirebaseHelper.writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best), this, true);
+                FirebaseHelper.writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment), this, true);
+                FirebaseHelper.writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing), this, true);
+                FirebaseHelper.writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt), this, true);
             }
 
             mPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
@@ -726,6 +725,15 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void hideFabFromNewFrag() {
+
+    }
+
+    @Override
+    public void putFabBackFromNewFrag() {
+
+    }
 }
 
 
