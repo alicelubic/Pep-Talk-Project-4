@@ -24,24 +24,18 @@ import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
  */
 
 public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder> implements ItemTouchHelperAdapter {
+    private static final String TAG = "PepTalkFirebaseAdapter";
     private static final String PREFS = "prefs";
-    private DatabaseReference mRef;
     private OnStartDragListener mOnStartDragListener;
     private Context mContext;
-    FragmentManager mFragmentManager;
-    ViewFrag.FABCoordinatorViewFrag mCallback;
-
-    private static final String TAG = "PepTalkFirebaseAdapter";
-
+    private ViewFrag.FABCoordinatorViewFrag mCallback;
 
     public PepTalkFirebaseAdapter(Class<PepTalkObject> modelClass, int modelLayout,
                                   Class<PepTalkViewHolder> viewHolderClass, Query ref,
-                                  Context context, FragmentManager fragmentManager, ViewFrag.FABCoordinatorViewFrag callback) {//OnStartDragListener onStartDragListener, Context context){
+                                  Context context, ViewFrag.FABCoordinatorViewFrag callback) {//OnStartDragListener onStartDragListener, Context context){
         super(modelClass, modelLayout, viewHolderClass, ref);
-        mRef = ref.getRef();
 //        mOnStartDragListener = onStartDragListener;
         mContext = context;
-        mFragmentManager = fragmentManager;
         mCallback = callback;
 
 

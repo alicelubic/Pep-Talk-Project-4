@@ -44,7 +44,6 @@ public class FragmentMethods {
 //    public static final String USERS = "users";
 
 
-
     public static void setupNewFrag(String objectType, FragmentActivity activity) {
         FragmentManager manager = activity.getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -65,36 +64,6 @@ public class FragmentMethods {
         transaction.addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
-    }
-
-
-    public static void detachFragment(FragmentActivity activity, String tag) {
-        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
-        if (fragment.getTag() != null) {
-            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-            transaction
-                    //doing detach so that it doesn't have to reload the data............ right?
-                    .detach(fragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                    .commit();
-        } else {
-            Log.d(TAG, "detachFragment: OOPS, FRAG TAG WAS NULL");
-        }
-
-    }
-
-    public static void addFragToBackStack(FragmentActivity activity, String tag) {
-        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
-        if (fragment.getTag() != null) {
-            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-            transaction
-                    //doing detach so that it doesn't have to reload the data............ right?
-                    .addToBackStack(tag)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                    .commit();
-        } else {
-            Log.d(TAG, "detachFragment: OOPS, FRAG TAG WAS NULL");
-        }
     }
 
 
@@ -124,7 +93,7 @@ public class FragmentMethods {
         } else {
             Log.d(TAG, "setupEditFrag: NO OBJECT TYPE?");
         }
-        transaction.replace(containerId, fragment, NEW_FRAG_TAG)//do i need to put a tag here?
+        transaction.replace(containerId, fragment, NEW_FRAG_TAG)
                 .addToBackStack(null)//what should this be if not null? idk?
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
@@ -143,9 +112,11 @@ public class FragmentMethods {
         fragment.setArguments(args);
 
         int containerId = 0;
-        if (activity instanceof MainActivity) {//would that be recyclerview frag?
-            containerId = R.id.framelayout_main_frag_container;
-        } else if (activity instanceof PepTalkListActivity) {
+//        if (activity instanceof MainActivity) {
+//            containerId = R.id.framelayout_main_frag_container;
+//        } else
+        //the above code is not necessary because if a frag is called from main, it's either NewFrag or RecyclerView Frag
+        if (activity instanceof PepTalkListActivity) {
             containerId = R.id.peptalk_activity_frag_container;
         } else if (activity instanceof ChecklistActivity) {
             containerId = R.id.checklist_activity_frag_container;
@@ -167,6 +138,35 @@ public class FragmentMethods {
         }
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
+    }
+
+    public static void detachFragment(FragmentActivity activity, String tag) {
+        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
+        if (fragment.getTag() != null) {
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+            transaction
+                    //doing detach so that it doesn't have to reload the data............ right?
+                    .detach(fragment)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                    .commit();
+        } else {
+            Log.d(TAG, "detachFragment: OOPS, FRAG TAG WAS NULL");
+        }
+
+    }
+
+    public static void addFragToBackStack(FragmentActivity activity, String tag) {
+        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
+        if (fragment.getTag() != null) {
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+            transaction
+                    //doing detach so that it doesn't have to reload the data............ right?
+                    .addToBackStack(tag)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                    .commit();
+        } else {
+            Log.d(TAG, "detachFragment: OOPS, FRAG TAG WAS NULL");
+        }
     }
 
 

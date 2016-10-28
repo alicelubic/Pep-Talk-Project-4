@@ -11,15 +11,15 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/myPrimaryLightBlue"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            android:navigationIcon="@drawable/ic_menu_hamburger_24dp"/>
+            android:navigationIcon="@drawable/ic_menu_hamburger_24dp" />
+        <!--app:popupTheme="@style/AppTheme.PopupOverlay"-->
 
     </android.support.design.widget.AppBarLayout>
 

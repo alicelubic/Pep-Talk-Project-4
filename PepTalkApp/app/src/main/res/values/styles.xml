@@ -2,11 +2,25 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/myPrimaryLightBlue</item>
         <item name="colorPrimaryDark">@color/mySecondaryBlue</item>
         <item name="colorAccent">@color/myAccentBlue</item>
+
+        <item name="colorControlNormal">#fafafa</item>
+        <item name="colorControlActivated">@color/myAccentBlue</item>
+        <item name="colorControlHighlight">@color/mySecondaryBlue</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/myPrimaryLightBlue</item>
+        <item name="android:windowTranslucentStatus">true</item>
+
     </style>
+
+    <!--<style name="alertdialog" parent="AlertDialog.AppCompat.Light">-->
+        <!--<item name="color"-->
+    <!--</style>-->
 
 
     <style name="AppTheme.NoActionBar">
@@ -39,6 +53,7 @@
         <item name="android:textColorHint">#fafafa</item>
         <item name="android:textSize">18sp</item>
         <item name="android:typeface">normal</item>
+        <item name="android:textColor">#fafafa</item>
     </style>
 
 

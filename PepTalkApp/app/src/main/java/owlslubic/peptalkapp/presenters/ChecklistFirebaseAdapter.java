@@ -11,6 +11,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 
 import owlslubic.peptalkapp.models.ChecklistItemObject;
+import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
 /**
  * Created by owlslubic on 9/2/16.
@@ -18,18 +19,20 @@ import owlslubic.peptalkapp.models.ChecklistItemObject;
 public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistItemObject,ChecklistViewHolder>  {
     private static final String TAG = "ChecklistFirebaseAdapt";
     private Context mContext;
-    private FragmentManager mFragmentManager;
+    private ViewFrag.FABCoordinatorViewFrag mCallback;
 
     public ChecklistFirebaseAdapter(Class<ChecklistItemObject> modelClass, int modelLayout,
                                     Class<ChecklistViewHolder> viewHolderClass, DatabaseReference ref,
-                                    Context context, FragmentManager fragmentManager) {
+                                    Context context, ViewFrag.FABCoordinatorViewFrag callback) {
         super(modelClass, modelLayout, viewHolderClass, ref);
         mContext = context;
-        mFragmentManager = fragmentManager;
+        mCallback = callback;
+
     }
 
     @Override
-    protected void populateViewHolder(final ChecklistViewHolder holder, final ChecklistItemObject model, int position) {
+    protected void populateViewHolder(final ChecklistViewHolder holder,
+                                      final ChecklistItemObject model, int position) {
 
 
         holder.mItem.setText(model.getText());
@@ -38,7 +41,14 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
         holder.mCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentMethods.setupViewFrag((FragmentActivity)mContext,FragmentMethods.CHECKLIST_OBJ,model.getKey(), model.getText(), model.getNotes());
+                FragmentMethods.setupViewFrag(
+                        (FragmentActivity)mContext,
+                        FragmentMethods.CHECKLIST_OBJ,
+                        model.getKey(),
+                        model.getText(),
+                        model.getNotes());
+                mCallback.hideFabFromViewFrag();
+
 
             }
         });

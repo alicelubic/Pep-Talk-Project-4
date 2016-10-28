@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_layout_peptalklist_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mySecondaryBlue"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true">
     <!--android:paddingBottom="3dp"-->
     <!--android:paddingLeft="8dp"-->
     <!--android:paddingRight="8dp"-->
@@ -52,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="Your Pep Talks"
+                    android:text="@string/peptalk_activity_header_title"
                     android:textSize="23sp" />
 
                 <TextView

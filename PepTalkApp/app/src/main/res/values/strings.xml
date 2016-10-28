@@ -25,7 +25,7 @@
     <string name="more_resources_text">Of all the stress management philosophies we\'ve explored, and all the tips and tricks we\'ve used to get through mood lows or bad days, we\'ve have found that the concepts of Mindfulness benefit us most. \n\n
         Read about how guided meditations and mindfulness exercises can help you take an active approach to feeling better right now.
 </string>
-    <string name="welcome_blurb">Welcome to PepTalkPal</string>
+    <string name="welcome_blurb">let me be yr\nPepTalkPal</string>
     <string name="sign_in_prompt">sign in to get goin\'</string>
     <string name="sign_in">LOGIN</string>
     <string name="sign_out">LOGOUT</string>
@@ -79,6 +79,12 @@
     <string name="enter_peptalk_body_hint">Hey buddy, you\'re great because…</string>
     <string name="signup_or_login">signup\nor login</string>
     <string name="peptalk_activity_header">Welcome to your toolbox! Here are all your Pep Talks! So if you want to jump to a specific one or add/edit/delete, here\'s where to do it!</string>
-
+    <string name="checklist_activity_header">So you\'re feeling down, well you\'ve come to the right place. Before succumbing to the stress and giving up on the day, go through and your Checklist and see if any of these options help.</string>
+    <string name="peptalk_activity_header_title">Your Pep Talks</string>
+    <string name="checklist_activity_header_title">Your Feel-Better Checklist</string>
+    <string name="new_checklist_title_hint">To feel better, I will...</string>
+    <string name="new_checklist_notes_hint">Notes</string>
+    <string name="new_peptalk_title_hint">Pep Talk Title</string>
+    <string name="new_peptalk_body_hint">I\'m going to be okay because...</string>
 
 </resources>

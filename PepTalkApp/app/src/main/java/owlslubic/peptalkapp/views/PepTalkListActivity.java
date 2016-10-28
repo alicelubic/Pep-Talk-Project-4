@@ -22,24 +22,83 @@ import owlslubic.peptalkapp.presenters.interfaces_behaviors.SimpleItemTouchHelpe
 import owlslubic.peptalkapp.views.fragments.NewFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
+import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
+import static owlslubic.peptalkapp.presenters.FirebaseHelper.getUserId;
+import static owlslubic.peptalkapp.presenters.FirebaseHelper.isUserSignedIn;
 import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
-public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.FABCoordinatorViewFrag, NewFrag.FABCoordinatorNewFrag {// implements OnStartDragListener {
+public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.FABCoordinatorViewFrag, NewFrag.FABCoordinatorNewFrag {
 
     private static final String TAG = "PepTalkListActivity";
     private PepTalkFirebaseAdapter mFirebaseAdapter;
-    private ItemTouchHelper mItemTouchHelper;
     private DatabaseReference mPeptalkRef;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFab;
-    ViewFrag.FABCoordinatorViewFrag mCallback;
+    private RecyclerView mRecyclerView;
+    private ViewFrag.FABCoordinatorViewFrag mCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pep_talk_list);
 
-        getSupportActionBar().setTitle("");
+        initViews();
+        setupRecyclerView();
+
+//        if(getSupportActionBar() != null){
+//            getSupportActionBar().setTitle("");
+//        }
+//        mCallback = this;
+//
+//        //fab launches new pep fragment
+//        mFab = (FloatingActionButton) findViewById(R.id.fab_peptalk_list);
+//        mFab.setVisibility(View.INVISIBLE);
+//        mFab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                setupNewFrag(PEPTALK_OBJ, PepTalkListActivity.this);
+//            }
+//        });
+//        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_peptalklist);
+//
+//        //recyclerview
+//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//            mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
+//                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
+//        }
+//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
+//        recyclerView.setHasFixedSize(true);
+//        LinearLayoutManager llm = new LinearLayoutManager(this);
+//        llm.setReverseLayout(true);
+//        llm.setStackFromEnd(true);
+//        recyclerView.setLayoutManager(llm);
+//        //create adapter, add progress bar, set adapter
+//        mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class,
+//                R.layout.card_peptalk, PepTalkViewHolder.class, mPeptalkRef,
+//                this, getSupportFragmentManager(), mCallback);//, this); took out the onstartdrag listener
+//
+//        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+//            @Override
+//            public void onItemRangeInserted(int positionStart, int itemCount) {
+//                super.onItemRangeInserted(positionStart, itemCount);
+//                //once loaded, hide the progress bar
+//                mProgressBar.setVisibility(View.GONE);
+//                mFab.setVisibility(View.VISIBLE);
+//            }
+//        });
+//        recyclerView.setAdapter(mFirebaseAdapter);
+
+//
+
+
+
+    }
+
+    public void initViews(){
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
         mCallback = this;
 
         //fab launches new pep fragment
@@ -51,23 +110,27 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
                 setupNewFrag(PEPTALK_OBJ, PepTalkListActivity.this);
             }
         });
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_peptalklist);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_peptalklist);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
+    }
+    public void setupRecyclerView(){
         //recyclerview
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS)
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(FirebaseHelper.PEPTALKS);
+        if (isUserSignedIn()) {
+            mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
+                    .child(getUserId()).child(PEPTALKS);
         }
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
-        recyclerView.setHasFixedSize(true);
+        //set layout
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setReverseLayout(true);
         llm.setStackFromEnd(true);
-        recyclerView.setLayoutManager(llm);
+        mRecyclerView.setLayoutManager(llm);
+        mRecyclerView.setHasFixedSize(true);
+
         //create adapter, add progress bar, set adapter
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class,
                 R.layout.card_peptalk, PepTalkViewHolder.class, mPeptalkRef,
-                this, getSupportFragmentManager(), mCallback);//, this); took out the onstartdrag listener
+                this, mCallback);//, this); took out the onstartdrag listener
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -76,24 +139,15 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
                 //once loaded, hide the progress bar
                 mProgressBar.setVisibility(View.GONE);
                 mFab.setVisibility(View.VISIBLE);
+                //TODO set a transition so this fades in or some shit
+
             }
         });
-        recyclerView.setAdapter(mFirebaseAdapter);
-
-
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);//, this, mFirebaseAdapter.get);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
-
+        mRecyclerView.setAdapter(mFirebaseAdapter);
 
     }
 
-    /*    @Override
-        public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-            mItemTouchHelper.startDrag(viewHolder);
 
-        }
-    */
 
     @Override
     protected void onDestroy() {
