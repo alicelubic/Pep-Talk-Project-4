@@ -18,6 +18,8 @@ public class PepTalkObject {
         this.isWidgetDefault = isWidgetDefault;
     }
 
+
+
     public String getTitle() {
         return this.title;
     }

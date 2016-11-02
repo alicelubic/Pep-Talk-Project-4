@@ -2,18 +2,19 @@ package owlslubic.peptalkapp.presenters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import owlslubic.peptalkapp.R;
-import owlslubic.peptalkapp.models.ChecklistItemObject;
-import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.views.ChecklistActivity;
 import owlslubic.peptalkapp.views.MainActivity;
 import owlslubic.peptalkapp.views.PepTalkListActivity;
@@ -41,8 +42,27 @@ public class FragmentMethods {
     public static final String VIEW = "view";
     public static final String PEPTALK_OBJ = "peptalk";
     public static final String CHECKLIST_OBJ = "checklist";
+    public static final String WIDGET_FRAG_TAG = "widget_frag_tag";
+    public static final String EMERGENCY_PEPTALK = "widget";
 //    public static final String USERS = "users";
 
+    public static void setupEditHomescreenWidgetFrag(FragmentActivity activity) {
+        FragmentManager manager = activity.getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        NewFrag fragment = new NewFrag();
+        Bundle args = new Bundle();
+        args.putString(OBJECT_TYPE, EMERGENCY_PEPTALK);
+        fragment.setArguments(args);
+        transaction.add(R.id.framelayout_main_frag_container, fragment, WIDGET_FRAG_TAG);
+        transaction.addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
+    }
+
+    public static boolean isFragVisible(FragmentActivity activity, String tag) {
+        Fragment frag = activity.getSupportFragmentManager().findFragmentByTag(tag);
+        return frag != null && frag.isVisible();
+    }
 
     public static void setupNewFrag(String objectType, FragmentActivity activity) {
         FragmentManager manager = activity.getSupportFragmentManager();
@@ -53,6 +73,7 @@ public class FragmentMethods {
         args.putString(OBJECT_TYPE, objectType);
         fragment.setArguments(args);
 
+        //determining fragment container based on the actiity that calls this method
         if (activity instanceof MainActivity) {
             transaction.add(R.id.framelayout_main_frag_container, fragment, NEW_FRAG_TAG);
         } else if (activity instanceof PepTalkListActivity) {
@@ -112,11 +133,10 @@ public class FragmentMethods {
         fragment.setArguments(args);
 
         int containerId = 0;
-//        if (activity instanceof MainActivity) {
-//            containerId = R.id.framelayout_main_frag_container;
-//        } else
-        //the above code is not necessary because if a frag is called from main, it's either NewFrag or RecyclerView Frag
-        if (activity instanceof PepTalkListActivity) {
+        //the below code means that it must be the emergency peptalk widget, in MainAct
+        if (activity instanceof MainActivity) {
+            containerId = R.id.framelayout_main_frag_container;
+        } else if (activity instanceof PepTalkListActivity) {
             containerId = R.id.peptalk_activity_frag_container;
         } else if (activity instanceof ChecklistActivity) {
             containerId = R.id.checklist_activity_frag_container;
@@ -140,18 +160,28 @@ public class FragmentMethods {
                 .commit();
     }
 
-    public static void detachFragment(FragmentActivity activity, String tag) {
-        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
-        if (fragment.getTag() != null) {
-            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-            transaction
-                    //doing detach so that it doesn't have to reload the data............ right?
-                    .detach(fragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                    .commit();
-        } else {
-            Log.d(TAG, "detachFragment: OOPS, FRAG TAG WAS NULL");
-        }
+    public static void detachFragment(FragmentActivity activity, String tag, View view){//}, boolean hasChanged) {
+//        if(!hasChanged) {
+            Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
+            if (fragment.getTag() != null) {
+                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                //TODO only detach if there hasn't been any changes to the text
+                transaction
+                        //doing detach so that it doesn't have to reload the data............ right?
+                        .detach(fragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .commit();
+
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            } else {
+                Log.d(TAG, "detachFragment: OOPS, FRAG TAG WAS NULL");
+            }
+//        }else{
+            //text has changed, so we don't wanna just detach without giving a warning
+//        }
 
     }
 
@@ -169,5 +199,25 @@ public class FragmentMethods {
         }
     }
 
+    public static void launchCancelAlertDialog(final Context context, final View view){//}, final boolean hasTextChanged) {
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setMessage("Are you sure you want to navigate away?")
+                .setPositiveButton("mhm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        detachFragment((FragmentActivity) context, NEW_FRAG_TAG, view);//, hasTextChanged);
+                    }
+                })
+                .setNegativeButton("whoops!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+//                .setCancelable(true)
+                .create();
+        dialog.show();
+
+    }
 
 }

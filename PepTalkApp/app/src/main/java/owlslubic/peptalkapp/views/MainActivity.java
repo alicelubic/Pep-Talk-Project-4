@@ -30,27 +30,29 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.firebase.ui.auth.AuthUI;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
+
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.presenters.FirebaseHelper;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
 import owlslubic.peptalkapp.views.fragments.NewFrag;
+import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
 import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
 import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
 
-
 public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, NewFrag.FABCoordinatorNewFrag {
+        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, NewFrag.FABCoordinatorNewFrag, ViewFrag.FABCoordinatorViewFrag {
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9;
     private static final String PREFS = "prefs";
     private BottomSheetBehavior mBottomSheetBehavior;
-    private TextView mBottomSheetHeading, mBottomSheetTopText, mWelcomeTextView,
-            mSigninPromptTextView, mSigninTextView, mResource1, mResource2, mResource3, mResource4, mLaunchFragMain;
+    private TextView mBottomSheetHeading, mBottomSheetTopText, mWelcomeTextView, mWelcomeUserTextView,
+            mSigninTextView, mResource1, mResource2, mResource3, mResource4, mLaunchFragMain;
     private FloatingActionsMenu mFabMenu;
     private DrawerLayout mDrawer;
     private FrameLayout mFrameLayout;
@@ -121,9 +123,16 @@ public class MainActivity extends AppCompatActivity implements
         mLaunchFragMain = (TextView) findViewById(R.id.textview_main);
         mLaunchFragMain.setOnClickListener(this);
         if (isUserSignedIn()) {
-            mLaunchFragMain.setText(R.string.need_a_pep_talk);
+            mLaunchFragMain.setText(getResources().getString(R.string.need_a_pep_talk));
         } else {
-            mLaunchFragMain.setText(R.string.signup_or_login);
+            mLaunchFragMain.setText(getResources().getString(R.string.signup_or_login));
+        }
+
+        mWelcomeUserTextView = (TextView) findViewById(R.id.textview_main_welcome_user);
+        if (isUserSignedIn()) {
+            String welcomePal = String.format(getResources().getString(R.string.main_activity_welcome), FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            mWelcomeUserTextView.setVisibility(View.VISIBLE);
+            mWelcomeUserTextView.setText(welcomePal);
         }
 
 
@@ -186,20 +195,6 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-//    public void setupFrag(int id) {
-//        FragmentManager manager = getSupportFragmentManager();
-//        FragmentTransaction transaction = manager.beginTransaction();
-//        if (id == R.id.textview_main) {
-//            RecyclerViewFrag fragment = new RecyclerViewFrag();
-//            transaction.add(R.id.framelayout_main_frag_container, fragment, FragmentMethods.RECYCLERVIEW_FRAG_TAG);
-//        } else {
-//            NewFrag fragment = new NewFrag();
-//            transaction.add(R.id.framelayout_main_frag_container, fragment, FragmentMethods.NEW_FRAG_TAG);
-//        }
-//        transaction.commit();
-//    }
-
-
     /**
      * for logging in
      */
@@ -247,7 +242,6 @@ public class MainActivity extends AppCompatActivity implements
                 dialog.show();
             } else {
                 // yes internet, but not already signed in, so let's sign em in or up!
-
                 startActivityForResult(AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setProviders(
@@ -292,11 +286,11 @@ public class MainActivity extends AppCompatActivity implements
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
         } else if (newFrag != null && newFrag.isVisible()) {
-            addFragToBackStack(this, NEW_FRAG_TAG);
+            detachFragment(this, NEW_FRAG_TAG, newFrag.getView());
         } else if (recyclerFrag != null && recyclerFrag.isVisible()) {
-            detachFragment(this, RECYCLERVIEW_FRAG_TAG);
+            detachFragment(this, RECYCLERVIEW_FRAG_TAG, recyclerFrag.getView());
         } else if (viewFrag != null && viewFrag.isVisible()) {
-            addFragToBackStack(this, VIEW_FRAG_TAG);
+            detachFragment(this, VIEW_FRAG_TAG, viewFrag.getView());
         } else {
             super.onBackPressed();
         }
@@ -314,7 +308,8 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
         if (id == R.id.widget) {
             if (isUserSignedIn()) {
-                launchAddWidgetTextDialog();
+//                launchAddWidgetTextDialog();
+                setupViewFrag(this, EMERGENCY_PEPTALK, null, null, null);
             } else {
                 Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to mess with your widget", Snackbar.LENGTH_SHORT);
                 snackbar.setAction("sign in", new View.OnClickListener() {
@@ -697,25 +692,25 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    public void myLogoutMethod(){
+    public void myLogoutMethod() {
         String displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
         if (isUserSignedIn()) {
             AuthUI.getInstance().signOut(this);
-            Toast.makeText(MainActivity.this, "see ya later, "+displayName+"!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "adios, " + displayName + "!", Toast.LENGTH_SHORT).show();
 //                Snackbar snackbar = Snackbar.make(item.getActionView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_LONG);
 //                snackbar.show();
             setIsLogoutVisible(false);
             mWelcomeTextView.setText(R.string.welcome_blurb);
             mLaunchFragMain.setText(R.string.signup_or_login);
-        }
-        else{
+            mWelcomeUserTextView.setVisibility(View.GONE);
+
+        } else {
             Toast.makeText(MainActivity.this, "you shouldnt be seeing this, because logout shouldn't be visible if you're not logged in!", Toast.LENGTH_SHORT).show();
         }
 
 
     }
-
 
 
     @Override
@@ -725,6 +720,16 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void putFabBackFromNewFrag() {
+
+    }
+
+    @Override
+    public void hideFabFromViewFrag() {
+
+    }
+
+    @Override
+    public void putFabBackFromViewFrag() {
 
     }
 }

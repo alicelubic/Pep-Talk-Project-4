@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import owlslubic.peptalkapp.R;
@@ -35,12 +36,15 @@ import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
 public class NewFrag extends Fragment implements View.OnClickListener, View.OnLongClickListener, View.OnKeyListener {
     private static final String TAG = "NewFrag";
-    public EditText mTitle, mBody;
-    public ImageButton mDone, mCancel;
-    String mObjectType, mNewOrEdit, mKey, mTitleText, mBodyText, mTitleInput, mBodyInput;
-    FABCoordinatorNewFrag mCallbackNew;
-    Context mContext;
-    Toolbar mToolbar;
+    private EditText mTitle, mBody;
+    private ImageButton mDone, mCancel;
+    private TextView mWidgetTextPrompt;
+    private String mObjectType, mNewOrEdit, mKey, mTitleText, mBodyText, mTitleInput, mBodyInput, mWidgetTag;
+    private FABCoordinatorNewFrag mCallbackNew;
+    private Context mContext;
+    private Toolbar mToolbar;
+    Boolean mIsChanged;
+
     //attach snackbar to activity view
 
     private TextInputLayout mInputLayoutTitle, mInputLayoutBody;
@@ -69,28 +73,51 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
 
         mCallbackNew.hideFabFromNewFrag();
 
+//        mWidgetTextPrompt = (TextView) view.findViewById(R.id.textview_homescreen_widget_prompt);
         return view;
     }
 
     public void getAllArguments() {
-        mObjectType = getArguments().getString(FragmentMethods.OBJECT_TYPE);
-        mNewOrEdit = getArguments().getString(FragmentMethods.NEW_OR_EDIT);
-        mKey = getArguments().getString(FragmentMethods.KEY);
-        mTitleText = getArguments().getString(FragmentMethods.TOP_TEXT);
-        mBodyText = getArguments().getString(FragmentMethods.BOTTOM_TEXT);
+        mObjectType = getArguments().getString(OBJECT_TYPE);
+        mNewOrEdit = getArguments().getString(NEW_OR_EDIT);
+        mKey = getArguments().getString(KEY);
+        mTitleText = getArguments().getString(TOP_TEXT);
+        mBodyText = getArguments().getString(BOTTOM_TEXT);
 
+//        mWidgetTag = getArguments().getString(FragmentMethods.WIDGET_FRAG_TAG);
 
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+//        if((mWidgetTag!=null)&&(mWidgetTag.equals(FragmentMethods.EMERGENCY_PEPTALK))){
+//
+//        }else{
         setupEditTexts();
+//        }
+
 //        mTitle.addTextChangedListener(new ATextWatcher(mTitle));
 //        mBody.addTextChangedListener(new ATextWatcher(mBody));
 
     }
 
+    /*
+        private void adaptForEmergencyPeptalk(){
+            if(mObjectType.equals(EMERGENCY_PEPTALK)){
+                //make the textview prompt visible, and the top edittext gone
+                mTitle.setVisibility(View.GONE);
+                mInputLayoutTitle.setVisibility(View.GONE);
+                mWidgetTextPrompt.setVisibility(View.VISIBLE);
+                //adapt the body edittext for emergency peptalk
+                mBody.setSingleLine(true);
+                mInputLayoutBody.setHint("What shall your Emergency Pep Talk say?");
+                //TODO change the onlcik for the button to set the widget text rather than whateve it does now
+            }
+
+        }
+    */
     public void setupEditTexts() {
 
         mDone.setOnClickListener(this);
@@ -100,12 +127,13 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
         mBody.setOnClickListener(this);
         mBody.setOnLongClickListener(this);
 
-
+        //top edittext
         mTitle.setMovementMethod(new ScrollingMovementMethod());
         mTitle.setCursorVisible(true);
 //        mTitle.requestFocus();
         mTitle.setSingleLine();
 
+        //bottom edittext
         mBody.setMovementMethod(new ScrollingMovementMethod());
 //        mBody.setCursorVisible(true);
 
@@ -131,20 +159,20 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
 
 
     public boolean isPepTalk() {
-        if (mObjectType.equals(FragmentMethods.PEPTALK_OBJ)) {
+        if (mObjectType.equals(PEPTALK_OBJ)) {
             return true;
         } else return false;
     }
 
     public boolean isChecklistItem() {
-        if (mObjectType.equals(FragmentMethods.CHECKLIST_OBJ)) {
+        if (mObjectType.equals(CHECKLIST_OBJ)) {
             return true;
         } else return false;
     }
 
     public boolean isPepBodyValid(String body) {
 
-        if (mObjectType.equals(FragmentMethods.PEPTALK_OBJ) && (body.length() == 0)) {
+        if (mObjectType.equals(PEPTALK_OBJ) && (body.length() == 0)) {
             //in this case, don't go any further because we at least need some body text to move on
             return false;
         }
@@ -153,7 +181,7 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
 
     public boolean isCheckValid(String title) {
 
-        if (mObjectType.equals(FragmentMethods.CHECKLIST_OBJ) && (title.length() == 0)) {
+        if (mObjectType.equals(CHECKLIST_OBJ) && (title.length() == 0)) {
             //in this case, don't go any further because we at least need some the checklist item, notes dont matter
             return false;
         }
@@ -181,7 +209,7 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
     }
 
     public void writeToDatabase() {
-        if (mObjectType.equals(FragmentMethods.CHECKLIST_OBJ)) {
+        if (mObjectType.equals(CHECKLIST_OBJ)) {
             if (mNewOrEdit.equals(NEW)) {
                 FirebaseHelper.writeNewChecklist(mTitleInput, mBodyInput, getContext(), false);
             } else if (mNewOrEdit.equals(EDIT)) {
@@ -189,7 +217,7 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
             } else {
                 Toast.makeText(getContext(), "oops! something went wrong with your checklist", Toast.LENGTH_SHORT).show();
             }
-        } else if (mObjectType.equals(FragmentMethods.PEPTALK_OBJ)) {
+        } else if (mObjectType.equals(PEPTALK_OBJ)) {
             if (mNewOrEdit.equals(NEW)) {
                 FirebaseHelper.writeNewPeptalk(mTitleInput, mBodyInput, getContext(), false);
             } else if (mNewOrEdit.equals(EDIT)) {
@@ -226,14 +254,14 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
                 } else {
                     setmTitleInput(titleInput, bodyInput);
                     writeToDatabase();
-                    FragmentMethods.detachFragment(getActivity(), NEW_FRAG_TAG);
+                    detachFragment(getActivity(), NEW_FRAG_TAG, getView());//, mIsChanged);
                 }
                 break;
             case R.id.imagebutton_fragment_cancel:
                 if (mTitle.getText().length() > 0 || mBody.getText().length() > 0) {
-                    launchCancelAlertDialog();
+                    FragmentMethods.launchCancelAlertDialog(getContext(),getView());//,mIsChanged);
                 } else {
-                    exitFragment();
+                    detachFragment(getActivity(), NEW_FRAG_TAG, getView());//, mIsChanged);
                 }
                 break;
         }
@@ -244,7 +272,7 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
     public boolean onLongClick(View view) {
         switch (view.getId()) {
             case R.id.edittext_fragment_title:
-                mTitle.selectAll();
+                mTitle.setSelection(mTitle.getSelectionStart(), mTitle.getSelectionEnd());
                 break;
             case R.id.edittext_fragment_body:
                 mBody.selectAll();
@@ -273,34 +301,6 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
         return true;
     }
 
-    public void exitFragment() {
-        FragmentMethods.detachFragment(getActivity(), NEW_FRAG_TAG);
-        if (getView() != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-        }
-    }
-
-    public void launchCancelAlertDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setMessage("Are you sure you want to cancel?")
-                .setPositiveButton("mhm", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        exitFragment();
-                    }
-                })
-                .setNegativeButton("whoops!", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-//                .setCancelable(true)
-                .create();
-        dialog.show();
-
-    }
 
     public void toggleKeyboard(View view, boolean makeVisible) {
         if (makeVisible) {
@@ -311,6 +311,7 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
         }
 
     }
+
 
     @Override//TODO should setRetainInstance be before or after the super.onAct...
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -336,6 +337,7 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
 
         View mView;
 
+
         private ATextWatcher(View view) {
             mView = view;
         }
@@ -348,6 +350,8 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+            mIsChanged = true;
+
         }
 
         @Override
@@ -355,5 +359,7 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
 
         }
     }
+
+
 
 }

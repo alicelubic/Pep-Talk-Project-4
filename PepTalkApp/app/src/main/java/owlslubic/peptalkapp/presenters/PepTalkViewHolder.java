@@ -17,7 +17,7 @@ public class PepTalkViewHolder extends RecyclerView.ViewHolder{
     public CardView mCard;
 
     public CardView mFragCard;
-    public ImageButton mEdit;
+    public ImageButton mEdit, mTrash;
 
 
 
@@ -30,6 +30,7 @@ public class PepTalkViewHolder extends RecyclerView.ViewHolder{
         mFragBody = (TextView) itemView.findViewById(R.id.textview_frag_body);
         mFragTitle = (TextView) itemView.findViewById(R.id.textview_frag_title);
         mEdit = (ImageButton) itemView.findViewById(R.id.button_frag_edit_peptalk);
+        mTrash = (ImageButton) itemView.findViewById(R.id.imagebutton_frag_view_delete);
 
 
 

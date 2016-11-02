@@ -30,6 +30,7 @@
     <string name="sign_in">LOGIN</string>
     <string name="sign_out">LOGOUT</string>
     <string name="welcome_back_user">"Welcome back,\n%1$s"</string>
+    <string name="main_activity_welcome">Hey %s, it\'s gonna be okay</string>
     <string name="pep_talks">Pep Talks</string>
     <string name="feel_better_checklist">Feel-Better Checklist</string>
     <string name="more_resources">More Resources</string>

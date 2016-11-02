@@ -3,13 +3,16 @@ package owlslubic.peptalkapp.presenters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.models.PepTalkObject;
@@ -35,13 +38,32 @@ public class FirebaseHelper {
     public FirebaseHelper() {
     }
 
-    public static boolean isUserSignedIn(){
+    public static Object getModelByKey(String objectType, String key){
+        String title = null;
+        String body = null;
+
+        Query queryRef = getDbRef(true, false).orderByKey().equalTo(key);
+        queryRef.addValueEventListener()
+
+
+
+        if(objectType.equals(FragmentMethods.PEPTALK_OBJ)){
+            return new PepTalkObject(key,title,body,false);
+        } else if (objectType.equals(FragmentMethods.CHECKLIST_OBJ)){
+            return new ChecklistItemObject(key, title, body, false);
+        }else{
+            return null;
+        }
+    }
+
+    public static boolean isUserSignedIn() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             return true;
         }
         return false;
     }
-    public static String getUserId(){
+
+    public static String getUserId() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             return FirebaseAuth.getInstance().getCurrentUser().getUid();
         }
@@ -49,6 +71,18 @@ public class FirebaseHelper {
     }
 
 
+    public static DatabaseReference getDbRef(boolean isPepTalkRef, boolean isChecklistRef){
+        if(isPepTalkRef){
+            return FirebaseDatabase.getInstance().getReference().child(USERS)
+                    .child(getUserId()).child(PEPTALKS);
+        }else if(isChecklistRef){
+            return FirebaseDatabase.getInstance().getReference().child(USERS)
+                    .child(getUserId()).child(CHECKLIST);
+        }else{
+            return FirebaseDatabase.getInstance().getReference().child(USERS)
+                    .child(getUserId());
+        }
+    }
     public static void writeNewPeptalk(final String title, String body, final Context context, final boolean isPreloadedContent) {
 
 
@@ -95,18 +129,18 @@ public class FirebaseHelper {
     }
 
 
-    public static void deletePepTalk(final PepTalkObject peptalk, final Context context) {
+    public static void deletePepTalk(final String key, final String title, final Context context) {
         if (isUserSignedIn()) {
             DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
                     .child(getUserId()).child(PEPTALKS);
-            peptalkRef.child(peptalk.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
+            peptalkRef.child(key).setValue(null, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError != null) {
                         Log.d(TAG, "onComplete: DELETE FROM DATABASE ERROR: " + databaseError);
                         Toast.makeText(context, "oops! something went wrong, peptalk not deleted", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(context, "\"" + peptalk.getTitle() + "\" deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "\"" + title + "\" deleted", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -203,10 +237,10 @@ public class FirebaseHelper {
     }
 
 
-    public static void launchDeletePepTalkDialog(final PepTalkObject peptalk, final Context context) {
+    public static void launchDeletePepTalkDialog(final String key, final String title, final Context context, final String tag, final View view) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                .setTitle("Are you sure you want to delete your \"" + peptalk.getTitle() + "\" peptalk?")
+                .setTitle("Are you sure you want to delete your \"" + title + "\" peptalk?")
                 .setNegativeButton("nvm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -217,7 +251,12 @@ public class FirebaseHelper {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //this is what does the actual deleting
-                        deletePepTalk(peptalk, context);
+                        deletePepTalk(key, title, context);
+
+                        //then close the fragment IF there is one! which wouldnt be the case if its onlongclick
+                        if(FragmentMethods.isFragVisible((FragmentActivity)context,tag)){
+                            FragmentMethods.detachFragment((FragmentActivity) context, tag, view);//, false);//making this last parameter false because we just want that frag gone
+                        }
                     }
                 });
         builder.create().show();

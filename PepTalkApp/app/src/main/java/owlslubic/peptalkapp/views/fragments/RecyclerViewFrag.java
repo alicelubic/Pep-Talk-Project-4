@@ -128,9 +128,13 @@ public class RecyclerViewFrag extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.imagebutton_frag_back:
-                FragmentMethods.detachFragment(getActivity(), FragmentMethods.RECYCLERVIEW_FRAG_TAG);
+//                boolean b = false;
+//                if ((mTextViewTitle.getText().toString().trim().length() > 0) && (mTextViewBody.getText().toString().trim().length() > 0)) {
+//                    b = true;//its true because there is text there, so thusly the text has changed
+//                }
+                FragmentMethods.detachFragment(getActivity(), FragmentMethods.RECYCLERVIEW_FRAG_TAG, getView());//, b);
         }
 
     }
