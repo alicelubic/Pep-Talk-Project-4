@@ -17,7 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
@@ -44,7 +47,12 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
     PepTalkObject mModel;
     FirebaseListAdapter mAdapter;
     Button mTempBackButton;
-
+    private DatabaseReference mRootRef;
+    private DatabaseReference mPepTalkRef;
+    private DatabaseReference mChecklistRef;
+    private FirebaseUser mCurrentUser;
+    private String mUID;
+    private boolean mIsUserSignedIn;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -82,7 +90,7 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        assignDBRefs();
         //for emergency peptalk
         if (mObjectType.equals(EMERGENCY_PEPTALK)) {
             //out with the old
@@ -170,9 +178,8 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
     }
 
     public void setListViewAdapter() {
-        DatabaseReference ref = FirebaseHelper.getDbRef(true, false);
         mAdapter = new FirebaseListAdapter<PepTalkObject>(getActivity(),
-                PepTalkObject.class, android.R.layout.simple_list_item_1, ref) {
+                PepTalkObject.class, android.R.layout.simple_list_item_1, mPepTalkRef) {
             @Override
             protected void populateView(View v, PepTalkObject model, int position) {
                 TextView t = (TextView) v.findViewById(android.R.id.text1);
@@ -187,5 +194,20 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
         mListView.setAdapter(mAdapter);
     }
 
+    public void assignDBRefs() {
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        if (mCurrentUser != null) {
+            mUID = mCurrentUser.getUid();
+            mIsUserSignedIn = true;
+        } else {
+            mIsUserSignedIn = false;
+        }
+
+        mRootRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID);
+
+        mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.PEPTALKS);
+
+        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.CHECKLIST);
+    }
 }

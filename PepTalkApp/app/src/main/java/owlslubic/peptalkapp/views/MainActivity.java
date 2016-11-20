@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -33,14 +34,20 @@ import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
+import owlslubic.peptalkapp.presenters.FirebaseHelper;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
 import owlslubic.peptalkapp.views.fragments.NewEditFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
-import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
 import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
 
@@ -55,7 +62,12 @@ public class MainActivity extends AppCompatActivity implements
     private FloatingActionsMenu mFabMenu;
     private DrawerLayout mDrawer;
     private FrameLayout mFrameLayout;
-
+    private DatabaseReference mRootRef;
+    private DatabaseReference mPepTalkRef;
+    private DatabaseReference mChecklistRef;
+    private FirebaseUser mCurrentUser;
+    private String mUID;
+    private boolean mIsUserSignedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,19 +80,46 @@ public class MainActivity extends AppCompatActivity implements
 //        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
 //        ref.keepSynced(true);
 
+        assignDBRefs();
 
-        initViews();
-        checkNetworkStatus();
-
-        if (isUserSignedIn()) {
+        if (mIsUserSignedIn) {
             setLogoutVisible(true);
         } else {
             setLogoutVisible(false);
         }
 
+        initViews();
+        checkNetworkStatus();
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            user.getToken(true).addOnCompleteListener(this, new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "token=" + task.getResult().getToken());
+                    } else {
+                        Log.e(TAG, "exception=" + task.getException().toString());
+                    }
+                }
+            });
+        }
     }
 
+    public void assignDBRefs() {
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        mIsUserSignedIn = false;
+
+        if (mCurrentUser != null) {
+            mUID = mCurrentUser.getUid();
+            mIsUserSignedIn = true;
+        }
+        mRootRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID);
+
+        mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.PEPTALKS);
+
+        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.CHECKLIST);
+    }
 
     /**
      * views stuffs
@@ -121,18 +160,18 @@ public class MainActivity extends AppCompatActivity implements
         //for launching our lil peptalks
         mLaunchFragMain = (TextView) findViewById(R.id.textview_main);
         mLaunchFragMain.setOnClickListener(this);
-        if (isUserSignedIn()) {
+        if (mIsUserSignedIn) {
             mLaunchFragMain.setText(getResources().getString(R.string.need_a_pep_talk));
         } else {
             mLaunchFragMain.setText(getResources().getString(R.string.signup_or_login));
         }
 
         mWelcomeUserTextView = (TextView) findViewById(R.id.textview_main_welcome_user);
-        if (isUserSignedIn()) {
+        if (mIsUserSignedIn) {
             String welcomePal = String.format(getResources().getString(R.string.main_activity_welcome), FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
             mWelcomeUserTextView.setVisibility(View.VISIBLE);
             mWelcomeUserTextView.setText(welcomePal);
-        }else{
+        } else {
             mWelcomeUserTextView.setVisibility(View.VISIBLE);
             mWelcomeUserTextView.setText("Welcome to PepTalkPal\ntap below to get started");
         }
@@ -161,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements
         mWelcomeTextView = (TextView) headerView.findViewById(R.id.textview_navheader_welcome);
         mSigninTextView = (TextView) headerView.findViewById(R.id.navheader_signin);
         mSigninTextView.setOnClickListener(this);
-        if (isUserSignedIn()) {
+        if (mIsUserSignedIn) {
             String welcomeBackPal = String.format(getResources().getString(R.string.welcome_back_user), FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 //            mWelcomeTextView.setText(getString(R.string.welcome_back_user) + displayName);
             mWelcomeTextView.setText(welcomeBackPal);
@@ -200,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * for logging in
      */
+/*
     public void myLoginMethod() {
         //first check if the user is already signed in
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -264,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements
                 //TODO revisit this
                 /** since i'm using firebaseui library, i can't figure out how to access the specific methods like onAccoutnCreated
                  * which is ideally where this would go, so this is my roundabout solution
-                 * although if you uninstall and reinstall, it resets the sharedprefs and adds the content again */
+                 * although if you uninstall and reinstall, it resets the sharedprefs and adds the content again
                 insertContentOnNewAccountCreated();
                 //TODO dont forget to uncomment the line above, just did this so it'll stop clogging mine up
                 startActivity(new Intent(this, MainActivity.class));
@@ -275,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
     }
-
+*/
 
     /**
      * main menu stuff
@@ -310,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.widget) {
-            if (isUserSignedIn()) {
+            if (mIsUserSignedIn) {
                 launchAddWidgetTextDialog();
 //                setupViewFrag(this, EMERGENCY_PEPTALK, null, null, null);
                 //the above method isn't good yet, come back to it later
@@ -319,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements
                 snackbar.setAction("sign in", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        myLoginMethod();
+//                        myLoginMethod();
                     }
                 }).show();
             }
@@ -340,7 +380,7 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = item.getItemId();
         if (id == R.id.nav_peptalks) {
-            if (isUserSignedIn()) {
+            if (mIsUserSignedIn) {
                 Intent intent = new Intent(MainActivity.this, PepTalkListActivity.class);
                 startActivity(intent);
             } else {
@@ -348,12 +388,12 @@ public class MainActivity extends AppCompatActivity implements
                 snackbar.setAction("sign in", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        myLoginMethod();
+//                        myLoginMethod();
                     }
                 }).show();
             }
         } else if (id == R.id.nav_checklist) {
-            if (isUserSignedIn()) {
+            if (mIsUserSignedIn) {
                 Intent intent = new Intent(MainActivity.this, ChecklistActivity.class);
                 startActivity(intent);
             } else {
@@ -361,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements
                 snackbar.setAction("sign in", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        myLoginMethod();
+//                        myLoginMethod();
                     }
                 }).show();
             }
@@ -456,13 +496,13 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * content
      */
-    private void insertContentOnNewAccountCreated() {
+    /*private void insertContentOnNewAccountCreated() {
         //shared prefs to make sure this only runs one time
         boolean b;
         SharedPreferences mPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         b = mPrefs.getBoolean("FIRST_RUN", false);
         if (!b) {
-            if (isUserSignedIn()) {
+            if (mIsisUserSignedIn()) {
                 writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes), this, true); //TODO CHECK IF USING this AS CONTEXT MAKES IT NOT WORK???
                 writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes), this, true);
                 writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes), this, true);
@@ -485,7 +525,7 @@ public class MainActivity extends AppCompatActivity implements
         }
         Log.d(TAG, "insertContentOnNewAccountCreated: sharedprefs first run is: " + mPrefs.getBoolean("FIRST_RUN", false));
     }
-
+*/
 
     /**
      * can't produce plays with internettie
@@ -535,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fablet_checklist:
-                if (isUserSignedIn()) {
+                if (mIsUserSignedIn) {
                     setupNewFrag(FragmentMethods.CHECKLIST_OBJ, this);
 
                     mFrameLayout.getBackground().setAlpha(0);
@@ -547,13 +587,13 @@ public class MainActivity extends AppCompatActivity implements
                     snackbar.setAction("sign in", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            myLoginMethod();
+//                            myLoginMethod();
                         }
                     }).show();
                 }
                 break;
             case R.id.fablet_peptalk:
-                if (isUserSignedIn()) {
+                if (mIsUserSignedIn) {
                     setupNewFrag(FragmentMethods.PEPTALK_OBJ, MainActivity.this);
                     mFrameLayout.getBackground().setAlpha(0);
                     mFrameLayout.setOnTouchListener(null);
@@ -563,21 +603,21 @@ public class MainActivity extends AppCompatActivity implements
                     snackbar.setAction("sign in", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            myLoginMethod();
+//                            myLoginMethod();
                         }
                     }).show();
                 }
                 break;
             case R.id.textview_main:
                 //launch pep talk view
-                if (isUserSignedIn()) {
+                if (mIsUserSignedIn) {
                     setupRecyclerFrag(R.id.textview_main, this);
                 } else {
-                    myLoginMethod();
+//                    myLoginMethod();
                 }
                 break;
             case R.id.navheader_signin:
-                if (isUserSignedIn()) {
+                if (mIsUserSignedIn) {
 
                     Snackbar snackbar = Snackbar.make(view.getRootView().findViewById(R.id.coordinator_layout_main_activity), "hey friend", Snackbar.LENGTH_LONG);
                     snackbar.show();
@@ -610,18 +650,13 @@ public class MainActivity extends AppCompatActivity implements
                 intent2.putExtra("url", "http://www.befriendingourselves.com/Mindfulness.html");
                 intent2.putExtra("title", "Befriending Ourselves");
                 startActivity(intent2);
-//                Uri uri2 = Uri.parse("http://www.befriendingourselves.com/Mindfulness.html");
-//                Intent intent2 = new Intent(Intent.ACTION_VIEW, uri2);
-//                startActivity(intent2);
                 break;
             case R.id.tv_resource3:
                 Intent intent3 = new Intent(MainActivity.this, WebViewActivity.class);
                 intent3.putExtra("url", "http://self-compassion.org/");
                 intent3.putExtra("title", "Self-Compassion");
                 startActivity(intent3);
-//                Uri uri3 = Uri.parse("http://self-compassion.org/");
-//                Intent intent3 = new Intent(Intent.ACTION_VIEW, uri3);
-//                startActivity(intent3);
+
                 break;
             case R.id.tv_resource4:
 //                Intent intent4 = new Intent(MainActivity.this, WebViewActivity.class);
@@ -699,15 +734,16 @@ public class MainActivity extends AppCompatActivity implements
     public void myLogoutMethod() {
         String displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-        if (isUserSignedIn()) {
+        if (mIsUserSignedIn) {
             AuthUI.getInstance().signOut(this);
             Toast.makeText(MainActivity.this, "adios, " + displayName + "!", Toast.LENGTH_SHORT).show();
 //                Snackbar snackbar = Snackbar.make(item.getActionView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_LONG);
 //                snackbar.show();
             setLogoutVisible(false);
-            mWelcomeTextView.setText(R.string.welcome_blurb);
-            mLaunchFragMain.setText(R.string.signup_or_login);
-            mWelcomeUserTextView.setVisibility(View.GONE);
+//            mWelcomeTextView.setText(R.string.welcome_blurb);
+//            mLaunchFragMain.setText(R.string.signup_or_login);
+//            mWelcomeUserTextView.setVisibility(View.GONE);
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
         } else {
             Toast.makeText(MainActivity.this, "you shouldnt be seeing this, because logout shouldn't be visible if you're not logged in!", Toast.LENGTH_SHORT).show();

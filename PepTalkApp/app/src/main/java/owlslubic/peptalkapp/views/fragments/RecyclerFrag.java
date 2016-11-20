@@ -1,5 +1,6 @@
 package owlslubic.peptalkapp.views.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -39,7 +41,6 @@ import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
 import owlslubic.peptalkapp.views.MainActivity;
 
-import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
 
 /**
  * Created by owlslubic on 9/5/16.
@@ -55,7 +56,18 @@ public class RecyclerFrag extends Fragment implements View.OnClickListener {
     public DatabaseReference mPeptalkRef;
     public FirebaseRecyclerAdapter mFirebaseAdapter;
     RecyclerView mFragRecycler;
+    private DatabaseReference mRootRef;
+    private DatabaseReference mPepTalkRef;
+    private DatabaseReference mChecklistRef;
+    private FirebaseUser mCurrentUser;
+    private String mUID;
+    private boolean mIsUserSignedIn;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        assignDBRefs();
+    }
 
     @Nullable
     @Override
@@ -88,7 +100,7 @@ public class RecyclerFrag extends Fragment implements View.OnClickListener {
         }
 
         //setting up the recyclerview
-        mPeptalkRef = getDbRef(true,false);
+//        mPeptalkRef = getDbRef(true,false);
 
         LinearLayoutManager llm = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, true);
         llm.setStackFromEnd(true);
@@ -138,7 +150,13 @@ public class RecyclerFrag extends Fragment implements View.OnClickListener {
 
     }
 
-//    @Override
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mFirebaseAdapter.cleanup();
+    }
+
+    //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        if(item.getItemId()==android.R.id.home){
 //            Toast.makeText(getContext(), "tryna go home!", Toast.LENGTH_SHORT).show();
@@ -147,5 +165,19 @@ public class RecyclerFrag extends Fragment implements View.OnClickListener {
 //        return super.onOptionsItemSelected(item);
 //    }
 
+    public void assignDBRefs() {
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        mIsUserSignedIn = false;
+
+        if (mCurrentUser != null) {
+            mUID = mCurrentUser.getUid();
+            mIsUserSignedIn = true;
+        }
+        mRootRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID);
+
+        mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.PEPTALKS);
+
+        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.CHECKLIST);
+    }
 
 }

@@ -143,27 +143,27 @@ public class FragmentMethods {
                 .commit();
     }
 
-    public static void detachFragment(FragmentActivity activity, String tag, View view){//}, boolean hasChanged) {
+    public static void detachFragment(FragmentActivity activity, String tag, View view) {//}, boolean hasChanged) {
 //        if(!hasChanged) {
-            Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
-            if (fragment.getTag() != null) {
-                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-                //TODO only detach if there hasn't been any changes to the text
-                transaction
-                        //doing detach so that it doesn't have to reload the data............ right?
-                        .detach(fragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .commit();
+        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
+        if (fragment.getTag() != null) {
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+            //TODO only detach if there hasn't been any changes to the text
+            transaction
+                    //doing detach so that it doesn't have to reload the data............ right?
+                    .detach(fragment)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit();
 
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-            } else {
-                Log.d(TAG, "detachFragment: OOPS, FRAG TAG WAS NULL");
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
+        } else {
+            Log.d(TAG, "detachFragment: OOPS, FRAG TAG WAS NULL");
+        }
 //        }else{
-            //text has changed, so we don't wanna just detach without giving a warning
+        //text has changed, so we don't wanna just detach without giving a warning
 //        }
 
     }
@@ -182,7 +182,7 @@ public class FragmentMethods {
         }
     }
 
-    public static void launchCancelAlertDialog(final Context context, final View view){//}, final boolean hasTextChanged) {
+    public static void launchCancelAlertDialog(final Context context, final View view) {//}, final boolean hasTextChanged) {
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setMessage("Are you sure you want to navigate away?")
                 .setPositiveButton("mhm", new DialogInterface.OnClickListener() {

@@ -320,32 +320,7 @@ public class NewEditFrag extends Fragment implements View.OnClickListener, View.
         void putFabBackFromNewFrag();
     }
 
-    private class ATextWatcher implements TextWatcher {
 
-        View mView;
-
-
-        private ATextWatcher(View view) {
-            mView = view;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            mIsChanged = true;
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    }
 
 
 

@@ -87,5 +87,6 @@
     <string name="new_checklist_notes_hint">Notes</string>
     <string name="new_peptalk_title_hint">Pep Talk Title</string>
     <string name="new_peptalk_body_hint">I\'m going to be okay because...</string>
+    <string name="sign_up">sign up</string>
 
 </resources>

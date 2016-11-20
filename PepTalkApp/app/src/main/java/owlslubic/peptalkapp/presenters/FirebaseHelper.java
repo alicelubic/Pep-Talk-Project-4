@@ -37,44 +37,61 @@ public class FirebaseHelper {
     private static final String CHECKLIST_TEXT = "text";
     private static final String CHECKLIST_NOTES = "notes";
     private static final String CHECKLIST_CHECKED = "checked";
-    private static DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-            .child(getUserId());
-    private static DatabaseReference mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-            .child(getUserId()).child(PEPTALKS);
-    private static DatabaseReference mChecklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-            .child(getUserId()).child(CHECKLIST);
-    private static FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private static DatabaseReference mRootRef;
+    private static DatabaseReference mPepTalkRef;
+    private static DatabaseReference mChecklistRef;
+    private FirebaseUser mCurrentUser;
+    private String mUID;
+    private boolean mIsUserSignedIn;
+
 
     public FirebaseHelper() {
-    }
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-    public static boolean isUserSignedIn() {
         if (mCurrentUser != null) {
-            return true;
+            mUID = mCurrentUser.getUid();
+            mIsUserSignedIn = true;
+        } else {
+            mIsUserSignedIn = false;
         }
-        return false;
+
+        mRootRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID);
+
+        mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.PEPTALKS);
+
+        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(USERS).child(mUID).child(CHECKLIST);
+
     }
 
-    public static String getUserId() {
-        if (mCurrentUser != null) {
-            return mCurrentUser.getUid();
+    /*
+        public static boolean isUserSignedIn() {
+            if (mCurrentUser != null) {
+                return true;
+            }
+            return false;
         }
-        return "";
-    }
+
+        public static String getUserId() {
+            if (mCurrentUser != null) {
+                return mCurrentUser.getUid();
+            }
+            return null;
+        }
 
 
-    public static DatabaseReference getDbRef(boolean isPepTalkRef, boolean isChecklistRef){
-        if(isPepTalkRef){
-            return mPepTalkRef;
-        }else if(isChecklistRef){
-            return mChecklistRef;
-        }else{
-            return mRootRef;
+        public static DatabaseReference getDbRef(boolean isPepTalkRef, boolean isChecklistRef){
+            if(isPepTalkRef){
+                return mPepTalkRef;
+            }else if(isChecklistRef){
+                return mChecklistRef;
+            }else{
+                return mRootRef;
+            }
         }
-    }
+        */
     public static void writeNewPepTalk(final String title, String body, final Context context, final boolean isPreloadedContent) {
 
-        if (isUserSignedIn()) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
             DatabaseReference pepKey = mPepTalkRef.push();
             String key = pepKey.getKey();
@@ -83,7 +100,7 @@ public class FirebaseHelper {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError != null) {
-                        Log.d(TAG, "writeNewPepTalk error: "+databaseError.getMessage());
+                        Log.d(TAG, "writeNewPepTalk error: " + databaseError.getMessage());
                         Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
                     } else {
                         if (!isPreloadedContent) {
@@ -98,7 +115,7 @@ public class FirebaseHelper {
     }
 
     public static void updatePepTalk(String key, final String title, String body, final Context context) {
-        if (isUserSignedIn()) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             mPepTalkRef.child(key).child(PEPTALK_TITLE).setValue(title, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -115,7 +132,7 @@ public class FirebaseHelper {
 
 
     public static void deletePepTalk(final String key, final String title, final Context context) {
-        if (isUserSignedIn()) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             mPepTalkRef.child(key).setValue(null, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -132,7 +149,7 @@ public class FirebaseHelper {
 
 
     public static void writeNewChecklist(final String text, String notes, final Context context, final boolean isPreloadedContent) {
-        if (isUserSignedIn()) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             DatabaseReference itemKey = mChecklistRef.push();//this creates the unique key, but no data
             String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
             final ChecklistItemObject item = new ChecklistItemObject(key, text, notes, false);
@@ -140,7 +157,7 @@ public class FirebaseHelper {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError != null) {
-                        Log.d(TAG, "writeNewChecklist error: "+databaseError.getMessage());
+                        Log.d(TAG, "writeNewChecklist error: " + databaseError.getMessage());
                         Toast.makeText(context, "oops! something went wrong... sign out and try again", Toast.LENGTH_SHORT).show();
                     } else {
                         if (!isPreloadedContent) {
@@ -158,7 +175,7 @@ public class FirebaseHelper {
     }
 
     public static void updateIsChecked(String key, boolean isChecked) {
-        if (isUserSignedIn()) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             mChecklistRef.child(key).child(CHECKLIST_CHECKED).setValue(isChecked, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -174,7 +191,7 @@ public class FirebaseHelper {
     }
 
     public static void updateChecklist(String key, String text, String notes, final Context context) {
-        if (isUserSignedIn()) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
             mChecklistRef.child(key).child(CHECKLIST_TEXT).setValue(text, new DatabaseReference.CompletionListener() {
                 @Override
@@ -195,7 +212,7 @@ public class FirebaseHelper {
     }
 
     public static void deleteChecklist(final ChecklistItemObject check, final Context context) {
-        if (isUserSignedIn()) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             mChecklistRef.child(check.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -229,7 +246,7 @@ public class FirebaseHelper {
                         deletePepTalk(key, title, context);
 
                         //then close the fragment IF there is one! which wouldnt be the case if its onlongclick
-                        if(isFragVisible((FragmentActivity)context,tag)){
+                        if (isFragVisible((FragmentActivity) context, tag)) {
                             detachFragment((FragmentActivity) context, tag, view);//, false);//making this last parameter false because we just want that frag gone
                         }
                     }
@@ -261,21 +278,20 @@ public class FirebaseHelper {
 
 
     @Nullable
-    public static Object getModelByKey(String objectType, String key){
+    public static Object getModelByKey(String objectType, String key) {
         //TODO finish this method lol
         String title = null;
         String body = null;
-        Query queryRef = getDbRef(true, false).orderByKey().equalTo(key);
+//        Query queryRef = getDbRef(true, false).orderByKey().equalTo(key);
 //        queryRef.addValueEventListener()
 
 
-
-        if(objectType.equals(PEPTALK_OBJ)){
+        if (objectType.equals(PEPTALK_OBJ)) {
             //but it shouldnt make a new one? or does it matter?
-            return new PepTalkObject(key,title,body,false);
-        } else if (objectType.equals(CHECKLIST_OBJ)){
+            return new PepTalkObject(key, title, body, false);
+        } else if (objectType.equals(CHECKLIST_OBJ)) {
             return new ChecklistItemObject(key, title, body, false);
-        }else{
+        } else {
             return null;
         }
     }
