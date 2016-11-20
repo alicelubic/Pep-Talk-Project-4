@@ -1,12 +1,10 @@
 package owlslubic.peptalkapp.views.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,8 +32,8 @@ import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
  * Created by owlslubic on 9/19/16.
  */
 
-public class NewFrag extends Fragment implements View.OnClickListener, View.OnLongClickListener, View.OnKeyListener {
-    private static final String TAG = "NewFrag";
+public class NewEditFrag extends Fragment implements View.OnClickListener, View.OnLongClickListener, View.OnKeyListener {
+    private static final String TAG = "NewEditFrag";
     private EditText mTitle, mBody;
     private ImageButton mDone, mCancel;
     private TextView mWidgetTextPrompt;
@@ -73,7 +71,6 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
 
         mCallbackNew.hideFabFromNewFrag();
 
-//        mWidgetTextPrompt = (TextView) view.findViewById(R.id.textview_homescreen_widget_prompt);
         return view;
     }
 
@@ -83,8 +80,8 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
         mKey = getArguments().getString(KEY);
         mTitleText = getArguments().getString(TOP_TEXT);
         mBodyText = getArguments().getString(BOTTOM_TEXT);
+        Log.d(TAG + "DB PROB", "getAllArguments: BODY TEXT IS: "+ mBodyText);
 
-//        mWidgetTag = getArguments().getString(FragmentMethods.WIDGET_FRAG_TAG);
 
     }
 
@@ -92,32 +89,14 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        if((mWidgetTag!=null)&&(mWidgetTag.equals(FragmentMethods.EMERGENCY_PEPTALK))){
-//
-//        }else{
         setupEditTexts();
-//        }
 
 //        mTitle.addTextChangedListener(new ATextWatcher(mTitle));
 //        mBody.addTextChangedListener(new ATextWatcher(mBody));
 
     }
 
-    /*
-        private void adaptForEmergencyPeptalk(){
-            if(mObjectType.equals(EMERGENCY_PEPTALK)){
-                //make the textview prompt visible, and the top edittext gone
-                mTitle.setVisibility(View.GONE);
-                mInputLayoutTitle.setVisibility(View.GONE);
-                mWidgetTextPrompt.setVisibility(View.VISIBLE);
-                //adapt the body edittext for emergency peptalk
-                mBody.setSingleLine(true);
-                mInputLayoutBody.setHint("What shall your Emergency Pep Talk say?");
-                //TODO change the onlcik for the button to set the widget text rather than whateve it does now
-            }
 
-        }
-    */
     public void setupEditTexts() {
 
         mDone.setOnClickListener(this);
@@ -140,23 +119,8 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         //determine which hint to display
-        if (mNewOrEdit.equals(NEW)) {
-            if (isChecklistItem()) {
-                mInputLayoutTitle.setHint(getString(R.string.new_checklist_title_hint));
-                mInputLayoutBody.setHint(getString(R.string.new_checklist_notes_hint));
-            } else if (isPepTalk()) {
-                mInputLayoutTitle.setHint(getString(R.string.new_peptalk_title_hint));
-                mInputLayoutBody.setHint(getString(R.string.new_peptalk_body_hint));
-            } else {
-                Log.d(TAG, "onViewCreated: OBJECT TYPE FROM BUNDLE = " + mObjectType);
-            }
-        } else if (mNewOrEdit.equals(EDIT)) {
-            mTitle.setText(mTitleText);
-            mBody.setText(mBodyText);
-        }
-
+        setHints();
     }
-
 
     public boolean isPepTalk() {
         if (mObjectType.equals(PEPTALK_OBJ)) {
@@ -196,16 +160,19 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
             //in this case, i'm going to set the first bit of body text to be the title
             if (body.length() > maxLength) {
                 mTitleInput = body.substring(0, Math.min(body.length(), maxLength)) + "...";
+//                mBodyInput = body;
             } else {
                 mTitleInput = body.substring(0, Math.min(body.length(), maxLength));
+//                mBodyInput = body;
             }
         } else if (title.length() > maxLength) {
             //in this case, i'm truncating the title
             mTitleInput = title.substring(0, Math.min(title.length(), maxLength)) + "...";
+//            mBodyInput = body;
         } else {
             mTitleInput = title;
         }
-
+        mBodyInput = body;
     }
 
     public void writeToDatabase() {
@@ -219,7 +186,8 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
             }
         } else if (mObjectType.equals(PEPTALK_OBJ)) {
             if (mNewOrEdit.equals(NEW)) {
-                FirebaseHelper.writeNewPeptalk(mTitleInput, mBodyInput, getContext(), false);
+                FirebaseHelper.writeNewPepTalk(mTitleInput, mBodyInput, getContext(), false);
+                Log.d(TAG + "DB PROB", "NEW writeToDatabase: title: "+mTitleInput+" and body: "+mBodyInput);
             } else if (mNewOrEdit.equals(EDIT)) {
                 FirebaseHelper.updatePepTalk(mKey, mTitleInput, mBodyInput, getContext());
             } else {
@@ -244,10 +212,10 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
             case R.id.imagebutton_fragment_done:
                 String titleInput = mTitle.getText().toString().trim();
                 String bodyInput = mBody.getText().toString().trim();
+                //check for valid input before writing to database
                 if (isPepTalk() && !isPepBodyValid(bodyInput)) {
                     mInputLayoutBody.setError("oops! please enter something");
                     mInputLayoutBody.requestFocus();
-
                 } else if (isChecklistItem() && !isCheckValid(titleInput)) {
                     mInputLayoutTitle.setError("oops! don't leave this blank");
                     mInputLayoutTitle.requestFocus();
@@ -272,7 +240,8 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
     public boolean onLongClick(View view) {
         switch (view.getId()) {
             case R.id.edittext_fragment_title:
-                mTitle.setSelection(mTitle.getSelectionStart(), mTitle.getSelectionEnd());
+//                mTitle.setSelection(mTitle.getSelectionStart(), mTitle.getSelectionEnd());
+                mTitle.selectAll();
                 break;
             case R.id.edittext_fragment_body:
                 mBody.selectAll();
@@ -301,6 +270,24 @@ public class NewFrag extends Fragment implements View.OnClickListener, View.OnLo
         return true;
     }
 
+
+    public void setHints(){
+        if (mNewOrEdit.equals(NEW)) {
+            if (isChecklistItem()) {
+                mInputLayoutTitle.setHint(getString(R.string.new_checklist_title_hint));
+                mInputLayoutBody.setHint(getString(R.string.new_checklist_notes_hint));
+            } else if (isPepTalk()) {
+                mInputLayoutTitle.setHint(getString(R.string.new_peptalk_title_hint));
+                mInputLayoutBody.setHint(getString(R.string.new_peptalk_body_hint));
+            } else {
+                Log.d(TAG, "onViewCreated: OBJECT TYPE FROM BUNDLE = " + mObjectType);
+            }
+        } else if (mNewOrEdit.equals(EDIT)) {
+            Log.d(TAG + "DB PROB", "setupEditTexts: EDIT title is: "+mTitleText+ " and body is: "+mBodyText);
+            mTitle.setText(mTitleText);
+            mBody.setText(mBodyText);
+        }
+    }
 
     public void toggleKeyboard(View view, boolean makeVisible) {
         if (makeVisible) {

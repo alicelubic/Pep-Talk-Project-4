@@ -7,6 +7,7 @@ public class PepTalkObject {
     private String key;
     private String title;
     private String body;
+    private String lastEdited;
     private boolean isWidgetDefault;
 
     public PepTalkObject() {}
@@ -49,7 +50,7 @@ public class PepTalkObject {
         return this.isWidgetDefault;
     }
 
-    public void setIsWidgetDefault(boolean isWidgetDefault) {
+    public void setisWidgetDefault(boolean isWidgetDefault) {
         this.isWidgetDefault = isWidgetDefault;
     }
 

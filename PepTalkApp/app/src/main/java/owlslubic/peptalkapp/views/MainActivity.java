@@ -36,9 +36,8 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
 
 import owlslubic.peptalkapp.R;
-import owlslubic.peptalkapp.presenters.FirebaseHelper;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
-import owlslubic.peptalkapp.views.fragments.NewFrag;
+import owlslubic.peptalkapp.views.fragments.NewEditFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
 import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
@@ -46,7 +45,7 @@ import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
 
 public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, NewFrag.FABCoordinatorNewFrag, ViewFrag.FABCoordinatorViewFrag {
+        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, NewEditFrag.FABCoordinatorNewFrag, ViewFrag.FABCoordinatorViewFrag {
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9;
     private static final String PREFS = "prefs";
@@ -74,9 +73,9 @@ public class MainActivity extends AppCompatActivity implements
         checkNetworkStatus();
 
         if (isUserSignedIn()) {
-            setIsLogoutVisible(true);
+            setLogoutVisible(true);
         } else {
-            setIsLogoutVisible(false);
+            setLogoutVisible(false);
         }
 
 
@@ -133,6 +132,9 @@ public class MainActivity extends AppCompatActivity implements
             String welcomePal = String.format(getResources().getString(R.string.main_activity_welcome), FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
             mWelcomeUserTextView.setVisibility(View.VISIBLE);
             mWelcomeUserTextView.setText(welcomePal);
+        }else{
+            mWelcomeUserTextView.setVisibility(View.VISIBLE);
+            mWelcomeUserTextView.setText("Welcome to PepTalkPal\ntap below to get started");
         }
 
 
@@ -154,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        //nav login header
+        //nav header
         View headerView = navigationView.getHeaderView(0);
         mWelcomeTextView = (TextView) headerView.findViewById(R.id.textview_navheader_welcome);
         mSigninTextView = (TextView) headerView.findViewById(R.id.navheader_signin);
@@ -245,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements
                 startActivityForResult(AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setProviders(
-//                            AuthUI.GOOGLE_PROVIDER,//GOOGLE DOESNT WORK THATS SAD
+//                            AuthUI.GOOGLE_PROVIDER,//GOOGLE DOESNT WORK? THATS SAD
                                 AuthUI.EMAIL_PROVIDER)
                         .setIsSmartLockEnabled(true)
                         .setTheme(R.style.AppTheme)
@@ -264,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements
                  * which is ideally where this would go, so this is my roundabout solution
                  * although if you uninstall and reinstall, it resets the sharedprefs and adds the content again */
                 insertContentOnNewAccountCreated();
+                //TODO dont forget to uncomment the line above, just did this so it'll stop clogging mine up
                 startActivity(new Intent(this, MainActivity.class));
                 mLaunchFragMain.setText(R.string.need_a_pep_talk);
             } else {
@@ -275,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     /**
-     * toolbar menu items
+     * main menu stuff
      */
     @Override
     public void onBackPressed() {
@@ -308,8 +311,9 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
         if (id == R.id.widget) {
             if (isUserSignedIn()) {
-//                launchAddWidgetTextDialog();
-                setupViewFrag(this, EMERGENCY_PEPTALK, null, null, null);
+                launchAddWidgetTextDialog();
+//                setupViewFrag(this, EMERGENCY_PEPTALK, null, null, null);
+                //the above method isn't good yet, come back to it later
             } else {
                 Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_main_activity), "Please sign in to mess with your widget", Snackbar.LENGTH_SHORT);
                 snackbar.setAction("sign in", new View.OnClickListener() {
@@ -466,18 +470,18 @@ public class MainActivity extends AppCompatActivity implements
                 writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes), this, true);
                 writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes), this, true);
 
-                writeNewPeptalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present), this, true);
-                writeNewPeptalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions), this, true);
-                writeNewPeptalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best), this, true);
-                writeNewPeptalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment), this, true);
-                writeNewPeptalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing), this, true);
-                writeNewPeptalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt), this, true);
+                writeNewPepTalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present), this, true);
+                writeNewPepTalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions), this, true);
+                writeNewPepTalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best), this, true);
+                writeNewPepTalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment), this, true);
+                writeNewPepTalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing), this, true);
+                writeNewPepTalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt), this, true);
             }
 
             mPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = mPrefs.edit();
             editor.putBoolean("FIRST_RUN", true);
-            editor.commit();
+            editor.apply();
         }
         Log.d(TAG, "insertContentOnNewAccountCreated: sharedprefs first run is: " + mPrefs.getBoolean("FIRST_RUN", false));
     }
@@ -567,7 +571,7 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.textview_main:
                 //launch pep talk view
                 if (isUserSignedIn()) {
-                    setupMainActivityFrag(R.id.textview_main, this);
+                    setupRecyclerFrag(R.id.textview_main, this);
                 } else {
                     myLoginMethod();
                 }
@@ -680,7 +684,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public void setIsLogoutVisible(Boolean b) {
+    public void setLogoutVisible(Boolean b) {
         NavigationView nav = (NavigationView) findViewById(R.id.nav_view);
         Menu menu = nav.getMenu();
         for (int index = 0; index < menu.size(); index++) {
@@ -700,7 +704,7 @@ public class MainActivity extends AppCompatActivity implements
             Toast.makeText(MainActivity.this, "adios, " + displayName + "!", Toast.LENGTH_SHORT).show();
 //                Snackbar snackbar = Snackbar.make(item.getActionView().findViewById(R.id.coordinator_layout_main_activity), "See ya later", Snackbar.LENGTH_LONG);
 //                snackbar.show();
-            setIsLogoutVisible(false);
+            setLogoutVisible(false);
             mWelcomeTextView.setText(R.string.welcome_blurb);
             mLaunchFragMain.setText(R.string.signup_or_login);
             mWelcomeUserTextView.setVisibility(View.GONE);

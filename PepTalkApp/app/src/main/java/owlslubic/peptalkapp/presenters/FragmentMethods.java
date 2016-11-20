@@ -1,14 +1,13 @@
 package owlslubic.peptalkapp.presenters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -18,8 +17,8 @@ import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.views.ChecklistActivity;
 import owlslubic.peptalkapp.views.MainActivity;
 import owlslubic.peptalkapp.views.PepTalkListActivity;
-import owlslubic.peptalkapp.views.fragments.NewFrag;
-import owlslubic.peptalkapp.views.fragments.RecyclerViewFrag;
+import owlslubic.peptalkapp.views.fragments.NewEditFrag;
+import owlslubic.peptalkapp.views.fragments.RecyclerFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
 
@@ -44,30 +43,11 @@ public class FragmentMethods {
     public static final String CHECKLIST_OBJ = "checklist";
     public static final String WIDGET_FRAG_TAG = "widget_frag_tag";
     public static final String EMERGENCY_PEPTALK = "widget";
-//    public static final String USERS = "users";
-
-    public static void setupEditHomescreenWidgetFrag(FragmentActivity activity) {
-        FragmentManager manager = activity.getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        NewFrag fragment = new NewFrag();
-        Bundle args = new Bundle();
-        args.putString(OBJECT_TYPE, EMERGENCY_PEPTALK);
-        fragment.setArguments(args);
-        transaction.add(R.id.framelayout_main_frag_container, fragment, WIDGET_FRAG_TAG);
-        transaction.addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit();
-    }
-
-    public static boolean isFragVisible(FragmentActivity activity, String tag) {
-        Fragment frag = activity.getSupportFragmentManager().findFragmentByTag(tag);
-        return frag != null && frag.isVisible();
-    }
 
     public static void setupNewFrag(String objectType, FragmentActivity activity) {
         FragmentManager manager = activity.getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        NewFrag fragment = new NewFrag();
+        NewEditFrag fragment = new NewEditFrag();
         Bundle args = new Bundle();
         args.putString(NEW_OR_EDIT, NEW);
         args.putString(OBJECT_TYPE, objectType);
@@ -87,10 +67,9 @@ public class FragmentMethods {
                 .commit();
     }
 
-
     public static void setupEditFrag(FragmentActivity activity, String objectType, String key, String title, String body) {
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-        NewFrag fragment = new NewFrag();
+        NewEditFrag fragment = new NewEditFrag();
         Bundle args = new Bundle();
         args.putString(OBJECT_TYPE, objectType);
         args.putString(NEW_OR_EDIT, EDIT);
@@ -120,8 +99,8 @@ public class FragmentMethods {
                 .commit();
     }
 
-
-    public static void setupViewFrag(FragmentActivity activity, String objectType, String key, String title, String body) {
+    public static void setupViewFrag(FragmentActivity activity, String objectType,
+                                     @Nullable String key, @Nullable String title, @Nullable String body) {
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
         ViewFrag fragment = new ViewFrag();
         Bundle args = new Bundle();
@@ -133,27 +112,31 @@ public class FragmentMethods {
         fragment.setArguments(args);
 
         int containerId = 0;
-        //the below code means that it must be the emergency peptalk widget, in MainAct
+        String tag = VIEW_FRAG_TAG;
+
         if (activity instanceof MainActivity) {
             containerId = R.id.framelayout_main_frag_container;
+            //must be emergency peptalk widget because no other use of ViewFrag in mainactivity
+            tag = WIDGET_FRAG_TAG;
         } else if (activity instanceof PepTalkListActivity) {
             containerId = R.id.peptalk_activity_frag_container;
         } else if (activity instanceof ChecklistActivity) {
             containerId = R.id.checklist_activity_frag_container;
         }
-        transaction.add(containerId, fragment, VIEW_FRAG_TAG)
+
+        transaction.add(containerId, fragment, tag)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
 
-    public static void setupMainActivityFrag(int id, FragmentActivity activity) {
+    public static void setupRecyclerFrag(int id, FragmentActivity activity) {
         FragmentManager manager = activity.getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         if (id == R.id.textview_main) {
-            RecyclerViewFrag fragment = new RecyclerViewFrag();
+            RecyclerFrag fragment = new RecyclerFrag();
             transaction.add(R.id.framelayout_main_frag_container, fragment, RECYCLERVIEW_FRAG_TAG);
         } else {
-            NewFrag fragment = new NewFrag();
+            NewEditFrag fragment = new NewEditFrag();
             transaction.add(R.id.framelayout_main_frag_container, fragment, NEW_FRAG_TAG);
         }
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -218,6 +201,11 @@ public class FragmentMethods {
                 .create();
         dialog.show();
 
+    }
+
+    public static boolean isFragVisible(FragmentActivity activity, String tag) {
+        Fragment frag = activity.getSupportFragmentManager().findFragmentByTag(tag);
+        return frag != null && frag.isVisible();
     }
 
 }

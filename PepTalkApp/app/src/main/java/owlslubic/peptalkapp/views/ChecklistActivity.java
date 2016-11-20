@@ -1,22 +1,13 @@
 package owlslubic.peptalkapp.views;
 
-import android.net.Uri;
-import android.os.RecoverySystem;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,16 +16,14 @@ import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.presenters.ChecklistFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.ChecklistViewHolder;
-import owlslubic.peptalkapp.presenters.FirebaseHelper;
-import owlslubic.peptalkapp.presenters.FragmentMethods;
-import owlslubic.peptalkapp.views.fragments.NewFrag;
+import owlslubic.peptalkapp.views.fragments.NewEditFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
 import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
 import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
 
-public class ChecklistActivity extends AppCompatActivity implements ViewFrag.FABCoordinatorViewFrag, NewFrag.FABCoordinatorNewFrag{
+public class ChecklistActivity extends AppCompatActivity implements ViewFrag.FABCoordinatorViewFrag, NewEditFrag.FABCoordinatorNewFrag{
 
     private static final String TAG = "ChecklistActivity";
     private ChecklistFirebaseAdapter mFirebaseAdapter;

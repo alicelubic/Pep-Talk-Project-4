@@ -1,18 +1,17 @@
 package owlslubic.peptalkapp.views.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +23,7 @@ import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
 import owlslubic.peptalkapp.presenters.FirebaseHelper;
 import owlslubic.peptalkapp.presenters.FragmentMethods;
-import owlslubic.peptalkapp.views.MainActivity;
+import owlslubic.peptalkapp.views.PepTalkListActivity;
 
 import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
@@ -39,17 +38,18 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
     String mTitleText, mBodyText, mObjectType, mKey;
     ImageButton mEdit, mTrash, mCancel, mDone;
     FABCoordinatorViewFrag mCallback;
-    NewFrag.FABCoordinatorNewFrag mCallbackNewFrag;
+    NewEditFrag.FABCoordinatorNewFrag mCallbackNewFrag;
     Context mContext;
     ListView mListView;
     PepTalkObject mModel;
     FirebaseListAdapter mAdapter;
+    Button mTempBackButton;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mCallback = (FABCoordinatorViewFrag) context;
-        mCallbackNewFrag = (NewFrag.FABCoordinatorNewFrag) context;
+        mCallbackNewFrag = (NewEditFrag.FABCoordinatorNewFrag) context;
         mContext = context;
     }
 
@@ -57,20 +57,24 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_view, container, false);
+        //init frag views
         mTopTextView = (TextView) view.findViewById(R.id.textview_frag_view_top);
         mBottomTextView = (TextView) view.findViewById(R.id.textview_frag_view_bottom);
         mEdit = (ImageButton) view.findViewById(R.id.imagebutton_frag_view_edit);
         mTrash = (ImageButton) view.findViewById(R.id.imagebutton_frag_view_delete);
 
-        //for emergency widget
+        //for emergency widget views
         mListView = (ListView) view.findViewById(R.id.listview_emergency_peptalk);
         mCancel = (ImageButton) view.findViewById(R.id.imagebutton_viewfrag_cancel);
         mDone = (ImageButton) view.findViewById(R.id.imagebutton_viewfrag_done);
 
+        //fetch model info
         mObjectType = getArguments().getString(OBJECT_TYPE);
         mKey = getArguments().getString(KEY);
         mTitleText = getArguments().getString(TOP_TEXT);
         mBodyText = getArguments().getString(BOTTOM_TEXT);
+
+        mTempBackButton = (Button) view.findViewById(R.id.temp_button);
 
         return view;
     }
@@ -79,6 +83,7 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //for emergency peptalk
         if (mObjectType.equals(EMERGENCY_PEPTALK)) {
             //out with the old
             mBottomTextView.setVisibility(View.GONE);
@@ -94,6 +99,7 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
             mListView.setOnItemClickListener(this);
             setListViewAdapter();
         } else
+        //normal view frag
             mTopTextView.setText(mTitleText);
         mBottomTextView.setText(mBodyText);
         mEdit.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +120,10 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
                 }
             }
         });
+
+
+
+        mTempBackButton.setOnClickListener(this);
     }
 
     @Override
@@ -131,7 +141,9 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
 
     @Override
     public void onClick(View v) {
-
+        if(v.getId()==R.id.temp_button){
+            startActivity(new Intent(getContext(), PepTalkListActivity.class));
+        }
     }
 
     public void setEmergencyPeptalkText(int position){

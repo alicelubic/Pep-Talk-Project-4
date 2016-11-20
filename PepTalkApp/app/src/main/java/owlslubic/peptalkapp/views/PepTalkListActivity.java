@@ -5,21 +5,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import owlslubic.peptalkapp.R;
 import owlslubic.peptalkapp.models.PepTalkObject;
-import owlslubic.peptalkapp.presenters.FirebaseHelper;
 import owlslubic.peptalkapp.presenters.PepTalkFirebaseAdapter;
 import owlslubic.peptalkapp.presenters.PepTalkViewHolder;
-import owlslubic.peptalkapp.presenters.interfaces_behaviors.SimpleItemTouchHelperCallback;
-import owlslubic.peptalkapp.views.fragments.NewFrag;
+import owlslubic.peptalkapp.views.fragments.NewEditFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
 import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
@@ -27,7 +23,7 @@ import static owlslubic.peptalkapp.presenters.FirebaseHelper.getUserId;
 import static owlslubic.peptalkapp.presenters.FirebaseHelper.isUserSignedIn;
 import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
-public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.FABCoordinatorViewFrag, NewFrag.FABCoordinatorNewFrag {
+public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.FABCoordinatorViewFrag, NewEditFrag.FABCoordinatorNewFrag {
 
     private static final String TAG = "PepTalkListActivity";
     private PepTalkFirebaseAdapter mFirebaseAdapter;

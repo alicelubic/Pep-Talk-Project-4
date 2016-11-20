@@ -44,8 +44,8 @@ import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
 /**
  * Created by owlslubic on 9/5/16.
  */
-public class RecyclerViewFrag extends Fragment implements View.OnClickListener {
-    private static final String TAG = "RecyclerViewFrag";
+public class RecyclerFrag extends Fragment implements View.OnClickListener {
+    private static final String TAG = "RecyclerFrag";
     private String mTitle, mBody;
     private PepTalkObject mPepTalk;
     public TextView mTextViewTitle;
@@ -88,8 +88,7 @@ public class RecyclerViewFrag extends Fragment implements View.OnClickListener {
         }
 
         //setting up the recyclerview
-        mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
+        mPeptalkRef = getDbRef(true,false);
 
         LinearLayoutManager llm = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, true);
         llm.setStackFromEnd(true);

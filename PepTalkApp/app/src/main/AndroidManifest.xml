@@ -24,17 +24,17 @@
         <activity
             android:name=".views.PepTalkListActivity"
             android:parentActivityName=".views.MainActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".views.ChecklistActivity"
             android:parentActivityName=".views.MainActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!-- widget business -->
         <receiver
             android:name=".views.EmergencyWidgetProvider"
-            android:label="Emergency Pep Talk Widget"
-            android:icon="@drawable/ic_speech_bubble_with_exclamation_mark_1">
+            android:icon="@drawable/ic_speech_bubble_with_exclamation_mark_1"
+            android:label="Emergency Pep Talk Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -43,26 +43,34 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_emergency_info" />
         </receiver>
-
-        <receiver android:name=".views.NewPepTalkWidgetProvider"
-            android:label="New Pep Talk Widget"
-            android:icon="@drawable/ic_add_message">
+        <receiver
+            android:name=".views.NewPepTalkWidgetProvider"
+            android:icon="@drawable/ic_add_message"
+            android:label="New Pep Talk Widget">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/widget_new_peptalk_info"/>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_new_peptalk_info" />
         </receiver>
 
         <activity
             android:name=".views.WebViewActivity"
             android:parentActivityName=".views.MainActivity"
-            android:windowSoftInputMode="adjustPan"/>
-
-        <activity android:name=".views.AddPepTalkWidgetActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".views.AddPepTalkWidgetActivity"
             android:parentActivityName=".views.MainActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".views.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
