@@ -23,15 +23,15 @@ import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
 import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
 
-public class ChecklistActivity extends AppCompatActivity implements ViewFrag.FABCoordinatorViewFrag, NewEditFrag.FABCoordinatorNewFrag{
+public class ChecklistActivity extends AppCompatActivity implements ViewFrag.FABCoordinatorViewFrag, NewEditFrag.FABCoordinatorNewFrag {
 
     private static final String TAG = "ChecklistActivity";
-    private ChecklistFirebaseAdapter mFirebaseAdapter;
-    private DatabaseReference mChecklistRef;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFab;
     private RecyclerView mRecyclerView;
     private ViewFrag.FABCoordinatorViewFrag mCallback;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mRootRef;
 
 
     @Override
@@ -39,55 +39,15 @@ public class ChecklistActivity extends AppCompatActivity implements ViewFrag.FAB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checklist);
 
+        mAuth = FirebaseAuth.getInstance();
+        mRootRef = FirebaseDatabase.getInstance().getReference();
         initViews();
         setupRecyclerView();
 
-//        getSupportActionBar().setTitle("Your Feel-Better Checklist");
-//        if(getSupportActionBar()!=null){
-//            getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        }
-//
-//        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_checklistactivity);
-//
-//        //fab for add new checklist item
-//        mFab = (FloatingActionButton) findViewById(R.id.fab_checklist);
-//
-//        mFab.setVisibility(View.INVISIBLE);
-//        mFab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                setupNewFrag(CHECKLIST_OBJ, ChecklistActivity.this);
-//            }
-//        });
-//
-//        //recyclerview setup
-//        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(CHECKLIST);
-//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_checklist);
-//        recyclerView.setHasFixedSize(true);
-//        LinearLayoutManager llm = new LinearLayoutManager(this);
-//        llm.setReverseLayout(true);
-//        llm.setStackFromEnd(true);
-//        recyclerView.setLayoutManager(llm);
-//
-//        //create adapter, add progress bar, set adapter
-//        mFirebaseAdapter = new ChecklistFirebaseAdapter(ChecklistItemObject.class, R.layout.card_checklist,
-//                ChecklistViewHolder.class, mChecklistRef, this, getSupportFragmentManager());
-//        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-//            @Override
-//            public void onItemRangeInserted(int positionStart, int itemCount) {
-//                super.onItemRangeInserted(positionStart, itemCount);
-//                //once loaded, hide the progress bar
-//                mProgressBar.setVisibility(View.GONE);
-//                mFab.setVisibility(View.VISIBLE);
-//            }
-//        });
-//        recyclerView.setAdapter(mFirebaseAdapter);
-
     }
 
-    public void initViews(){
-        if(getSupportActionBar()!=null){
+    public void initViews() {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         mCallback = this;
@@ -106,7 +66,7 @@ public class ChecklistActivity extends AppCompatActivity implements ViewFrag.FAB
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_checklist);
     }
 
-    public void setupRecyclerView(){
+    public void setupRecyclerView() {
         //set layout
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -115,13 +75,17 @@ public class ChecklistActivity extends AppCompatActivity implements ViewFrag.FAB
         mRecyclerView.setLayoutManager(llm);
 
         //get database ref to pass to adapter
-        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(CHECKLIST);
+        DatabaseReference checklistRef = mRootRef
+                .child(USERS)
+                .child(mAuth.getCurrentUser().getUid())
+                .child(CHECKLIST);
 
         //create adapter, add progress bar, set adapter
-        mFirebaseAdapter = new ChecklistFirebaseAdapter(ChecklistItemObject.class, R.layout.card_checklist,
-                ChecklistViewHolder.class, mChecklistRef, this, mCallback);
-        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        ChecklistFirebaseAdapter firebaseAdapter = new ChecklistFirebaseAdapter(
+                ChecklistItemObject.class, R.layout.card_checklist,
+                ChecklistViewHolder.class, checklistRef, this, mCallback);
+
+        firebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
@@ -131,7 +95,7 @@ public class ChecklistActivity extends AppCompatActivity implements ViewFrag.FAB
             }
         });
 
-        mRecyclerView.setAdapter(mFirebaseAdapter);
+        mRecyclerView.setAdapter(firebaseAdapter);
 
     }
 

@@ -53,7 +53,7 @@ public class FragmentMethods {
         args.putString(OBJECT_TYPE, objectType);
         fragment.setArguments(args);
 
-        //determining fragment container based on the actiity that calls this method
+        //determining fragment container based on the activity that calls this method
         if (activity instanceof MainActivity) {
             transaction.add(R.id.framelayout_main_frag_container, fragment, NEW_FRAG_TAG);
         } else if (activity instanceof PepTalkListActivity) {
@@ -168,20 +168,6 @@ public class FragmentMethods {
 
     }
 
-    public static void addFragToBackStack(FragmentActivity activity, String tag) {
-        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
-        if (fragment.getTag() != null) {
-            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-            transaction
-                    //doing detach so that it doesn't have to reload the data............ right?
-                    .addToBackStack(tag)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                    .commit();
-        } else {
-            Log.d(TAG, "detachFragment: OOPS, FRAG TAG WAS NULL");
-        }
-    }
-
     public static void launchCancelAlertDialog(final Context context, final View view) {//}, final boolean hasTextChanged) {
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setMessage("Are you sure you want to navigate away?")
@@ -203,7 +189,7 @@ public class FragmentMethods {
 
     }
 
-    public static boolean isFragVisible(FragmentActivity activity, String tag) {
+    static boolean isFragVisible(FragmentActivity activity, String tag) {
         Fragment frag = activity.getSupportFragmentManager().findFragmentByTag(tag);
         return frag != null && frag.isVisible();
     }

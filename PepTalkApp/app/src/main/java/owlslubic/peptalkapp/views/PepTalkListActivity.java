@@ -34,26 +34,16 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
     private FloatingActionButton mFab;
     private RecyclerView mRecyclerView;
     private ViewFrag.FABCoordinatorViewFrag mCallback;
+    private FirebaseAuth mAuth;
     private DatabaseReference mRootRef;
-    private DatabaseReference mPepTalkRef;
-    private DatabaseReference mChecklistRef;
-    private FirebaseUser mCurrentUser;
-    private String mUID;
-    private boolean mIsUserSignedIn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pep_talk_list);
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (mCurrentUser != null) {
-            mUID = mCurrentUser.getUid();
-            Log.d(TAG, "DEBUG DB >>  oncreate mUID = "+ mUID);
-            mIsUserSignedIn = true;
-        } else {
-            mIsUserSignedIn = false;
-        }
-
+        mAuth = FirebaseAuth.getInstance();
+        mRootRef = FirebaseDatabase.getInstance().getReference();
 
         initViews();
         setupRecyclerView();
@@ -82,8 +72,8 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
     }
 
     public void setupRecyclerView() {
-        mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.PEPTALKS);
-        Log.d(TAG, "DEBUG DB >>  setUpRecyclerView db ref mUID = "+ mUID);
+        DatabaseReference pepTalkRef = mRootRef.child(FirebaseHelper.USERS)
+                .child(mAuth.getCurrentUser().getUid()).child(FirebaseHelper.PEPTALKS);
 
         //set layout
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -94,8 +84,8 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
 
         //create adapter, add progress bar, set adapter
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class,
-                R.layout.card_peptalk, PepTalkViewHolder.class, mPepTalkRef,
-                this, mCallback);//, this); took out the onstartdrag listener
+                R.layout.card_peptalk, PepTalkViewHolder.class, pepTalkRef,
+                this, mCallback);
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -105,7 +95,6 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
                 mProgressBar.setVisibility(View.GONE);
                 mFab.setVisibility(View.VISIBLE);
                 //TODO set a transition so this fades in or some shit
-
             }
         });
         mRecyclerView.setAdapter(mFirebaseAdapter);

@@ -36,22 +36,14 @@ public class NewEditFrag extends Fragment implements View.OnClickListener, View.
     private static final String TAG = "NewEditFrag";
     private EditText mTitle, mBody;
     private ImageButton mDone, mCancel;
-    private TextView mWidgetTextPrompt;
     private String mObjectType, mNewOrEdit, mKey, mTitleText, mBodyText, mTitleInput, mBodyInput, mWidgetTag;
     private FABCoordinatorNewFrag mCallbackNew;
-    private Context mContext;
-    private Toolbar mToolbar;
-    Boolean mIsChanged;
-
-    //attach snackbar to activity view
-
     private TextInputLayout mInputLayoutTitle, mInputLayoutBody;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mCallbackNew = (FABCoordinatorNewFrag) context;
-        mContext = context;
     }
 
     @Nullable
@@ -61,7 +53,7 @@ public class NewEditFrag extends Fragment implements View.OnClickListener, View.
         return initViews(inflater.inflate(R.layout.frag_new_edit, container, false));
     }
 
-    public View initViews(View view) {
+    private View initViews(View view) {
         mTitle = (EditText) view.findViewById(R.id.edittext_fragment_title);
         mBody = (EditText) view.findViewById(R.id.edittext_fragment_body);
         mDone = (ImageButton) view.findViewById(R.id.imagebutton_fragment_done);
@@ -74,30 +66,17 @@ public class NewEditFrag extends Fragment implements View.OnClickListener, View.
         return view;
     }
 
-    public void getAllArguments() {
+    private void getAllArguments() {
         mObjectType = getArguments().getString(OBJECT_TYPE);
         mNewOrEdit = getArguments().getString(NEW_OR_EDIT);
-        mKey = getArguments().getString(KEY);
         mTitleText = getArguments().getString(TOP_TEXT);
         mBodyText = getArguments().getString(BOTTOM_TEXT);
-        Log.d(TAG + "DB PROB", "getAllArguments: BODY TEXT IS: "+ mBodyText);
-
-
+        mKey = getArguments().getString(KEY);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        setupEditTexts();
-
-//        mTitle.addTextChangedListener(new ATextWatcher(mTitle));
-//        mBody.addTextChangedListener(new ATextWatcher(mBody));
-
-    }
-
-
-    public void setupEditTexts() {
 
         mDone.setOnClickListener(this);
         mCancel.setOnClickListener(this);
@@ -109,33 +88,28 @@ public class NewEditFrag extends Fragment implements View.OnClickListener, View.
         //top edittext
         mTitle.setMovementMethod(new ScrollingMovementMethod());
         mTitle.setCursorVisible(true);
-//        mTitle.requestFocus();
         mTitle.setSingleLine();
 
         //bottom edittext
         mBody.setMovementMethod(new ScrollingMovementMethod());
-//        mBody.setCursorVisible(true);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         //determine which hint to display
         setHints();
+
     }
 
+
     public boolean isPepTalk() {
-        if (mObjectType.equals(PEPTALK_OBJ)) {
-            return true;
-        } else return false;
+        return mObjectType.equals(PEPTALK_OBJ);
     }
 
     public boolean isChecklistItem() {
-        if (mObjectType.equals(CHECKLIST_OBJ)) {
-            return true;
-        } else return false;
+        return mObjectType.equals(CHECKLIST_OBJ);
     }
 
     public boolean isPepBodyValid(String body) {
-
         if (mObjectType.equals(PEPTALK_OBJ) && (body.length() == 0)) {
             //in this case, don't go any further because we at least need some body text to move on
             return false;
@@ -212,6 +186,7 @@ public class NewEditFrag extends Fragment implements View.OnClickListener, View.
             case R.id.imagebutton_fragment_done:
                 String titleInput = mTitle.getText().toString().trim();
                 String bodyInput = mBody.getText().toString().trim();
+
                 //check for valid input before writing to database
                 if (isPepTalk() && !isPepBodyValid(bodyInput)) {
                     mInputLayoutBody.setError("oops! please enter something");
@@ -222,14 +197,14 @@ public class NewEditFrag extends Fragment implements View.OnClickListener, View.
                 } else {
                     setmTitleInput(titleInput, bodyInput);
                     writeToDatabase();
-                    detachFragment(getActivity(), NEW_FRAG_TAG, getView());//, mIsChanged);
+                    detachFragment(getActivity(), NEW_FRAG_TAG, getView());
                 }
                 break;
             case R.id.imagebutton_fragment_cancel:
                 if (mTitle.getText().length() > 0 || mBody.getText().length() > 0) {
-                    FragmentMethods.launchCancelAlertDialog(getContext(),getView());//,mIsChanged);
+                    FragmentMethods.launchCancelAlertDialog(getContext(),getView());
                 } else {
-                    detachFragment(getActivity(), NEW_FRAG_TAG, getView());//, mIsChanged);
+                    detachFragment(getActivity(), NEW_FRAG_TAG, getView());
                 }
                 break;
         }
@@ -240,7 +215,6 @@ public class NewEditFrag extends Fragment implements View.OnClickListener, View.
     public boolean onLongClick(View view) {
         switch (view.getId()) {
             case R.id.edittext_fragment_title:
-//                mTitle.setSelection(mTitle.getSelectionStart(), mTitle.getSelectionEnd());
                 mTitle.selectAll();
                 break;
             case R.id.edittext_fragment_body:
@@ -290,6 +264,7 @@ public class NewEditFrag extends Fragment implements View.OnClickListener, View.
     }
 
     public void toggleKeyboard(View view, boolean makeVisible) {
+        //TODO finish this method because this shit is so annoying
         if (makeVisible) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         } else {
@@ -300,7 +275,7 @@ public class NewEditFrag extends Fragment implements View.OnClickListener, View.
     }
 
 
-    @Override//TODO should setRetainInstance be before or after the super.onAct...
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);

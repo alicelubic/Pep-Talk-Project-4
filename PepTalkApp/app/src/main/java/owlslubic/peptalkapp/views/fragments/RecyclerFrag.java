@@ -53,7 +53,15 @@ public class RecyclerFrag extends Fragment implements View.OnClickListener {
     private ProgressBar mProgressBar;
     private FirebaseRecyclerAdapter mFirebaseAdapter;
     private RecyclerView mFragRecycler;
+    private DatabaseReference mRootRef;
+    private FirebaseAuth mAuth;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+    }
 
     @Nullable
     @Override
@@ -80,9 +88,10 @@ public class RecyclerFrag extends Fragment implements View.OnClickListener {
         llm.setStackFromEnd(true);
 
         //get ref to pass to adapter
-        DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference()
-                .child(FirebaseHelper.USERS).child(FirebaseAuth.getInstance()
-                        .getCurrentUser().getUid()).child(FirebaseHelper.PEPTALKS);
+        DatabaseReference peptalkRef = mRootRef
+                .child(FirebaseHelper.USERS)
+                .child(mAuth.getCurrentUser().getUid())
+                .child(FirebaseHelper.PEPTALKS);
 
         mFragRecycler.setLayoutManager(llm);
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class, R.layout.frag_card,
@@ -92,7 +101,7 @@ public class RecyclerFrag extends Fragment implements View.OnClickListener {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
-                //once loaded, hide the progress bar
+                //once data is loaded, hide the progress bar
                 mProgressBar.setVisibility(View.GONE);
 
             }

@@ -45,9 +45,11 @@ public class FirebaseHelper {
 
     public static void writeNewPepTalk(final String title, String body, final Context context, final boolean isPreloadedContent) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null){
+        if (currentUser != null) {
             DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference()
-                    .child(USERS).child(currentUser.getUid()).child(PEPTALKS);
+                    .child(USERS)
+                    .child(currentUser.getUid())
+                    .child(PEPTALKS);
             DatabaseReference pepKey = peptalkRef.push();
             String key = pepKey.getKey();
             final PepTalkObject peptalk = new PepTalkObject(key, title, body, false);
@@ -71,10 +73,12 @@ public class FirebaseHelper {
 
     public static void updatePepTalk(String key, final String title, String body, final Context context) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null){
-            DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference()
-                    .child(USERS).child(currentUser.getUid()).child(PEPTALKS);
-            peptalkRef.child(key).child(PEPTALK_TITLE).setValue(title, new DatabaseReference.CompletionListener() {
+        if (currentUser != null) {
+            DatabaseReference pepTalkRef = FirebaseDatabase.getInstance().getReference()
+                    .child(USERS)
+                    .child(currentUser.getUid())
+                    .child(PEPTALKS);
+            pepTalkRef.child(key).child(PEPTALK_TITLE).setValue(title, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError != null) {
@@ -84,17 +88,19 @@ public class FirebaseHelper {
                     }
                 }
             });
-            peptalkRef.child(key).child(PEPTALK_BODY).setValue(body);
+            pepTalkRef.child(key).child(PEPTALK_BODY).setValue(body);
         }
     }
 
 
     public static void deletePepTalk(final String key, final String title, final Context context) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null){
-            DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference()
-                    .child(USERS).child(currentUser.getUid()).child(PEPTALKS);
-            peptalkRef.child(key).setValue(null, new DatabaseReference.CompletionListener() {
+        if (currentUser != null) {
+            DatabaseReference pepTalkRef = FirebaseDatabase.getInstance().getReference()
+                    .child(USERS)
+                    .child(currentUser.getUid())
+                    .child(PEPTALKS);
+            pepTalkRef.child(key).setValue(null, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError != null) {
@@ -111,9 +117,11 @@ public class FirebaseHelper {
 
     public static void writeNewChecklist(final String text, String notes, final Context context, final boolean isPreloadedContent) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null){
+        if (currentUser != null) {
             DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference()
-                    .child(USERS).child(currentUser.getUid()).child(CHECKLIST);
+                    .child(USERS)
+                    .child(currentUser.getUid())
+                    .child(CHECKLIST);
             DatabaseReference itemKey = checklistRef.push();//this creates the unique key, but no data
             String key = itemKey.getKey();//then we grab the id from db so we can set it to the object when it is created
             final ChecklistItemObject item = new ChecklistItemObject(key, text, notes, false);
@@ -140,9 +148,11 @@ public class FirebaseHelper {
 
     public static void updateIsChecked(String key, boolean isChecked) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null){
+        if (currentUser != null) {
             DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference()
-                    .child(USERS).child(currentUser.getUid()).child(CHECKLIST);
+                    .child(USERS)
+                    .child(currentUser.getUid())
+                    .child(CHECKLIST);
             checklistRef.child(key).child(CHECKLIST_CHECKED).setValue(isChecked, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -158,9 +168,11 @@ public class FirebaseHelper {
 
     public static void updateChecklist(String key, String text, String notes, final Context context) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null){
+        if (currentUser != null) {
             DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference()
-                    .child(USERS).child(currentUser.getUid()).child(CHECKLIST);
+                    .child(USERS)
+                    .child(currentUser.getUid())
+                    .child(CHECKLIST);
             checklistRef.child(key).child(CHECKLIST_TEXT).setValue(text, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -181,9 +193,11 @@ public class FirebaseHelper {
 
     public static void deleteChecklist(final ChecklistItemObject check, final Context context) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null){
+        if (currentUser != null) {
             DatabaseReference checklistRef = FirebaseDatabase.getInstance().getReference()
-                    .child(USERS).child(currentUser.getUid()).child(CHECKLIST);
+                    .child(USERS)
+                    .child(currentUser.getUid())
+                    .child(CHECKLIST);
             checklistRef.child(check.getKey()).setValue(null, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

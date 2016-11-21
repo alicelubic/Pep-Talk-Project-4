@@ -9,10 +9,10 @@
     android:fitsSystemWindows="true">
     <!--app:theme="@style/ThemeOverlay.AppCompat.ActionBar"-->
 
-    <include
-        layout="@layout/app_bar_frag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <!--<include-->
+        <!--layout="@layout/app_bar_frag"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" />-->
     <!--<android.support.design.widget.AppBarLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->

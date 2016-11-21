@@ -9,7 +9,9 @@ public class ChecklistItemObject {
     String notes;
     boolean isChecked;
 
-    public ChecklistItemObject() {}
+    //empty constructor so that firebase realtime database can use this
+    public ChecklistItemObject() {
+    }
 
     public ChecklistItemObject(String key, String text, String notes, boolean isChecked) {
         this.key = key;
@@ -30,6 +32,7 @@ public class ChecklistItemObject {
     public String getKey() {
         return key;
     }
+
     public void setKey(String key) {
         this.key = key;
     }

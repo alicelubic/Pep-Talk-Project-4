@@ -10,7 +10,9 @@ public class PepTalkObject {
     private String lastEdited;
     private boolean isWidgetDefault;
 
-    public PepTalkObject() {}
+    //empty constructor so that firebase realtime database can use this
+    public PepTalkObject() {
+    }
 
     public PepTalkObject(String key, String title, String body, boolean isWidgetDefault) {
         this.key = key;
@@ -18,7 +20,6 @@ public class PepTalkObject {
         this.body = body;
         this.isWidgetDefault = isWidgetDefault;
     }
-
 
 
     public String getTitle() {
@@ -45,12 +46,11 @@ public class PepTalkObject {
         this.key = key;
     }
 
-
     public boolean isWidgetDefault() {
         return this.isWidgetDefault;
     }
 
-    public void setisWidgetDefault(boolean isWidgetDefault) {
+    public void setWidgetDefault(boolean isWidgetDefault) {
         this.isWidgetDefault = isWidgetDefault;
     }
 

@@ -13,11 +13,9 @@ import owlslubic.peptalkapp.R;
  */
 public class PepTalkViewHolder extends RecyclerView.ViewHolder{
     private static final String TAG = "PepTalkViewHolder";
-    public TextView mTitle, mFragTitle, mFragBody;
-    public CardView mCard;
-
-    public CardView mFragCard;
-    public ImageButton mEdit, mTrash;
+    TextView mTitle, mFragTitle, mFragBody;
+    CardView mCard, mFragCard;
+    ImageButton mEdit, mTrash;
 
 
 

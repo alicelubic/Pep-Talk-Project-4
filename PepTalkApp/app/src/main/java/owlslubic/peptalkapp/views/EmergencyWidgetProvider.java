@@ -16,12 +16,11 @@ import owlslubic.peptalkapp.R;
  * Created by owlslubic on 9/5/16.
  */
 public class EmergencyWidgetProvider extends AppWidgetProvider {
-    private static final String EMERGENCY_PEPTALK = "emergency_peptalk";
-    private static final String WIDGET_VISIBLE = "widget_visible";
     private static final String TAG = "EmergencyWidgetProvider";
+    private static final String EMERGENCY_PEPTALK = "emergency_peptalk";
     private static final String UNDO = "undo";
     private static final String PREFS = "prefs";
-    RemoteViews mRemoteViews;
+    private RemoteViews mRemoteViews;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -42,7 +41,6 @@ public class EmergencyWidgetProvider extends AppWidgetProvider {
             //layout and attach onclicklistener
             mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_emergency);
             mRemoteViews.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-//            mRemoteViews.setOnClickPendingIntent(R.id.textview_widget_reset, pendingIntent2);
             mRemoteViews.setOnClickPendingIntent(R.id.reset_button_widget, pendingIntent2);
             //then update i guess
             appWidgetManager.updateAppWidget(appWidgetId, mRemoteViews);
@@ -63,8 +61,7 @@ public class EmergencyWidgetProvider extends AppWidgetProvider {
             mRemoteViews.setTextViewText(R.id.textview_widget, text);
             mRemoteViews.setViewVisibility(R.id.reset_button_widget, View.VISIBLE);
 
-        }
-        else if(intent.getAction().equals(UNDO)){
+        } else if (intent.getAction().equals(UNDO)) {
             mRemoteViews.setTextViewText(R.id.textview_widget, context.getString(R.string.emergency_pep_talk));
             mRemoteViews.setViewVisibility(R.id.reset_button_widget, View.INVISIBLE);
         }

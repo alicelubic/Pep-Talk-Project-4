@@ -16,7 +16,7 @@ import owlslubic.peptalkapp.presenters.FirebaseHelper;
  * Created by owlslubic on 9/20/16.
  */
 
-public class AddPepTalkWidgetActivity extends AppCompatActivity implements View.OnClickListener{
+public class AddPepTalkWidgetActivity extends AppCompatActivity implements View.OnClickListener {
     EditText mTitle, mBody;
     ImageButton mSubmit, mCancel;
 
@@ -40,7 +40,7 @@ public class AddPepTalkWidgetActivity extends AppCompatActivity implements View.
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.button_widget_submit_activity:
                 String titleInput = mTitle.getText().toString().trim();
                 String bodyInput = mBody.getText().toString().trim();

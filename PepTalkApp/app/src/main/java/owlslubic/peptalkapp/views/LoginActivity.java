@@ -5,8 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,16 +28,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Logger;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import owlslubic.peptalkapp.R;
-import owlslubic.peptalkapp.presenters.FirebaseHelper;
 
-import static owlslubic.peptalkapp.presenters.FirebaseHelper.writeNewChecklist;
-import static owlslubic.peptalkapp.presenters.FirebaseHelper.writeNewPepTalk;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
@@ -56,7 +53,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //skip this activity if you're still logged in via smartlock
         if (mAuth.getCurrentUser() != null) {
-            //already logged in, close this activity, and:
             startMainActivity();
         }
 
@@ -66,17 +62,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private boolean isInputValid() {
-//        mDisplayName = mEtName.getText().toString().trim();
+
+        mDisplayName = mEtName.getText().toString().trim();
         mEmail = mEtEmail.getText().toString().trim();
         mPassword = mEtPassword.getText().toString().trim();
 
-      /*  if (TextUtils.isEmpty(mDisplayName)) {
-            //set error
-            mNameLayout.setErrorEnabled(true);
-            mNameLayout.setError("Please enter a name!");
-            mNameLayout.requestFocus();
-            return false;
-        }*/
+        if(mSignUpButton.getVisibility()==View.VISIBLE){
+            if (TextUtils.isEmpty(mDisplayName)) {
+                //set error
+                mNameLayout.setError("Oh come now, put any name you like!");
+                mNameLayout.requestFocus();
+                return false;
+            }
+        }
         if (TextUtils.isEmpty(mEmail)) {
             //TODO include other stipulations for deal with this email badly formatted issue
             mEmailLayout.setError("Please enter valid email address");
@@ -95,6 +93,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return true;
     }
 
+
+
     private void registerUser() {
         if (isInternetConnection()) {
             if (isInputValid()) {
@@ -105,10 +105,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    //TODO set the display name somehow
+                                    Log.d(TAG, "create new user was successful");
+                                    addDisplayName();
                                     //take them to main act
                                     startMainActivity();
-                                } else {
+                                }
+                                else {
                                     //TODO let the user know this didn't work... and what to do next)
                                     //TODO also stipulate that if they already have an accoount, they gotta log in
                                     Toast.makeText(LoginActivity.this, "bad news...", Toast.LENGTH_SHORT).show();
@@ -117,6 +119,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 mProgDialog.dismiss();
                             }
                         });
+
+
             }
         }
     }
@@ -129,15 +133,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                mProgDialog.dismiss();
                                 if (task.isSuccessful()) {
                                     startMainActivity();
-
                                 } else {
                                     //TODO let the user know this didn't work... and what to do next
                                     Toast.makeText(LoginActivity.this, "bad news...", Toast.LENGTH_SHORT).show();
                                     Log.e(TAG, "exception=" + task.getException().toString());
                                 }
+                                mProgDialog.dismiss();
                             }
                         });
 
@@ -156,6 +159,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void initViews() {
         TextView welcomeText = (TextView) findViewById(R.id.tv_login_welcome);
         welcomeText.requestFocus();
+
         mNameLayout = (TextInputLayout) findViewById(R.id.inputlayout_login_display_name);
         mNameLayout.setErrorEnabled(true);
         mEmailLayout = (TextInputLayout) findViewById(R.id.inputlayout_login_email);
@@ -165,10 +169,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mEtName = (EditText) findViewById(R.id.et_login_display_name);
         mEtName.setTextColor(getResources().getColor(R.color.white));
+        mEtName.setCursorVisible(true);
         mEtEmail = (EditText) findViewById(R.id.et_login_email);
         mEtEmail.setTextColor(getResources().getColor(R.color.white));
+        mEtEmail.setCursorVisible(true);
         mEtPassword = (EditText) findViewById(R.id.et_login_pass);
         mEtPassword.setTextColor(getResources().getColor(R.color.white));
+        mEtPassword.setCursorVisible(true);
 
         mSignUpButton = (Button) findViewById(R.id.button_login_sign_up);
         mSignUpButton.setOnClickListener(this);
@@ -196,12 +203,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     break;
                 case R.id.textview_login_alreadyhaveanaccount:
                     if (mSignUpButton.getVisibility() == View.VISIBLE) {
-                        //if the sign UP button is visible onClick, set it to be SIGN IN
+                        //if the sign UP button is visible when clicked,
+                        //change the layout for LOGIN
+                        mNameLayout.setVisibility(View.GONE);
+                        mEtName.setImeOptions(EditorInfo.IME_ACTION_NONE);
                         mSignUpButton.setVisibility(View.GONE);
                         mSignInButton.setVisibility(View.VISIBLE);
                         mExistingAccount.setText(R.string.need_an_account);
                     } else {
-                        //if sign up is not visible, make it so
+                        //if sign up is not visible, then login must be, so
+                        //change the layout for SIGN UP
+                        mNameLayout.setVisibility(View.VISIBLE);
+                        mEtName.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                         mSignInButton.setVisibility(View.GONE);
                         mSignUpButton.setVisibility(View.VISIBLE);
                         mExistingAccount.setText(R.string.already_have_account);
@@ -215,7 +228,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void startMainActivity() {
         finish();
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("Display Name", mDisplayName);
+        startActivity(intent);
     }
 
     private boolean isInternetConnection() {
@@ -257,5 +272,39 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         return true;
     }
+
+    private void addDisplayName() {
+        //also save this to shared prefs for now
+        SharedPreferences prefs = getSharedPreferences("prefs",MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("display name", mDisplayName);
+        editor.commit();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        UserProfileChangeRequest updateName = new UserProfileChangeRequest.Builder()
+                .setDisplayName(mDisplayName)
+                .build();
+        Log.d(TAG, "setDisplayName: mDisplayName = " + mDisplayName);
+
+        if (user != null) {
+            user.updateProfile(updateName)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "User display name updated.");
+                            } else {
+                                Log.d(TAG, "User display name update failed, error: " + task.getException().getMessage());
+                            }
+                        }
+                    });
+        }
+
+
+
+
+    }
+
 
 }

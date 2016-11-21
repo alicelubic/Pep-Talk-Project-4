@@ -19,7 +19,7 @@
         Swipe horizontally through pep talks from the main screen, tap on the text to see the edit option to customize it, and go to the Pep Talks list to add and edit as many as you need. Hold down on a pep talk in the list to delete it. \n\n
         Create a checklist of actions or suggestions that make you feel better, and tap on them to see some notes about each.\n\n
         Visit the resources page if these pep talks aren\'t doing it for you. There are some great techniques to help you get through this.\n\n
-        Use the menu on the top right to write yourself a little emergency pep talk that will show up in a homescreen widget. Add the widget to your home screen, and tap on it to receive your own little emergency peptalk, then tap \"done\" to reset it in order to keep that message for your eyes only.
+        Use the menu on the top right to write yourself a little emergency pep talk that will show up in a homescreen widget. Add the widget to your home screen, and tap on it to receive your own little emergency pep talk, then tap the undo icon to reset it in order to keep that message for your eyes only.
     </string>
 
     <string name="more_resources_text">Of all the stress management philosophies we\'ve explored, and all the tips and tricks we\'ve used to get through mood lows or bad days, we\'ve have found that the concepts of Mindfulness benefit us most. \n\n
@@ -65,7 +65,7 @@
     <string name="pep_facts_emotions">Sometimes the facts don’t match up with how you feel, and that’s okay. You feel like the world is ending because of one situation, one decision, but take a moment and try to be objective. What are the facts of the situation? What could you do differently? What is the worst that can happen? Take a moment, and try to see the situation from the outside. It’s going to be okay.</string>
     <string name="pep_do_your_best_title">Do your best, it\'s all you can do</string>
     <string name="pep_do_your_best">You know you are trying hard, but it still doesn\’t feel like enough. There\’s always one more thing you can do, one more thing you have to do, and there always will be. All you can do is try your best in the moment, and maybe that\’s not your all-time best, but it\’s what you can manage right now. And in the next moment, do it again. It\’s all you can do.</string>
-    <string name="widget_prompt_blurb">You can write yourself a little \"emergency peptalk\" to come up on your homescreen when you tap the widget.</string>
+    <string name="widget_prompt_blurb">You can write yourself a little \"emergency pep talk\" to come up on your homescreen when you tap the widget.</string>
     <string name="emergency_pep_talk">Emergency\nPep Talk</string>
     <string name="emergency_pep_talk_widget">emergency pep talk widget</string>
     <string name="live_in_the_moment_title">Live in the moment</string>
@@ -80,7 +80,7 @@
     <string name="enter_peptalk_body_hint">Hey buddy, you\'re great because…</string>
     <string name="signup_or_login">signup\nor login</string>
     <string name="peptalk_activity_header">Welcome to your toolbox! Here are all your Pep Talks! So if you want to jump to a specific one or add/edit/delete, here\'s where to do it!</string>
-    <string name="checklist_activity_header">So you\'re feeling down, well you\'ve come to the right place. Before succumbing to the stress and giving up on the day, go through and your Checklist and see if any of these options help.</string>
+    <string name="checklist_activity_header">So you\'re feeling down, but before succumbing to stress and giving up, go through and your Checklist and see if you can turn today around!</string>
     <string name="peptalk_activity_header_title">Your Pep Talks</string>
     <string name="checklist_activity_header_title">Your Feel-Better Checklist</string>
     <string name="new_checklist_title_hint">To feel better, I will...</string>
@@ -91,5 +91,17 @@
     <string name="already_have_account">Already have an account? Tap here</string>
     <string name="create_account">Or create an account</string>
     <string name="need_an_account">Need to create an account? Tap here</string>
+    <string name="facebook_package_name">com.facebook.katana</string>
+    <string name="default_email_type">message/rfc822</string>
+    <string name="facebook_not_installed">Facebook is not currently installed on your device</string>
+    <string name="default_sms_type">vnd.android-dir/mms-sms</string>
+    <string name="no_network_connection_detected">No network connection detected</string>
+    <string name="no_network_dialog_message">You may not be able to access your pep talks from our database until connection is restored</string>
+    <string name="check_network">Check network</string>
+    <string name="connection_restored">And we\'re back! Connection restored</string>
+    <string name="no_luck">Still no luck, try again later</string>
+    <string name="k">k</string>
+    <string name="logout">Logout</string>
+    <string name="delete_account">Delete Account</string>
 
 </resources>

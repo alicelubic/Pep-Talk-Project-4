@@ -13,10 +13,12 @@ import com.google.firebase.database.DatabaseReference;
 import owlslubic.peptalkapp.models.ChecklistItemObject;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
+import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
+
 /**
  * Created by owlslubic on 9/2/16.
  */
-public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistItemObject,ChecklistViewHolder>  {
+public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistItemObject, ChecklistViewHolder> {
     private static final String TAG = "ChecklistFirebaseAdapt";
     private Context mContext;
     private ViewFrag.FABCoordinatorViewFrag mCallback;
@@ -42,13 +44,12 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
             @Override
             public void onClick(View view) {
                 FragmentMethods.setupViewFrag(
-                        (FragmentActivity)mContext,
+                        (FragmentActivity) mContext,
                         FragmentMethods.CHECKLIST_OBJ,
                         model.getKey(),
                         model.getText(),
                         model.getNotes());
                 mCallback.hideFabFromViewFrag();
-
 
             }
         });
@@ -56,30 +57,29 @@ public class ChecklistFirebaseAdapter extends FirebaseRecyclerAdapter<ChecklistI
         holder.mCard.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                FirebaseHelper.launchDeleteChecklistDialog(model, mContext);
+                launchDeleteChecklistDialog(model, mContext);
                 return true;
             }
         });
 
-
+        //TODO check marks still don't really persist...
         holder.mCheckBox.setOnCheckedChangeListener(null);
 //        holder.mCheckBox.setChecked(model.isChecked());
         holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 model.setIsChecked(isChecked);
-                FirebaseHelper.updateIsChecked(model.getKey(), isChecked);
-                Log.i(TAG, "onCheckedChanged: isChecked "+ isChecked);
+                updateIsChecked(model.getKey(), isChecked);
+                Log.i(TAG, "onCheckedChanged: isChecked " + isChecked);
             }
         });
         holder.mCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onCHECKClick: model.isChecked() : "+ model.isChecked());
+                Log.i(TAG, "onCHECKClick: model.isChecked() : " + model.isChecked());
             }
         });
     }
-
 
 
 }

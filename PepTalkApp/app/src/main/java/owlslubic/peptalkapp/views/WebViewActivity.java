@@ -8,6 +8,7 @@ import android.net.http.SslError;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
@@ -20,6 +21,8 @@ import android.widget.ProgressBar;
 
 import owlslubic.peptalkapp.R;
 
+import static android.support.v7.appcompat.R.styleable.Toolbar;
+
 public class WebViewActivity extends AppCompatActivity {
 
     @Override
@@ -30,6 +33,9 @@ public class WebViewActivity extends AppCompatActivity {
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar_webview);
         progressBar.setMax(100);
         WebView webView = (WebView) findViewById(R.id.webview);
+
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
 
 
         webView.setWebChromeClient(new WebChromeClient() {
@@ -59,7 +65,7 @@ public class WebViewActivity extends AppCompatActivity {
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                Log.i("WEBVIEW", "onReceivedSslError: "+ error.toString());
+                Log.i("WEBVIEW", "onReceivedSslError: " + error.toString());
                 Context context = view.getContext();
                 Uri uri = Uri.parse(getIntent().getStringExtra("url"));
                 launchSslWarningDialog(context, error.toString(), uri, handler);

@@ -37,22 +37,15 @@ import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 public class ViewFrag extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
     private static final String TAG = "ViewFrag";
     private static final String PREFS = "prefs";
-    TextView mTopTextView, mBottomTextView;
-    String mTitleText, mBodyText, mObjectType, mKey;
-    ImageButton mEdit, mTrash, mCancel, mDone;
-    FABCoordinatorViewFrag mCallback;
-    NewEditFrag.FABCoordinatorNewFrag mCallbackNewFrag;
-    Context mContext;
-    ListView mListView;
-    PepTalkObject mModel;
-    FirebaseListAdapter mAdapter;
-    Button mTempBackButton;
-    private DatabaseReference mRootRef;
-    private DatabaseReference mPepTalkRef;
-    private DatabaseReference mChecklistRef;
-    private FirebaseUser mCurrentUser;
-    private String mUID;
-    private boolean mIsUserSignedIn;
+    private TextView mTopTextView, mBottomTextView;
+    private String mTitleText, mBodyText, mObjectType, mKey;
+    private ImageButton mEdit, mTrash, mCancel, mDone;
+    private FABCoordinatorViewFrag mCallback;
+    private NewEditFrag.FABCoordinatorNewFrag mCallbackNewFrag;
+    private Context mContext;
+    private ListView mListView;
+    private FirebaseListAdapter mAdapter;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -82,7 +75,6 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
         mTitleText = getArguments().getString(TOP_TEXT);
         mBodyText = getArguments().getString(BOTTOM_TEXT);
 
-        mTempBackButton = (Button) view.findViewById(R.id.temp_button);
 
         return view;
     }
@@ -106,7 +98,7 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
             mListView.setOnItemClickListener(this);
 //            setListViewAdapter();
         } else
-        //normal view frag
+            //normal view frag
             mTopTextView.setText(mTitleText);
         mBottomTextView.setText(mBodyText);
         mEdit.setOnClickListener(new View.OnClickListener() {
@@ -128,14 +120,12 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
             }
         });
 
-        mTempBackButton.setOnClickListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-//        mCallback.putFabBackFromViewFrag();
-        //TODO when this is here, you can see it pop back up which  i dont like
+        //TODO when this is here, you can see it pop back up which i dont like
     }
 
     @Override
@@ -146,49 +136,46 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.temp_button){
-            startActivity(new Intent(getContext(), PepTalkListActivity.class));
-        }
+
     }
 
-   /* public void setEmergencyPeptalkText(int position){
-        //we want to grab the text of the item clicked
-        String key = mAdapter.getRef(position).getKey();
-        PepTalkObject model = (PepTalkObject) FirebaseHelper.getModelByKey(PEPTALK_OBJ, key);
-        String widgetText = model.getBody();
-        //pass that text to shared prefs
-        SharedPreferences prefs = getActivity().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("WIDGET_TEXT", widgetText);
-        editor.apply();
-        //let the user know their emergency peptalk was updates
-        Toast.makeText(getContext(), "Text set to widget, go to your home screen to check it out!", Toast.LENGTH_SHORT).show();
-        //close the fragment
-        FragmentMethods.detachFragment(getActivity(), VIEW_FRAG_TAG, null);
+    /* public void setEmergencyPeptalkText(int position){
+         //we want to grab the text of the item clicked
+         String key = mAdapter.getRef(position).getKey();
+         PepTalkObject model = (PepTalkObject) FirebaseHelper.getModelByKey(PEPTALK_OBJ, key);
+         String widgetText = model.getBody();
+         //pass that text to shared prefs
+         SharedPreferences prefs = getActivity().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+         SharedPreferences.Editor editor = prefs.edit();
+         editor.putString("WIDGET_TEXT", widgetText);
+         editor.apply();
+         //let the user know their emergency peptalk was updates
+         Toast.makeText(getContext(), "Text set to widget, go to your home screen to check it out!", Toast.LENGTH_SHORT).show();
+         //close the fragment
+         FragmentMethods.detachFragment(getActivity(), VIEW_FRAG_TAG, null);
 
-    }*/
+     }
 
+     public void setListViewAdapter() {
+         mAdapter = new FirebaseListAdapter<PepTalkObject>(getActivity(),
+                 PepTalkObject.class, android.R.layout.simple_list_item_1, mPepTalkRef) {
+             @Override
+             protected void populateView(View v, PepTalkObject model, int position) {
+                 TextView t = (TextView) v.findViewById(android.R.id.text1);
+                 t.setText(model.getTitle());
+                 t.setGravity(View.TEXT_ALIGNMENT_CENTER);
+                 t.setTextColor(getResources().getColor(R.color.mySecondaryBlue));//, R.style.PepTalkTheme));
+                 int p = (int) getResources().getDimension(R.dimen.activity_horizontal_margin);
+ //                ViewGroup.LayoutParams params = t.getLayoutParams();
+                 t.setPadding(p, p, p, p);
+             }
+         };
+         mListView.setAdapter(mAdapter);
+     }*/
     public interface FABCoordinatorViewFrag {
         void hideFabFromViewFrag();
 
         void putFabBackFromViewFrag();
     }
-
-    /*public void setListViewAdapter() {
-        mAdapter = new FirebaseListAdapter<PepTalkObject>(getActivity(),
-                PepTalkObject.class, android.R.layout.simple_list_item_1, mPepTalkRef) {
-            @Override
-            protected void populateView(View v, PepTalkObject model, int position) {
-                TextView t = (TextView) v.findViewById(android.R.id.text1);
-                t.setText(model.getTitle());
-                t.setGravity(View.TEXT_ALIGNMENT_CENTER);
-                t.setTextColor(getResources().getColor(R.color.mySecondaryBlue));//, R.style.PepTalkTheme));
-                int p = (int) getResources().getDimension(R.dimen.activity_horizontal_margin);
-//                ViewGroup.LayoutParams params = t.getLayoutParams();
-                t.setPadding(p, p, p, p);
-            }
-        };
-        mListView.setAdapter(mAdapter);
-    }*/
 
 }

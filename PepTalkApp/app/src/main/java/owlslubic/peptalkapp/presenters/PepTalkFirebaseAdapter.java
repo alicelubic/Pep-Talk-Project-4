@@ -30,7 +30,6 @@ import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
 
 public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObject, PepTalkViewHolder> implements View.OnClickListener {
     private static final String TAG = "PepFireAdapter";
-    private static final String PREFS = "prefs";
     private Context mContext;
     private ViewFrag.FABCoordinatorViewFrag mCallback;
     private PepTalkViewHolder mHolder;
@@ -83,7 +82,7 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
                 }
             });
 
-            swipeDismiss(holder.mCard);
+//            swipeDismiss(holder.mCard);
         }
 
     }
@@ -105,21 +104,22 @@ public class PepTalkFirebaseAdapter extends FirebaseRecyclerAdapter<PepTalkObjec
         if ((id == R.id.cardview_fragment) ||
                 (id == R.id.textview_frag_body) ||
                 (id == R.id.textview_frag_title)) {
+
             changeIconVisibility(mHolder.mEdit);
         }
 
     }
-
+/*
     private void swipeDismiss(CardView card) {
         SwipeDismissBehavior<CardView> swipeDismissBehavior = new SwipeDismissBehavior<>();
         swipeDismissBehavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_ANY);
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) card.getLayoutParams();
         layoutParams.setBehavior(swipeDismissBehavior);
-
+        //TODO it should delete or something when you dismiss....
     }
 
     //this is not where trash is but i wanna remember how i was gonnna do it so just commenting out not deleting
-/*  private void changeIconVisibility(ImageButton edit, ImageButton trash) {
+  private void changeIconVisibility(ImageButton edit, ImageButton trash) {
         if (edit != null) {
             if (edit.getVisibility() == View.INVISIBLE) {
                 edit.setVisibility(View.VISIBLE);

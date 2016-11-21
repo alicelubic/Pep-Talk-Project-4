@@ -59,7 +59,8 @@
         <activity
             android:name=".views.WebViewActivity"
             android:parentActivityName=".views.MainActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".views.AddPepTalkWidgetActivity"
             android:parentActivityName=".views.MainActivity"

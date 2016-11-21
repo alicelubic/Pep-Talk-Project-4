@@ -8,10 +8,10 @@ import android.widget.TextView;
 
 import owlslubic.peptalkapp.R;
 
-public class ChecklistViewHolder extends RecyclerView.ViewHolder{
+public class ChecklistViewHolder extends RecyclerView.ViewHolder {
     CheckBox mCheckBox;
-    public TextView mItem;
-    public CardView mCard;
+    TextView mItem;
+    CardView mCard;
 
     public ChecklistViewHolder(View itemView) {
         super(itemView);

@@ -29,15 +29,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryDark"
-        android:hint="Name"
-        android:visibility="gone">
+        android:hint="Name">
 
         <EditText
             android:id="@+id/et_login_display_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:imeOptions="actionNext"
             android:inputType="textCapWords" />
 
     </android.support.design.widget.TextInputLayout>

@@ -22,7 +22,7 @@ public class NewPepTalkWidgetProvider extends AppWidgetProvider {
     RemoteViews mRemoteViews;
 
 
-    /**THIS WORKS ONE TIME, AND IT SEEMS LIKE THE INTENT HASN'T BEEN UPDATED BECAUSE IT DOESN'T WORK THEN...*/
+    /**THIS WORKED ONE TIME, AND IT SEEMS LIKE THE INTENT HASN'T BEEN UPDATED BECAUSE IT DOESN'T WORK THEN...*/
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
