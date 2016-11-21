@@ -37,7 +37,7 @@
 
 
     <style name="app_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">#fafafa</item>
+        <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">16sp</item>
         <item name="android:typeface">normal</item>
     </style>
@@ -49,21 +49,24 @@
     <style name="app_font.Blue">
         <item name="android:textColor">@color/myPrimaryLightBlue</item>
     </style>
+    <style name="app_font.BrightBlue">
+        <item name="android:textColor">@color/myAccentBlue</item>
+    </style>
 
-    <style name="my_edit_text" parent="@android:style/Widget.EditText">
+    <style name="my_edit_text" parent="@android:style/Widget.Material.EditText">
         <item name="android:textColorHint">@color/white</item>
         <item name="android:background">@color/white</item>
         <item name="android:padding">6dp</item>
         <!--<item name="app:hintTextAppearance=">@style/app_font.Blue"</item>-->
-        <item name="android:textSize">20sp</item>
-        <!--<item name="textColor">@color/white</item>-->
-        <item name="android:alpha">0.8</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/myAccentBlue</item>
+
 
     </style>
 
     <style name="frag_button" parent="@android:style/Widget.ImageButton">
         <item name="android:layout_margin">6dp</item>
-        <item name="android:backgroundTint">@color/myPrimaryLightBlue</item>
+        <item name="android:backgroundTint">@color/mySecondaryBlue</item>
         <item name="android:paddingBottom">30dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>

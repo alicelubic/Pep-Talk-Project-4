@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/myPrimaryLightBlue"
+    android:background="@color/mySecondaryBlue"
     android:clickable="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
@@ -11,16 +11,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
         android:orientation="vertical"
         android:layout_gravity="center">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_gravity="end|top"
             android:layout_marginBottom="6dp"
+            android:paddingBottom="16dp"
             android:orientation="horizontal">
 
             <ImageButton
@@ -29,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|end"
                 android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/myPrimaryLightBlue"
+                android:backgroundTint="@color/mySecondaryBlue"
                 android:padding="6dp"
                 android:src="@drawable/ic_mode_edit_white_24dp" />
 
@@ -38,24 +39,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|end"
-                android:backgroundTint="@color/myPrimaryLightBlue"
+                android:backgroundTint="@color/mySecondaryBlue"
                 android:padding="6dp"
                 android:src="@drawable/ic_rubbish_bin" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/textview_frag_view_top"
-            style="@style/app_font"
+            style="@style/app_font.BrightBlue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:alpha="0.4"
+            android:padding="16dp"
+            android:gravity="center_horizontal"
+            android:background="@color/white"
+            />
 
         <TextView
             android:id="@+id/textview_frag_view_bottom"
-            style="@style/app_font"
+            style="@style/app_font.BrightBlue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity=""
+            android:alpha="0.4"
+            android:padding="16dp"
+            android:gravity="center_horizontal"
+            android:background="@color/white"/>
 
         <ListView
             android:id="@+id/listview_emergency_peptalk"

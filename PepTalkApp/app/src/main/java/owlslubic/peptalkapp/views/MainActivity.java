@@ -27,6 +27,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements
         initViews();
 
         mDisplayName = getSharedPreferences("prefs", MODE_PRIVATE).getString("display name", "pal");
-        Log.d(TAG, "onCreate: shared pref user name is: "+ mDisplayName);
+        Log.d(TAG, "onCreate: shared pref user name is: " + mDisplayName);
     }
 
 
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements
                 getSharedPreferences("prefs", MODE_PRIVATE).getString("display name", "pal")));
 
         userWelcomeMessage.setVisibility(View.VISIBLE);
-        Log.d(TAG, "initViews: main welcome text is: "+ userWelcomeMessage.getText().toString());
+        Log.d(TAG, "initViews: main welcome text is: " + userWelcomeMessage.getText().toString());
 
 
         //toolbar
@@ -176,8 +177,7 @@ public class MainActivity extends AppCompatActivity implements
         String welcomeBackPal = String.format(getResources().getString(R.string.welcome_back_user),
                 getSharedPreferences("prefs", MODE_PRIVATE).getString("display name", "pal"));
         navWelcome.setText(welcomeBackPal);
-        Log.d(TAG, "initViews: nav header welcome message with mDisplayName is: "+ welcomeBackPal);
-
+        Log.d(TAG, "initViews: nav header welcome message with mDisplayName is: " + welcomeBackPal);
 
 
         //nav bottom imagebuttons
@@ -528,12 +528,6 @@ public class MainActivity extends AppCompatActivity implements
         LayoutInflater inflater = LayoutInflater.from(this);
         View layout = inflater.inflate(R.layout.dialog_add_widget_text, null);
         builder.setView(layout);
-        builder.setNegativeButton("nvm", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
         builder.setPositiveButton("cool", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -541,9 +535,9 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         final AlertDialog dialog = builder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         dialog.show();
         final EditText editText = (EditText) dialog.findViewById(R.id.edittext_dialog_widget);
-
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -554,7 +548,7 @@ public class MainActivity extends AppCompatActivity implements
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("WIDGET_TEXT", widgetText);
                 editor.apply();
-                Toast.makeText(MainActivity.this, "Text set to widget", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Emergency Pep Talk is ready to go", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
@@ -583,7 +577,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public void deleteAccount(){
+    public void deleteAccount() {
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 /*
 
@@ -616,7 +610,7 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         prog.show();
-                        if(user!=null){
+                        if (user != null) {
 
                             user.delete()
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -626,11 +620,11 @@ public class MainActivity extends AppCompatActivity implements
                                                 Log.d(TAG, "User account deleted.");
                                                 finish();
                                                 prog.dismiss();
-                                                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                                                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                                                 Toast.makeText(getApplicationContext(),
                                                         "Good luck in all your future endeavors!", Toast.LENGTH_SHORT).show();
-                                            }else{
-                                                Log.d(TAG, "User account not deleted, error: "+ task.getException().getMessage());
+                                            } else {
+                                                Log.d(TAG, "User account not deleted, error: " + task.getException().getMessage());
                                                 Toast.makeText(getApplicationContext(), "Something went wrong... account not deleted\nsign out and back in, then try again", Toast.LENGTH_LONG).show();
                                             }
                                         }

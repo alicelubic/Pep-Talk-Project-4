@@ -5,15 +5,22 @@
     android:padding="16dp">
 
     <TextView
-        android:padding="16dp"
+        android:padding="3dp"
+        android:textSize="18sp"
+        style="@style/app_font.BrightBlue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/widget_prompt_blurb"/>
+        android:text="@string/widget_prompt_blurb"
+        android:gravity="center_horizontal"/>
     <EditText
+        style="@style/app_font.Blue"
         android:id="@+id/edittext_dialog_widget"
         android:hint="What do you want your emergency pep talk to say?"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"/>
+        android:padding="12dp"
+        android:imeOptions="actionDone"
+        android:maxLength="140"
+        />
 
 </LinearLayout>
