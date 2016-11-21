@@ -90,7 +90,6 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        assignDBRefs();
         //for emergency peptalk
         if (mObjectType.equals(EMERGENCY_PEPTALK)) {
             //out with the old
@@ -105,7 +104,7 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
             mDone.setOnClickListener(this);
             mListView.setVisibility(View.VISIBLE);
             mListView.setOnItemClickListener(this);
-            setListViewAdapter();
+//            setListViewAdapter();
         } else
         //normal view frag
             mTopTextView.setText(mTitleText);
@@ -128,8 +127,6 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
                 }
             }
         });
-
-
 
         mTempBackButton.setOnClickListener(this);
     }
@@ -154,7 +151,7 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
         }
     }
 
-    public void setEmergencyPeptalkText(int position){
+   /* public void setEmergencyPeptalkText(int position){
         //we want to grab the text of the item clicked
         String key = mAdapter.getRef(position).getKey();
         PepTalkObject model = (PepTalkObject) FirebaseHelper.getModelByKey(PEPTALK_OBJ, key);
@@ -169,7 +166,7 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
         //close the fragment
         FragmentMethods.detachFragment(getActivity(), VIEW_FRAG_TAG, null);
 
-    }
+    }*/
 
     public interface FABCoordinatorViewFrag {
         void hideFabFromViewFrag();
@@ -177,7 +174,7 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
         void putFabBackFromViewFrag();
     }
 
-    public void setListViewAdapter() {
+    /*public void setListViewAdapter() {
         mAdapter = new FirebaseListAdapter<PepTalkObject>(getActivity(),
                 PepTalkObject.class, android.R.layout.simple_list_item_1, mPepTalkRef) {
             @Override
@@ -192,22 +189,6 @@ public class ViewFrag extends Fragment implements AdapterView.OnItemClickListene
             }
         };
         mListView.setAdapter(mAdapter);
-    }
+    }*/
 
-    public void assignDBRefs() {
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (mCurrentUser != null) {
-            mUID = mCurrentUser.getUid();
-            mIsUserSignedIn = true;
-        } else {
-            mIsUserSignedIn = false;
-        }
-
-        mRootRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID);
-
-        mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.PEPTALKS);
-
-        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.CHECKLIST);
-    }
 }

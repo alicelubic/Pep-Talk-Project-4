@@ -47,27 +47,13 @@ import owlslubic.peptalkapp.views.MainActivity;
  */
 public class RecyclerFrag extends Fragment implements View.OnClickListener {
     private static final String TAG = "RecyclerFrag";
-    private String mTitle, mBody;
-    private PepTalkObject mPepTalk;
     public TextView mTextViewTitle;
-    public TextView mTextViewBody;
-    public ImageButton mEdit, mBack;
+    private TextView mTextViewBody;
+    private ImageButton mBack;
     private ProgressBar mProgressBar;
-    public DatabaseReference mPeptalkRef;
-    public FirebaseRecyclerAdapter mFirebaseAdapter;
-    RecyclerView mFragRecycler;
-    private DatabaseReference mRootRef;
-    private DatabaseReference mPepTalkRef;
-    private DatabaseReference mChecklistRef;
-    private FirebaseUser mCurrentUser;
-    private String mUID;
-    private boolean mIsUserSignedIn;
+    private FirebaseRecyclerAdapter mFirebaseAdapter;
+    private RecyclerView mFragRecycler;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        assignDBRefs();
-    }
 
     @Nullable
     @Override
@@ -75,39 +61,32 @@ public class RecyclerFrag extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.frag_peptalk, container, false);
         mFragRecycler = (RecyclerView) view.findViewById(R.id.recyclerview_fragment);
         mBack = (ImageButton) view.findViewById(R.id.imagebutton_frag_back);
-        mBack.setOnClickListener(this);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar_recyclerviewfrag);
-//        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_peptalk_frag);
-//        toolbar.setBackgroundColor(getResources().getColor(R.color.mySecondaryBlue));
-//        toolbar.setHapticFeedbackEnabled(true);
-//        AppCompatActivity activity = (AppCompatActivity) getActivity();
-//        activity.setSupportActionBar(toolbar);
-//        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        mTextViewTitle = (TextView) view.findViewById(R.id.textview_frag_title);
+        mTextViewBody = (TextView) view.findViewById(R.id.textview_frag_body);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-        mTextViewTitle = (TextView) view.findViewById(R.id.textview_frag_title);
-        mTextViewBody = (TextView) view.findViewById(R.id.textview_frag_body);
-
         if (mTextViewBody != null) {
             mTextViewBody.setMovementMethod(new ScrollingMovementMethod());
         }
+        mBack.setOnClickListener(this);
 
         //setting up the recyclerview
-//        mPeptalkRef = getDbRef(true,false);
-
         LinearLayoutManager llm = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, true);
         llm.setStackFromEnd(true);
 
+        //get ref to pass to adapter
+        DatabaseReference peptalkRef = FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseHelper.USERS).child(FirebaseAuth.getInstance()
+                        .getCurrentUser().getUid()).child(FirebaseHelper.PEPTALKS);
+
         mFragRecycler.setLayoutManager(llm);
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class, R.layout.frag_card,
-                PepTalkViewHolder.class, mPeptalkRef, view.getContext(), null);
+                PepTalkViewHolder.class, peptalkRef, view.getContext(), null);
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -123,10 +102,6 @@ public class RecyclerFrag extends Fragment implements View.OnClickListener {
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(mFragRecycler);
 
-        /**testing for sunil*/
-//        RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
-//        animator.setAddDuration(1000);
-//        mFragRecycler.setItemAnimator(animator);
 
     }
 
@@ -141,11 +116,8 @@ public class RecyclerFrag extends Fragment implements View.OnClickListener {
 
         switch (v.getId()) {
             case R.id.imagebutton_frag_back:
-//                boolean b = false;
-//                if ((mTextViewTitle.getText().toString().trim().length() > 0) && (mTextViewBody.getText().toString().trim().length() > 0)) {
-//                    b = true;//its true because there is text there, so thusly the text has changed
-//                }
-                FragmentMethods.detachFragment(getActivity(), FragmentMethods.RECYCLERVIEW_FRAG_TAG, getView());//, b);
+                FragmentMethods.detachFragment(getActivity(),
+                        FragmentMethods.RECYCLERVIEW_FRAG_TAG, getView());//, b);
         }
 
     }
@@ -154,30 +126,6 @@ public class RecyclerFrag extends Fragment implements View.OnClickListener {
     public void onDestroy() {
         super.onDestroy();
         mFirebaseAdapter.cleanup();
-    }
-
-    //    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if(item.getItemId()==android.R.id.home){
-//            Toast.makeText(getContext(), "tryna go home!", Toast.LENGTH_SHORT).show();
-//            getActivity().onBackPressed();
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-    public void assignDBRefs() {
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        mIsUserSignedIn = false;
-
-        if (mCurrentUser != null) {
-            mUID = mCurrentUser.getUid();
-            mIsUserSignedIn = true;
-        }
-        mRootRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID);
-
-        mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.PEPTALKS);
-
-        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.CHECKLIST);
     }
 
 }

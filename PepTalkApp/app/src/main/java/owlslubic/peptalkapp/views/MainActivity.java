@@ -49,6 +49,7 @@ import owlslubic.peptalkapp.views.fragments.NewEditFrag;
 import owlslubic.peptalkapp.views.fragments.ViewFrag;
 
 import static owlslubic.peptalkapp.presenters.FragmentMethods.*;
+import static owlslubic.peptalkapp.presenters.FirebaseHelper.*;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements
     private DatabaseReference mRootRef;
     private DatabaseReference mPepTalkRef;
     private DatabaseReference mChecklistRef;
+    private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
     private String mUID;
     private boolean mIsUserSignedIn;
@@ -80,7 +82,8 @@ public class MainActivity extends AppCompatActivity implements
 //        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
 //        ref.keepSynced(true);
 
-        assignDBRefs();
+        mAuth = FirebaseAuth.getInstance();
+        insertContentOnNewAccountCreated();
 
         if (mIsUserSignedIn) {
             setLogoutVisible(true);
@@ -91,35 +94,8 @@ public class MainActivity extends AppCompatActivity implements
         initViews();
         checkNetworkStatus();
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            user.getToken(true).addOnCompleteListener(this, new OnCompleteListener<GetTokenResult>() {
-                @Override
-                public void onComplete(@NonNull Task<GetTokenResult> task) {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "token=" + task.getResult().getToken());
-                    } else {
-                        Log.e(TAG, "exception=" + task.getException().toString());
-                    }
-                }
-            });
-        }
     }
 
-    public void assignDBRefs() {
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        mIsUserSignedIn = false;
-
-        if (mCurrentUser != null) {
-            mUID = mCurrentUser.getUid();
-            mIsUserSignedIn = true;
-        }
-        mRootRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID);
-
-        mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.PEPTALKS);
-
-        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.CHECKLIST);
-    }
 
     /**
      * views stuffs
@@ -496,13 +472,13 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * content
      */
-    /*private void insertContentOnNewAccountCreated() {
+    private void insertContentOnNewAccountCreated() {
         //shared prefs to make sure this only runs one time
         boolean b;
         SharedPreferences mPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         b = mPrefs.getBoolean("FIRST_RUN", false);
         if (!b) {
-            if (mIsisUserSignedIn()) {
+            if (mAuth.getCurrentUser()!=null) {
                 writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes), this, true); //TODO CHECK IF USING this AS CONTEXT MAKES IT NOT WORK???
                 writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes), this, true);
                 writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes), this, true);
@@ -525,7 +501,6 @@ public class MainActivity extends AppCompatActivity implements
         }
         Log.d(TAG, "insertContentOnNewAccountCreated: sharedprefs first run is: " + mPrefs.getBoolean("FIRST_RUN", false));
     }
-*/
 
     /**
      * can't produce plays with internettie

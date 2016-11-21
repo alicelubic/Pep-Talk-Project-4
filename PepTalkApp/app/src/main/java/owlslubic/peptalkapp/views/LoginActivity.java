@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,9 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String mDisplayName, mEmail, mPassword;
     private ProgressDialog mProgDialog;
     private FirebaseAuth mAuth;
-    private FirebaseUser mCurrentUser;
-    private String mUID;
-    private boolean mIsUserSignedIn;
+    private TextView mExistingAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mAuth = FirebaseAuth.getInstance();
 
-        //TODO check if smartlock is enabled, and if you're already logged in, it should automatically
-        //skip this activity
+        //skip this activity if you're still logged in via smartlock
         if (mAuth.getCurrentUser() != null) {
             //already logged in, close this activity, and:
             startMainActivity();
@@ -65,144 +63,153 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         initViews();
 
 
-
     }
 
-
-
-    private void registerOrLoginUser(boolean isSignUp) {
-        mDisplayName = mEtName.getText().toString().trim();
+    private boolean isInputValid() {
+//        mDisplayName = mEtName.getText().toString().trim();
         mEmail = mEtEmail.getText().toString().trim();
         mPassword = mEtPassword.getText().toString().trim();
 
-        //make sure there was valid input
-        if (TextUtils.isEmpty(mDisplayName)) {
+      /*  if (TextUtils.isEmpty(mDisplayName)) {
             //set error
             mNameLayout.setErrorEnabled(true);
             mNameLayout.setError("Please enter a name!");
             mNameLayout.requestFocus();
-            return;
-        }
+            return false;
+        }*/
         if (TextUtils.isEmpty(mEmail)) {
             //TODO include other stipulations for deal with this email badly formatted issue
-            //set error;
-            mEmailLayout.setErrorEnabled(true);
             mEmailLayout.setError("Please enter valid email address");
             mEmailLayout.requestFocus();
-            return;
-        }
-        if (TextUtils.isEmpty(mPassword)) {
-            //set error
-            mPasswordLayout.setErrorEnabled(true);
+            return false;
+        } else if (TextUtils.isEmpty(mPassword)) {
             mPasswordLayout.setError("Please enter a password");
             mPasswordLayout.requestFocus();
-            return;
-        }
-        if(mPassword.length()<6){
+            return false;
+        } else if (mPassword.length() < 6) {
             mPasswordLayout.setError("Password must be more than 6 characters");
             mPasswordLayout.requestFocus();
-            return;
-        }
+            return false;
+        } else
 
-        //assuming the data is good, now display progress dialog...
-        String message;
-        if (isSignUp) {
-            message = "Registering...";
-        } else {
-            message = "Logging in...";
+            return true;
+    }
+
+    private void registerUser() {
+        if (isInternetConnection()) {
+            if (isInputValid()) {
+                showProgDialog("Registering...");
+
+                mAuth.createUserWithEmailAndPassword(mEmail, mPassword)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    //TODO set the display name somehow
+                                    //take them to main act
+                                    startMainActivity();
+                                } else {
+                                    //TODO let the user know this didn't work... and what to do next)
+                                    //TODO also stipulate that if they already have an accoount, they gotta log in
+                                    Toast.makeText(LoginActivity.this, "bad news...", Toast.LENGTH_SHORT).show();
+                                    Log.e(TAG, "exception=" + task.getException().toString());
+                                }
+                                mProgDialog.dismiss();
+                            }
+                        });
+            }
         }
+    }
+
+    private void loginUser() {
+        if (isInternetConnection()) {
+            if (isInputValid()) {
+                showProgDialog("Logging in...");
+                mAuth.signInWithEmailAndPassword(mEmail, mPassword)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                mProgDialog.dismiss();
+                                if (task.isSuccessful()) {
+                                    startMainActivity();
+
+                                } else {
+                                    //TODO let the user know this didn't work... and what to do next
+                                    Toast.makeText(LoginActivity.this, "bad news...", Toast.LENGTH_SHORT).show();
+                                    Log.e(TAG, "exception=" + task.getException().toString());
+                                }
+                            }
+                        });
+
+            }
+        }
+    }
+
+
+    public void showProgDialog(String message) {
         mProgDialog.setMessage(message);
         mProgDialog.show();
 
-
-        if (!isSignUp) {
-            //log in the user
-            mAuth.signInWithEmailAndPassword(mEmail, mPassword)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            mProgDialog.dismiss();
-                            if (task.isSuccessful()) {
-                                startMainActivity();
-
-                            } else {
-                                //TODO let the user know this didn't work... and what to do next
-                                Toast.makeText(LoginActivity.this, "bad news...", Toast.LENGTH_SHORT).show();
-                                Log.e(TAG, "exception=" + task.getException().toString());
-                            }
-                        }
-                    });
-
-        } else {
-            //create new user
-            mAuth.createUserWithEmailAndPassword(mEmail, mPassword)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                //TODO set the display name somehow
-                                //insert the template peptalk content:
-                                preloadPepTalks();
-                                //take them to main act
-                                startMainActivity();
-                            } else {
-                                //TODO let the user know this didn't work... and what to do next
-                                Toast.makeText(LoginActivity.this, "bad news...", Toast.LENGTH_SHORT).show();
-                                Log.e(TAG, "exception=" + task.getException().toString());
-                            }
-                            mProgDialog.dismiss();
-                        }
-                    });
-        }
-
     }
 
-    private void preloadPepTalks(){
-        if (mIsUserSignedIn) {
-            writeNewChecklist(getString(R.string.checklist_water), getString(R.string.checklist_water_notes), this, true); //TODO CHECK IF USING this AS CONTEXT MAKES IT NOT WORK???
-            writeNewChecklist(getString(R.string.checklist_eat), getString(R.string.checklist_eat_notes), this, true);
-            writeNewChecklist(getString(R.string.checklist_move), getString(R.string.checklist_move_notes), this, true);
-            writeNewChecklist(getString(R.string.checklist_moment), getString(R.string.checklist_moment_notes), this, true);
-            writeNewChecklist(getString(R.string.checklist_breathe), getString(R.string.checklist_breathe_notes), this, true);
-            writeNewChecklist(getString(R.string.checklist_locations), getString(R.string.checklist_locations_notes), this, true);
-
-            writeNewPepTalk(getString(R.string.pep_past_present_title), getString(R.string.pep_past_present), this, true);
-            writeNewPepTalk(getString(R.string.pep_facts_emotions_title), getString(R.string.pep_facts_emotions), this, true);
-            writeNewPepTalk(getString(R.string.pep_do_your_best_title), getString(R.string.pep_do_your_best), this, true);
-            writeNewPepTalk(getString(R.string.live_in_the_moment_title), getString(R.string.live_in_the_moment), this, true);
-            writeNewPepTalk(getString(R.string.doing_and_not_doing_title), getString(R.string.doing_and_not_doing), this, true);
-            writeNewPepTalk(getString(R.string.exercise_guilt_title), getString(R.string.exercise_guilt), this, true);
-        }
-    }
 
     private void initViews() {
+        TextView welcomeText = (TextView) findViewById(R.id.tv_login_welcome);
+        welcomeText.requestFocus();
         mNameLayout = (TextInputLayout) findViewById(R.id.inputlayout_login_display_name);
+        mNameLayout.setErrorEnabled(true);
         mEmailLayout = (TextInputLayout) findViewById(R.id.inputlayout_login_email);
+        mEmailLayout.setErrorEnabled(true);
         mPasswordLayout = (TextInputLayout) findViewById(R.id.inputlayout_login_pass);
+        mPasswordLayout.setErrorEnabled(true);
+
         mEtName = (EditText) findViewById(R.id.et_login_display_name);
+        mEtName.setTextColor(getResources().getColor(R.color.white));
         mEtEmail = (EditText) findViewById(R.id.et_login_email);
+        mEtEmail.setTextColor(getResources().getColor(R.color.white));
         mEtPassword = (EditText) findViewById(R.id.et_login_pass);
-        mSignInButton = (Button) findViewById(R.id.button_login_sign_in);
+        mEtPassword.setTextColor(getResources().getColor(R.color.white));
+
         mSignUpButton = (Button) findViewById(R.id.button_login_sign_up);
-        mSignInButton.setOnClickListener(this);
         mSignUpButton.setOnClickListener(this);
+
+        mSignInButton = (Button) findViewById(R.id.button_login_sign_in);
+        mSignInButton.setOnClickListener(this);
+
         mProgDialog = new ProgressDialog(this);
 
+        mExistingAccount = (TextView) findViewById(R.id.textview_login_alreadyhaveanaccount);
+        mExistingAccount.setOnClickListener(this);
+
     }
+
 
     @Override
     public void onClick(View v) {
         if (isInternetConnection()) {
-            if (v.getId() == R.id.button_login_sign_in) {
-                //sign in
-                registerOrLoginUser(false);
+            switch (v.getId()) {
+                case R.id.button_login_sign_up:
+                    registerUser();
+                    break;
+                case R.id.button_login_sign_in:
+                    loginUser();
+                    break;
+                case R.id.textview_login_alreadyhaveanaccount:
+                    if (mSignUpButton.getVisibility() == View.VISIBLE) {
+                        //if the sign UP button is visible onClick, set it to be SIGN IN
+                        mSignUpButton.setVisibility(View.GONE);
+                        mSignInButton.setVisibility(View.VISIBLE);
+                        mExistingAccount.setText(R.string.need_an_account);
+                    } else {
+                        //if sign up is not visible, make it so
+                        mSignInButton.setVisibility(View.GONE);
+                        mSignUpButton.setVisibility(View.VISIBLE);
+                        mExistingAccount.setText(R.string.already_have_account);
+                    }
+                    break;
+
             }
-            if (v.getId() == R.id.button_login_sign_up) {
-                //sign up
-                registerOrLoginUser(true);
-            } else {
-                Log.d(TAG, "onClick: no view id");
-            }
+
         }
     }
 
@@ -251,20 +258,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return true;
     }
 
-    public void assignDBRefs() {
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (mCurrentUser != null) {
-            mUID = mCurrentUser.getUid();
-            mIsUserSignedIn = true;
-        } else {
-            mIsUserSignedIn = false;
-        }
-
-//        mRootRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID);
-//
-//        mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.PEPTALKS);
-//
-//        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.CHECKLIST);
-    }
 }

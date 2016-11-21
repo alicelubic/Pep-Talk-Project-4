@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
@@ -14,19 +13,30 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="owlslubic.peptalkapp.views.LoginActivity">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/inputlayout_login_display_name"
+    <TextView
+        android:id="@+id/tv_login_welcome"
+        style="@style/app_font"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_horizontal"
+        android:text="Welcome to Pep Talk Pal\nlet's get started"
+        android:textSize="26sp" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/inputlayout_login_display_name"
+        style="@style/my_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
         android:hint="Name"
-        app:hintTextAppearance="@style/app_font.Blue">
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/et_login_display_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:imeOptions="actionNext"
             android:inputType="textCapWords" />
 
@@ -34,16 +44,17 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/inputlayout_login_email"
+        style="@style/my_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:hint="Email address"
-        app:hintTextAppearance="@style/app_font.Blue">
+        android:background="@color/colorPrimaryDark"
+        android:hint="Email address">
 
         <EditText
             android:id="@+id/et_login_email"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:imeOptions="actionNext"
             android:inputType="textEmailAddress" />
 
@@ -51,48 +62,50 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/inputlayout_login_pass"
+        style="@style/my_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:hint="Password"
-        app:hintTextAppearance="@style/app_font.Blue">
+        android:background="@color/colorPrimaryDark"
+        android:hint="Password">
 
         <EditText
             android:id="@+id/et_login_pass"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:imeOptions="actionDone"
-            android:inputType="textPassword" />
+            android:inputType="textVisiblePassword" />
 
     </android.support.design.widget.TextInputLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <Button
+        android:id="@+id/button_login_sign_up"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_margin="16dp"
+        android:background="@drawable/login_button_shape"
+        android:text="@string/sign_up"
+        android:textColor="@color/white" />
 
-        <Button
-            android:id="@+id/button_login_sign_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="@drawable/login_button_shape"
-            android:text="@string/sign_up"
-            android:textColor="@color/white" />
+    <Button
+        android:id="@+id/button_login_sign_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/login_button_shape"
+        android:text="@string/sign_in"
+        android:textColor="@color/white"
+        android:visibility="gone" />
 
-        <Button
-            android:id="@+id/button_login_sign_in"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="@drawable/login_button_shape"
-            android:text="@string/sign_in"
-            android:textColor="@color/white" />
-
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/textview_login_alreadyhaveanaccount"
+        style="@style/app_font.Gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/already_have_account" />
 
 
 </LinearLayout>

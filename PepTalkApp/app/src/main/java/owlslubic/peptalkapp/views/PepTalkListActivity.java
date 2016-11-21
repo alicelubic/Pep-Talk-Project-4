@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -29,7 +30,6 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
 
     private static final String TAG = "PepTalkListActivity";
     private PepTalkFirebaseAdapter mFirebaseAdapter;
-    private DatabaseReference mPeptalkRef;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFab;
     private RecyclerView mRecyclerView;
@@ -48,61 +48,15 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (mCurrentUser != null) {
             mUID = mCurrentUser.getUid();
+            Log.d(TAG, "DEBUG DB >>  oncreate mUID = "+ mUID);
             mIsUserSignedIn = true;
         } else {
             mIsUserSignedIn = false;
         }
 
 
-
         initViews();
         setupRecyclerView();
-
-//        if(getSupportActionBar() != null){
-//            getSupportActionBar().setTitle("");
-//        }
-//        mCallback = this;
-//
-//        //fab launches new pep fragment
-//        mFab = (FloatingActionButton) findViewById(R.id.fab_peptalk_list);
-//        mFab.setVisibility(View.INVISIBLE);
-//        mFab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                setupNewFrag(PEPTALK_OBJ, PepTalkListActivity.this);
-//            }
-//        });
-//        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_peptalklist);
-//
-//        //recyclerview
-//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//            mPeptalkRef = FirebaseDatabase.getInstance().getReference().child(USERS)
-//                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(PEPTALKS);
-//        }
-//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_peptalk_list);
-//        recyclerView.setHasFixedSize(true);
-//        LinearLayoutManager llm = new LinearLayoutManager(this);
-//        llm.setReverseLayout(true);
-//        llm.setStackFromEnd(true);
-//        recyclerView.setLayoutManager(llm);
-//        //create adapter, add progress bar, set adapter
-//        mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class,
-//                R.layout.card_peptalk, PepTalkViewHolder.class, mPeptalkRef,
-//                this, getSupportFragmentManager(), mCallback);//, this); took out the onstartdrag listener
-//
-//        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-//            @Override
-//            public void onItemRangeInserted(int positionStart, int itemCount) {
-//                super.onItemRangeInserted(positionStart, itemCount);
-//                //once loaded, hide the progress bar
-//                mProgressBar.setVisibility(View.GONE);
-//                mFab.setVisibility(View.VISIBLE);
-//            }
-//        });
-//        recyclerView.setAdapter(mFirebaseAdapter);
-
-//
-
 
     }
 
@@ -129,6 +83,7 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
 
     public void setupRecyclerView() {
         mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.PEPTALKS);
+        Log.d(TAG, "DEBUG DB >>  setUpRecyclerView db ref mUID = "+ mUID);
 
         //set layout
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -139,7 +94,7 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
 
         //create adapter, add progress bar, set adapter
         mFirebaseAdapter = new PepTalkFirebaseAdapter(PepTalkObject.class,
-                R.layout.card_peptalk, PepTalkViewHolder.class, mPeptalkRef,
+                R.layout.card_peptalk, PepTalkViewHolder.class, mPepTalkRef,
                 this, mCallback);//, this); took out the onstartdrag listener
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -186,23 +141,6 @@ public class PepTalkListActivity extends AppCompatActivity implements ViewFrag.F
     @Override
     public void putFabBackFromNewFrag() {
         mFab.setVisibility(View.VISIBLE);
-    }
-
-    public void assignDBRefs() {
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (mCurrentUser != null) {
-            mUID = mCurrentUser.getUid();
-            mIsUserSignedIn = true;
-        } else {
-            mIsUserSignedIn = false;
-        }
-
-        mRootRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID);
-
-        mPepTalkRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.PEPTALKS);
-
-        mChecklistRef = FirebaseDatabase.getInstance().getReference().child(FirebaseHelper.USERS).child(mUID).child(FirebaseHelper.CHECKLIST);
     }
 
 }

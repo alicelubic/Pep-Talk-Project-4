@@ -88,5 +88,8 @@
     <string name="new_peptalk_title_hint">Pep Talk Title</string>
     <string name="new_peptalk_body_hint">I\'m going to be okay because...</string>
     <string name="sign_up">sign up</string>
+    <string name="already_have_account">Already have an account? Tap here</string>
+    <string name="create_account">Or create an account</string>
+    <string name="need_an_account">Need to create an account? Tap here</string>
 
 </resources>
