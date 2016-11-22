@@ -18,6 +18,7 @@ Wherever you are, Pep Talk Pal is here for you._
 
 <p align="center">
   <img src="./Screenshots/Screenshot_20161121-181819.png" width="220" height="400" >
-  <img src="./Screenshots/Screenshot_20161121-182021.png" width="220" height="400" >
   <img src="./Screenshots/unnamed.png" width="220" height="400" > 
+  <img src="./Screenshots/Screenshot_20161121-182021.png" width="220" height="400" >
+
 </p>
