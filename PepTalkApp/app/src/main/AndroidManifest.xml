@@ -43,6 +43,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_emergency_info" />
         </receiver>
+
         <receiver
             android:name=".views.NewPepTalkWidgetProvider"
             android:icon="@drawable/ic_add_message"
